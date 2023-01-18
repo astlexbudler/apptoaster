@@ -1,5 +1,4 @@
-# apptoaster-server
-stackable apptoaster
+# apptoaster
 
 venv requirements
 pip install Django
