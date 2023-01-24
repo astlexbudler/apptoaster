@@ -1,258 +1,202 @@
 import json
-import imaplib
-import email
-from . import models
-from . import utilities
+from .services import api
+from .services import common
+from .services import email
+from .services import model
+from .services import session
+
 import logging
-
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('appToaster')
 
 ##################################################
-# 앱 토스터 API
+# 수신인 등록
 ##################################################
-##################################################
-# 사용자 등록(POST)
-##################################################
-def apptoasterSetUserHandler(request):
-    # Logger
-    ip = utilities.getIp(request)
-    key = 'UNKNOWN'
-    log = utilities.timestamp() + ' - '
-
-    # request method 확인
-    if request.method != 'POST':
-        log += key + '(' + ip + ') - apptoasterSetUser() - error - request method error;'
-        logger.warning(log)
-        return json.dumps({
-            'result':'request method error'
-        })
-
-    # POST 데이터 수신
+def apiPutTargetHandler(request, userInfo):
     try:
-        request_dictionary = json.loads(request.body)
-        key = request_dictionary['key']
-        user_id = request_dictionary['user_id']
-        device_token = request_dictionary['device_token']
+        deviceType = request.GET['deviceType']
+        token = request.GET['token']
+        isPushAllow = request.GET['isPushAllow']
+        if isPushAllow == 'true':
+            isPushAllow = True
+        else:
+            isPushAllow = False
+
+        model.createTarget(userInfo.id, deviceType, token, isPushAllow)
+
+        return json.dumps({
+            'isSucceed': True
+        })
     except:
-        log += key + '(' + ip + ') - apptoasterSetUser() - error - json decode error;'
-        logger.warning(log)
         return json.dumps({
-            'result':'json decode error'
+            'isSucceed': False
         })
 
-    log += key + '(' + ip + ') - apptoasterSetUser() - user_id(' + user_id + ') has settled to device_token(' + device_token + ');'
-    logger.info(log)
-    
-    return
-
 ##################################################
-# 사용자 확인(GET)
+# 수신인 확인
 ##################################################
-def apptoasterGetUserHandler(request):
-    # Logger
-    ip = utilities.getIp(request)
-    key = 'UNKNOWN'
-    log = utilities.timestamp() + ' - '
-
-    # request method 확인
-    if request.method != 'GET':
-        log += key + '(' + ip + ') - apptoasterGetUser() - error - request method error;'
-        logger.warning(log)
-        return json.dumps({
-            'result':'request method error'
-        })
-
-    # GET 데이터 수신
+def apiGetTargetHandler(request, userInfo):
     try:
-        key = request.GET['key']
-        user_id = request.GET['user_id']
-    except:
-        log += key + '(' + ip + ') - apptoasterGetUser() - error - required parameter error;'
-        logger.warning(log)
+        deviceType = request.GET['deviceType']
+        token = request.GET['token']
+
+        targetInfo = model.readTarget(deviceType, token)
+
         return json.dumps({
-            'result':'required parameter error'
+            'isSucceed': True,
+            'targetInfo': targetInfo
+        })
+    except:
+        return json.dumps({
+            'isSucceed': False,
+            'targetInfo': None
         })
 
-    log += key + '(' + ip + ') - apptoasterGetUser() - get user(' + user_id + ') info;'
-    logger.info(log)
-    
-    return
-
 ##################################################
-# 사용자 삭제(DELETE)
+# 수신인 수정
 ##################################################
-def apptoasterDeleteUserHandler(request):
-    # Logger
-    ip = utilities.getIp(request)
-    key = 'UNKNOWN'
-    log = utilities.timestamp() + ' - '
+def apiPatchTargetHandler(request, userInfo):
+    try:
+        id = request.GET['id']
+        isPushAllow = request.GET['isPushAllow']
+        if isPushAllow == 'true':
+            isPushAllow = True
+        else:
+            isPushAllow = False
+        isAdAllow = request.GET['isAdAllow']
+        if isAdAllow == 'true':
+            isAdAllow = True
+        else:
+            isAdAllow = False
+        isNightAllow = request.GET['isNightAllow']
+        if isNightAllow == 'true':
+            isNightAllow = True
+        else:
+            isNightAllow = False
 
-    # request method 확인
-    if request.method != 'DELETE':
-        log += key + '(' + ip + ') - apptoasterDeleteUser() - error - request method error;'
-        logger.warning(log)
+        model.updateTarget(id, isPushAllow, isAdAllow, isNightAllow)
+
         return json.dumps({
-            'result':'request method error'
+            'isSucceed': True
+        })
+    except:
+        return json.dumps({
+            'isSucceed': False
         })
 
-    # GET 데이터 수신
+##################################################
+# PUSH API
+##################################################
+##################################################
+# PUSH 스케줄 추가(POST)
+##################################################
+def apiToastPushHandler(request, userInfo):
     try:
-        key = request.GET['key']
-        user_id = request.GET['user_id']
-    except:
-        log += key + '(' + ip + ') - apptoasterDeleteUser() - error - required parameter error;'
-        logger.warning(log)
+        alias = request.POST['alias']
+        title = request.POST['title']
+        message = request.POST['message']
+        date = common.stringToDate(request.POST.get('date', ''))
+        time = common.stringToTime(request.POST.get('time', ''))
+        repeat = request.POST['repeat']
+        if repeat == '2':
+            repeat = True
+        else:
+            repeat = False
+        ad = request.POST['ad']
+        if ad == '1':
+            ad = True
+        else:
+            ad = False
+
+        model.createPush(userInfo.id, alias, title, message, date, time, repeat, ad)
+
         return json.dumps({
-            'result':'required parameter error'
+            'isSucceed': True
+        })
+    except:
+        return json.dumps({
+            'isSucceed': False
         })
 
-    log += key + '(' + ip + ') - apptoasterDeleteUser() - delete user(' + user_id + ');'
-    logger.info(log)
-    
-    return
-
 ##################################################
-# 알림 메세지 송신(POST)
+# PUSH 수정
 ##################################################
-def apptoasterSendNotificationToUserHandler(request):
-    # Logger
-    ip = utilities.getIp(request)
-    key = 'UNKNOWN'
-    log = utilities.timestamp() + ' - '
+def apiUpdatePushHandler(request, userInfo):
+    try:
+        id = request.POST['id']
+        alias = request.POST['alias']
+        title = request.POST['title']
+        message = request.POST['message']
+        date = common.stringToDate(request.POST.get('date', ''))
+        time = common.stringToTime(request.POST.get('time', ''))
+        repeat = request.POST['repeat']
+        if repeat == '2':
+            repeat = True
+        else:
+            repeat = False
+        ad = request.POST['ad']
+        if ad == '1':
+            ad = True
+        else:
+            ad = False
 
-    # request method 확인
-    if request.method != 'POST':
-        log += key + '(' + ip + ') - apptoasterSendNotificationToUser() - error - request method error;'
-        logger.warning(log)
+            model.updatePush(id, alias, title, message, date, time, repeat, ad)
+
         return json.dumps({
-            'result':'request method error'
+            'isSucceed': True
+        })
+    except:
+        return json.dumps({
+            'isSucceed': False
         })
 
-    # POST 데이터 수신
+##################################################
+# PUSH 스케줄 확인
+##################################################
+def apiGetPushHandler(request, userInfo):
     try:
-        request_dictionary = json.loads(request.body)
-        key = request_dictionary['key']
-        user_id = request_dictionary['user_id']
-        title = request_dictionary['title']
-        message = request_dictionary['message']
-    except:
-        log += key + '(' + ip + ') - apptoasterSendNotificationToUser() - error - json decode error;'
-        logger.warning(log)
+        pushList = model.readPush(userInfo.id)
+
         return json.dumps({
-            'result':'json decode error'
+            'isSucceed': True,
+            'pushList': pushList
+        })
+    except:
+        return json.dumps({
+            'isSucceed': False,
+            'pushList': None
         })
 
-    log += key + '(' + ip + ') - apptoasterSendNotificationToUser() - notification has sent to user(' + user_id + ');'
-    logger.info(log)
-    
-    return
-
 ##################################################
-# 전체 알림 메세지 송신(POST)
+# PUSH 삭제
 ##################################################
-def apptoasterSendNotificationToAllHandler(request):
-    # Logger
-    ip = utilities.getIp(request)
-    key = 'UNKNOWN'
-    log = utilities.timestamp() + ' - '
+def apiDeletePushHandler(request, userInfo):
+    try:
+        id = request.GET['id']
 
-    # request method 확인
-    if request.method != 'POST':
-        log += key + '(' + ip + ') - apptoasterSendNotificationToAll() - error - request method error;'
-        logger.warning(log)
+        model.deletePush(id)
+
         return json.dumps({
-            'result':'request method error'
+            'isSucceed': True
+        })
+    except:
+        return json.dumps({
+            'isSucceed': False
         })
 
-    # POST 데이터 수신
+
+##################################################
+# PUSH 기록 확인
+##################################################
+def apiPushToastedHandler(request, userInfo):
     try:
-        request_dictionary = json.loads(request.body)
-        key = request_dictionary['key']
-        title = request_dictionary['title']
-        message = request_dictionary['message']
-    except:
-        log += key + '(' + ip + ') - apptoasterSendNotificationToAll() - error - json decode error;'
-        logger.warning(log)
+        pushList = model.readPushHistory(userInfo.id)
+
         return json.dumps({
-            'result':'json decode error'
+            'isSucceed': True,
+            'pushList': pushList
         })
-
-    log += key + '(' + ip + ') - apptoasterSendNotificationToAll() - notification has sent to all;'
-    logger.info(log)
-    
-    return
-
-##################################################
-# 카카오 PUSH API(TEST)
-##################################################
-##################################################
-# 푸시 토큰 등록하기
-##################################################
-def kakaoRegisterPushTokenHandler(request):
-    # POST 데이터 수신
-    try:
-        request_dictionary = json.loads(request.body)
     except:
-        request_dictionary = ""
-
-    # GET 데이터 수신
-    kakao_app_admin_key = request.GET.get("kakao_app_admin_key")
-    uuid = request.GET.get("uuid")
-    device_id = request.GET.get("device_id")
-    push_type = request.GET.get("push_type")
-    push_token = request.GET.get("push_token")
-
-    return utilities.kakaoRegisterPushToken(kakao_app_admin_key, uuid, device_id, push_type, push_token)
-
-##################################################
-# 푸시 토큰 보기
-##################################################
-def kakaoGetPushTokenHandler(request):
-    # POST 데이터 kakaoGetPushTokenHandler
-    try:
-        request_dictionary = json.loads(request.body)
-    except:
-        request_dictionary = ""
-
-    # GET 데이터 수신
-    kakao_app_admin_key = request.GET.get("kakao_app_admin_key")
-    uuid = request.GET.get("uuid")
-
-    return utilities.kakaoGetPushToken(kakao_app_admin_key, uuid)
-
-##################################################
-# 푸시 토큰 삭제하기
-##################################################
-def kakaoDeletePushTokenHandler(request):
-    # POST 데이터 수신
-    try:
-        request_dictionary = json.loads(request.body)
-    except:
-        request_dictionary = ""
-
-    # GET 데이터 수신
-    kakao_app_admin_key = request.GET.get("kakao_app_admin_key")
-    uuid = request.GET.get("uuid")
-    device_id = request.GET.get("device_id")
-    push_type = request.GET.get("push_type")
-
-    return utilities.kakaoDeletePushToken(kakao_app_admin_key, uuid, device_id, push_type)
-
-##################################################
-# 푸시 알림 보내기
-##################################################
-def kakaoSendPushNotificationHandler(request):
-    # POST 데이터 수신
-    try:
-        request_dictionary = json.loads(request.body)
-    except:
-        request_dictionary = ""
-
-    # GET 데이터 수신
-    kakao_app_admin_key = request.GET.get("kakao_app_admin_key")
-    title = request.GET.get("title")
-    message = request.GET.get("message")
-    uuid_list = []
-    uuid_list.append(request.GET.get("uuid"))
-
-    return utilities.kakaoSendPushNotification(kakao_app_admin_key, title, message, uuid_list)
+        return json.dumps({
+            'isSucceed': False,
+            'pushList': None
+        })

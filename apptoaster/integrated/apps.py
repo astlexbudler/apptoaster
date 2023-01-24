@@ -1,5 +1,5 @@
 from django.apps import AppConfig
-from . import utilities
+from .services import scheduler
 
 class IntegratedConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
@@ -7,4 +7,4 @@ class IntegratedConfig(AppConfig):
 
     # apscheduler
     def ready(self):
-        utilities.startScheduler()
+        scheduler.startScheduler()

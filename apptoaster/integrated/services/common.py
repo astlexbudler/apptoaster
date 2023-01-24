@@ -1,0 +1,182 @@
+import datetime
+import time
+import random
+import math
+
+'''
+common.py
+데이터베이스 관련 기능을 관리하는 서비스입니다.
+'''
+
+##################################################
+# 타임스탬프 생성(1970년부터 timedelta)
+##################################################
+def getTimestamp():
+    return str(int(time.time()*1000))
+
+
+
+##################################################
+# 아이디 생성(오늘 날짜)
+##################################################
+def getId():
+    # 예 - 20231231235517000000
+    return  datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")
+
+
+
+##################################################
+# 랜덤 문자열 생성
+##################################################
+def getRandomString(length):
+    str = ""
+    pool = "123456789qwertyupasdfghkzxcvbnmQWERTYUPASDFGHJKLZXCVBNM"
+
+    for i in range(length):
+        str += random.choice(pool)
+
+    return str
+
+
+
+##################################################
+# 랜덤 숫자 생성
+##################################################
+def getRandomNumber(length):
+    str = ""
+    pool = "123456789"
+
+    for i in range(length):
+        str += random.choice(pool)
+
+    return str
+
+
+
+##################################################
+# datetime 을 문자열로
+##################################################
+def datetimeToString(datetime):
+    try: 
+        return datetime.strftime("%Y%m%d%H%M%S")
+    except:
+        return ""
+
+
+
+##################################################
+# date 을 문자열로
+##################################################
+def dateToString(date):
+    try: 
+        return date.strftime("%Y%m%d")
+    except:
+        return ""
+
+
+
+##################################################
+# time 을 문자열로
+##################################################
+def timeToString(date):
+    try: 
+        return date.strftime("%H%M%S")
+    except:
+        return ""
+
+
+
+##################################################
+# 문자열을 datetime 으로
+##################################################
+def stringToDatetime(string):
+    try:
+        return datetime.datetime.strptime(string, "%Y%m%d%H%M%S")
+    except:
+        return ""
+
+
+
+##################################################
+# 문자열을 date 으로
+##################################################
+def stringToDate(string):
+    try:
+        return datetime.datetime.strptime(string, "%Y%m%d")
+    except:
+        return ""
+
+
+
+##################################################
+# 문자열을 time 으로
+##################################################
+def stringToTime(string):
+    try:
+        return datetime.datetime.strptime(string, "%H%M%S")
+    except:
+        return ""
+
+
+
+##################################################
+# 두 시간 사이 차
+##################################################
+def subtractTimestamp(timestamp1, timestamp2):
+    if timestamp1 == "":
+        timestamp1 = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+
+    if timestamp2 == "":
+        timestamp2 = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+
+    timestamp1 = datetime.datetime.strptime(timestamp1, "%Y%m%d%H%M%S")
+    timestamp2 = datetime.datetime.strptime(timestamp2, "%Y%m%d%H%M%S")
+
+    residual_seconds = 0
+    delta = timestamp1 - timestamp2
+
+    try:
+        delta_microseconds = delta.microseconds
+        sec_microseconds = delta_microseconds / 1000000
+        residual_seconds += sec_microseconds
+    except:
+        pass
+    try:
+        delta_milliseconds = delta.milliseconds
+        sec_milliseconds = delta_milliseconds / 1000
+        residual_seconds += sec_milliseconds
+    except:
+        pass
+    try:
+        delta_seconds = delta.seconds
+        sec_seconds = delta_seconds
+        residual_seconds += sec_seconds
+    except:
+        pass
+    try:
+        delta_minute = delta.minute
+        sec_minute = delta_minute * 60
+        residual_seconds += sec_minute
+    except:
+        pass
+    try:
+        delta_hours = delta.hours
+        sec_hours = delta_hours * 3600
+        residual_seconds += sec_minute
+    except:
+        pass
+    try:
+        delta_days = delta.days
+        sec_days = delta_days * 86400
+        residual_seconds += sec_days
+    except:
+        pass
+    try:
+        delta_weeks = delta.weeks
+        sec_weeks = delta_weeks * 604800
+        residual_seconds += sec_weeks
+    except:
+        pass
+    residual_seconds = math.trunc(residual_seconds)
+    
+    return int(residual_seconds)

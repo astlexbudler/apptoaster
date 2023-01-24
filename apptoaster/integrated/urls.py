@@ -4,25 +4,68 @@ from . import views
 
 urlpatterns = [
     ##################################################
-    # Web
+    # 웹 페이지 경로
     ##################################################
-    path('', views.index, name='index'),
-    path('test/', views.test, name='test'),
+    # 메인 페이지
+    path('', views.webIndex, name='webIndex'),
+
+    # 이용약관
+    path('push/policy', views.webPushPolicy, name='webPushPolicy'),
+
+    # 발송 관리 페이지
+    path('push/toasting', views.webPushToasting, name='webPushToasting'),
+
+    # 발송 기록 페이지
+    path('push/toasted', views.webPushToasted, name='webPushToasted'),
+
+    # 내부 테스트 페이지
+    path('test_console/', views.webTestConsole, name='webTestConsole'),
 
     ##################################################
     # 앱 토스터 API
     ##################################################
-    path('apptoaster/set_user/', views.apptoasterSetUser, name='apptoasterSetUser'),
-    path('apptoaster/get_user/', views.apptoasterGetUser, name='apptoasterGetUser'),
-    path('apptoaster/delete_user/', views.apptoasterDeleteUser, name='apptoasterDeleteUser'),
-    path('apptoaster/send_notification_to_user/', views.apptoasterSendNotificationToUser, name='apptoasterSendNotificationToUser'),
-    path('apptoaster/send_notification_to_all/', views.apptoasterSendNotificationToAll, name='apptoasterSendNotificationToAll'),
+    # 수신인 관리(PUT/GET/PATCH)
+    path('api/target/key/<str:key>', views.apiTarget, name='apiTarget'),
+
+    # 로그인
+    path('api/login/key/<str:key>', views.apiLogin, name='apiLogin'),
+
+    # 로그아웃
+    path('api/logout', views.apiLogout, name='apiLogout'),
+
+    # 내부 테스트 API
+    path('api/test', views.apiTest, name='apiTest'),
 
     ##################################################
-    # 카카오 PUSH API(TEST)
+    # PUSH API
     ##################################################
-    path('kakao_register_push_token/', views.kakaoRegisterPushToken, name="kakaoRegisterPushToken"),
-    path('kakao_get_push_token/', views.kakaoGetPushToken, name="kakaoGetPushToken"),
-    path('kakao_delete_push_token/', views.kakaoDeletePushToken, name="kakaoDeletePushToken"),
-    path('kakao_send_push_notification/', views.kakaoSendPushNotification, name="kakaoSendPushNotification"),
+    # PUSH 스케줄 추가(POST)
+    path('api/toast_push/key/<str:key>', views.apiToastPush, name='apiToastPush'),
+
+    # PUSH 수정(POST)
+    path('api/update_push/key/<str:key>', views.apiUpdatePush, name='apiUpdatePush'),
+
+    # PUSH 스케줄 확인/삭제(GET/DELETE)
+    path('api/push/key/<str:key>', views.apiPush, name='apiPush'),
+
+    # PUSH 기록 확인(GET)
+    path('api/push/toasted/key/<str:key>', views.apiPushToasted, name='apiPushToasted'),
+
+    ##################################################
+    # CIA(ChurchInApp) API
+    ##################################################
+    # 수신인 관리(PUT/GET/PATCH/DELETE)
+    path('cia/target/key/<str:key>', views.ciaTarget, name='ciaTarget'),
+
+    # PUSH 스케줄 추가(POST)
+    path('cia/toast_push/key/<str:key>', views.ciaToastPush, name='ciaToastPush'),
+
+    # PUSH 수정(POST)
+    path('cia/update_push/key/<str:key>', views.ciaUpdatePush, name='ciaUpdatePush'),
+
+    # PUSH 스케줄 확인/삭제(GET/DELETE)
+    path('cia/push/key/<str:key>', views.ciaPush, name='ciaPush'),
+
+    # PUSH 기록 확인(GET)
+    path('cia/push/toasted/key/<str:key>', views.ciaPushToasted, name='ciaPushToasted'),
 ]

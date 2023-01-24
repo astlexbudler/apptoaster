@@ -82,6 +82,7 @@ body {
     font-family: 'Raleway', sans-serif;
     font-weight: 400;
     letter-spacing: 1px;
+    word-break: keep-all;
 }
 
 img {

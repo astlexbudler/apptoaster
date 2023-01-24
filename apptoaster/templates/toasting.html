@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+
+<head>
+    <meta charset="utf-8" />
+    <title>AppToaster</title>
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/png" href="{% static 'default/img/favicon.png' %}">
+
+    <!-- CSS -->
+    <link href="{% static 'default/css/bootstrap.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'default/css/style.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'default/css/plugin/animate.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'default/css/jquery-ui.css' %}" rel="stylesheet" type="text/css" />
+    <!-- CSS -->
+
+    <!-- SDK -->
+    <script src="{% static 'default/js/apptoaster.js' %}" type="text/javascript"></script>
+    <script src="https://kit.fontawesome.com/37a4d902d2.js" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- SDK -->
+</head>
+
+<body>
+
+    <!-- Preloader -->
+    {% include "parts/preloader.html" %}
+    <!-- Preloader -->
+
+    <!-- Wrapper -->
+    <div class="wrapper">
+
+        <!-- Header-->
+        {% include "parts/header.html" %}
+        <!-- Header -->
+
+        <section class="ptb ptb-sm-80 " style="min-height: 100vh;">
+            <div class="container">
+                <div class="col-md-8 offset-md-2">
+
+                    <h4>푸시 메세지 관리</h4>
+
+                    <br />
+                    <hr />
+                    <br />
+
+                    <!-- 푸시 스케줄 -->
+                    <div>
+                        <table class="col-12">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        이름
+                                    </th>
+                                    <th>
+                                        예약
+                                    </th>
+                                    <th>
+                                        반복
+                                    </th>
+                                    <th class="text-center">
+                                        수정
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="4"><br /></th>
+                                </tr>
+                            </thead>
+                            <tbody id="push_list"></tbody>
+                            <tfoot>
+                                {% if user_info.id == '' %}
+                                <tr>
+                                    <td colspan="4" class="text-center">
+                                        -- 먼저 인증키를 입력하고 계정을 인증해주세요. --
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="4" class="text-center" onclick="initPushForm();">
+                                        -- 새로운 푸시 메세지 생성 --
+                                    </td>
+                                </tr>
+                                {% endif %}
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- 푸시 스케줄 -->
+
+                    <br />
+                    <hr />
+                    <br />
+
+                    <!-- 푸시 미리보기 -->
+                    <div>
+                        <h6>푸시 미리보기</h6>
+                        <div class="p-3" style="border-radius: 30px; background-color: whitesmoke;">
+                            <table class="col-12">
+                                <tr style="vertical-align: middle;">
+                                    <td style="width: 35px;">
+                                        {% if user_info.id == '' %}
+                                        <img src="/static/default/img/favicon.png" style="width: 25px; height: 25px;">
+                                        {% else %}
+                                        <img src="/media/application_icons/{{ user_info.id }}.png"
+                                            style="width: 25px; height: 25px;">
+                                        {% endif %}
+                                    </td>
+                                    <td style="max-width: 20px; font-weight: 700;">
+                                        <span style='display: none;' preview_ad>(광고)</span>
+                                    </td>
+                                    <td class="h6" style="font-weight: 700;" id="preview_title">
+                                        푸시 메세지 제목
+                                    </td>
+                                    <td class="h6 text-secondary text-right" style="width: 75px;">
+                                        now <i class="fa-solid fa-bell"></i>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" style="padding: 10px 0px 10px 0px;"></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td class="h6" id="preview_message" colspan="2">
+                                        메세지를 입력해주세요.
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td class="h6" id="preview_message" colspan="2">
+                                        <span style='display: none;' preview_ad>
+                                            수신 거부: 앱 실행 후 앱 설정에서 변경가능
+                                        </span>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- 푸시 미리보기 -->
+
+                    <br />
+                    <hr />
+                    <br />
+
+                    <!-- 푸시 작성 -->
+                    <div>
+                        <table class="col-12">
+                            <tr>
+                                <td class="p-1" colspan="2">
+                                    <label for="alias" id="alias_label">이름(19/24)</label>
+                                    <input class="input-sm form-full" id="alias" type="text" name="form-subject"
+                                        maxlength="24">
+                                    <input id="id" style="display: none;">
+                                </td>
+                                <td class="p-1" colspan="2">
+                                    <label id="title_label" for="title">
+                                        제목(9/32) <span class="text-danger">*</span>
+                                    </label>
+                                    <input class="input-sm form-full" id="title" type="text" name="form-subject"
+                                        maxlength="32">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <label id="message_label" for="message">
+                                        푸시 내용(9/255) <span class="text-danger">*</span>
+                                    </label>
+                                    <textarea class="form-full" id="message" name="form-message"
+                                        maxlength="255">메세지를 입력해주세요.</textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-1">
+                                    <label for="repeat">
+                                        예약 선택 <span class="text-danger">*</span>
+                                    </label>
+                                    <select id="repeat">
+                                        <option value='0' selected>예약 안함</option>
+                                        <option value='1'>예약하고 한번</option>
+                                        <option value="2">예약하고 반복</option>
+                                    </select>
+                                </td>
+                                <td class="p-1">
+                                    <label for="ad">
+                                        종류 선택 <span class="text-danger">*</span>
+                                    </label>
+                                    <select id="ad">
+                                        <option value="0" selected>일반 메세지</option>
+                                        <option value="1">광고, 마케팅용</option>
+                                    </select>
+                                </td>
+                                <td class="p-1">
+                                    <label for="datetime">
+                                        푸시 발송 날짜 <span class="text-danger">*</span>
+                                    </label>
+                                    <input class="input-sm form-full" id="date" type="date" name="form-subject"
+                                        style="border-radius: 0px; border: 1px solid gainsboro;" disabled>
+                                </td>
+                                <td class="p-1">
+                                    <label for="datetime">
+                                        푸시 발송 시간 <span class="text-danger">*</span>
+                                    </label>
+                                    <input class="input-sm form-full" id="time" type="time" name="form-subject"
+                                        style="border-radius: 0px; border: 1px solid gainsboro;" disabled>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    {% if user_info.id == '' %}
+                                    <button class="btn btn-md btn-black form-full" type="submit" name="submit" disabled>
+                                        계정을 인증해주세요
+                                    </button>
+                                    {% else %}
+                                    <button class="btn btn-md btn-black form-full" type="submit" id="createPush" style=""
+                                        name="submit">
+                                        보내기
+                                    </button>
+                                    <button class="btn btn-md btn-black form-full" type="submit" id="updatePush" style="display: none;;"
+                                        name="submit">
+                                        수정하기
+                                    </button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+                        <script>
+                            updatePreview = () => {
+                                document.querySelector('#alias_label').innerHTML = '이름(' + document.querySelector('#alias').value.length + '/24)';
+                                document.querySelector('#title_label').innerHTML = '제목(' + document.querySelector('#title').value.length + '/32) <span class="text-danger">*</span>';
+                                document.querySelector('#preview_title').innerHTML = document.querySelector('#title').value;
+                                document.querySelector('#message_label').innerHTML = '푸시 내용(' + document.querySelector('#message').value.length + '/255) <span class="text-danger">*</span>';
+                                document.querySelector('#preview_message').innerHTML = document.querySelector('#message').value;
+                                document.querySelector('#message_label').innerHTML = '푸시 내용(' + document.querySelector('#message').value.length + '/255) <span class="text-danger">*</span>';
+                                document.querySelector('#preview_message').innerHTML = document.querySelector('#message').value;
+                                if (document.querySelector('#repeat').value == '0') {
+                                    document.querySelector('#time').disabled = true;
+                                    document.querySelector('#date').disabled = true;
+                                    document.querySelector('#time').value = null;
+                                    document.querySelector('#date').value = null;
+                                } else if (document.querySelector('#repeat').value == '1') {
+                                    document.querySelector('#time').disabled = false;
+                                    document.querySelector('#date').disabled = false;
+                                    document.querySelector('#time').value = getTime();
+                                    document.querySelector('#date').value = getDate();
+                                } else {
+                                    document.querySelector('#time').disabled = false;
+                                    document.querySelector('#date').disabled = true;
+                                    document.querySelector('#date').value = null;
+                                    document.querySelector('#time').value = getTime();
+                                }
+                                if (document.querySelector('#ad').value == '0') {
+                                    document.querySelectorAll('[preview_ad]').forEach((item, index, arr) => {
+                                        item.setAttribute('style', 'display: none;');
+                                    });
+                                } else if (document.querySelector('#ad').value == '1') {
+                                    document.querySelectorAll('[preview_ad]').forEach((item, index, arr) => {
+                                        item.setAttribute('style', '');
+                                    });
+                                }
+                            }
+                            document.querySelector('#alias').onchange = () => {
+                                updatePreview();
+                            }
+                            document.querySelector('#title').onchange = () => {
+                                updatePreview();
+                            }
+                            document.querySelector('#message').onchange = (e) => {
+                                updatePreview();
+                            }
+                            document.querySelector('#message').onchange = (e) => {
+                                updatePreview();
+                            }
+                            document.querySelector('#repeat').onchange = (e) => {
+                                updatePreview();
+                            }
+                            document.querySelector('#ad').onchange = (e) => {
+                                updatePreview();
+                            }
+
+                            initPushForm = () => {
+                                document.querySelector("#alias").value = getTimestamp() + '번 푸시';
+                                document.querySelector("#title").value = '{{ user_info.application_name }}';
+                                if ('{{ user_info.application_name }}' == '') {
+                                    document.querySelector("#title").value = '푸시 메세지 제목';
+                                    document.querySelector("#preview_title").innerText = '푸시 메세지 제목';
+                                }
+                                document.querySelector("#message").value = '메세지를 입력해주세요.';
+                                document.querySelectorAll('[pushItem]').forEach((_item, index, arr) => {
+                                    _item.setAttribute('style', 'background-color: white;');
+                                });
+
+                                document.querySelector('#createPush').setAttribute('style', '');
+                                document.querySelector('#updatePush').setAttribute('style', 'display: none;');
+                                updatePreview();
+                            }
+
+                            document.querySelector('#createPush').onclick = (e) => {
+                                Swal.fire({
+                                    title: '푸시 보내기',
+                                    html: '푸시 메세지를 보낼까요?<br>' +
+                                        '예약 메세지의 경우 지정된 시간에 발송됩니다.<br>' +
+                                        '<small class="text-danger">일반 메세지와 광고, 마케팅용 메세지를 꼭 구분해주세요.</small>',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonText: `보내기`,
+                                    cancelButtonText: `취소`,
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        key = '{{ user_info.key }}';
+                                        url = '/api/toast_push/key/' + key;
+                                        var formData = new FormData();
+                                        formData.append('alias', document.querySelector('#alias').value);
+                                        formData.append('title', document.querySelector('#title').value);
+                                        formData.append('message', document.querySelector('#message').value);
+                                        formData.append('date', document.querySelector('#date').value);
+                                        formData.append('time', document.querySelector('#time').value);
+                                        formData.append('repeat', document.querySelector('#repeat').value);
+                                        formData.append('ad', document.querySelector('#ad').value);
+                                        fetch(url, {
+                                            method: 'POST',
+                                            body: formData
+                                        }).then((response) => response.json())
+                                            .then((data) => {
+                                                console.log('isSucceed:', data.isSucceed);
+                                            })
+                                            .catch((error) => {
+                                                console.error('Error:', error);
+                                            });
+                                        document.location.reload();
+                                    } else {
+                                        return
+                                    }
+                                })
+                            }
+
+                            document.querySelector('#updatePush').onclick = (e) => {
+                                Swal.fire({
+                                    title: '푸시 수정',
+                                    html: '푸시 메세지를 수정할까요?<br>' +
+                                        '예약 메세지의 경우 지정된 시간에 발송됩니다.<br>' +
+                                        '<small class="text-danger">일반 메세지와 광고, 마케팅용 메세지를 꼭 구분해주세요.</small>',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonText: `보내기`,
+                                    cancelButtonText: `취소`,
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        key = '{{ user_info.key }}';
+                                        url = '/api/update_push/key/' + key;
+                                        var formData = new FormData();
+                                        formData.append('id', document.querySelector('#alias').value);
+                                        formData.append('alias', document.querySelector('#alias').value);
+                                        formData.append('title', document.querySelector('#title').value);
+                                        formData.append('message', document.querySelector('#message').value);
+                                        formData.append('date', document.querySelector('#date').value);
+                                        formData.append('time', document.querySelector('#time').value);
+                                        formData.append('repeat', document.querySelector('#repeat').value);
+                                        formData.append('ad', document.querySelector('#ad').value);
+                                        fetch(url, {
+                                            method: 'POST',
+                                            body: formData
+                                        }).then((response) => response.json())
+                                            .then((data) => {
+                                                console.log('isSucceed:', data.isSucceed);
+                                            })
+                                            .catch((error) => {
+                                                console.error('Error:', error);
+                                            });
+                                        document.location.reload();
+                                    } else {
+                                        return
+                                    }
+                                })
+                            }
+                        </script>
+                    </div>
+                    <!-- 푸시 작성 -->
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- FOOTER -->
+        {% include "parts/footer.html" %}
+        <!-- END FOOTER -->
+
+        <!-- Scroll Top -->
+        {% include "parts/top.html" %}
+        <!-- End Scroll Top -->
+
+    </div>
+    <!-- Wrapper -->
+
+    <!-- Javascript -->
+    <script src="{% static 'default/js/jquery-1.11.2.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/jquery-ui.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.easing.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/bootstrap.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.flexslider.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.fitvids.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.viewportchecker.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.stellar.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/wow.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.colorbox-min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/owl.carousel.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/isotope.pkgd.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/masonry.pkgd.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/imagesloaded.pkgd.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.fs.tipper.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/mediaelement-and-player.min.js' %}"></script>
+    <script src="{% static 'default/js/plugin/jquery.validate.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/theme.js' %}" type="text/javascript"></script>
+    <script>
+        window.onload = () => {
+            initPushForm();
+            key = '{{ user_info.key }}';
+            url = '/api/push/key/' + key;
+            fetch(url, {
+                method: 'GET',
+            }).then((response) => response.json())
+                .then((data) => {
+                    html = '';
+                    data.pushList.forEach((item, index, arr) => {
+                        jsonString = JSON.stringify(item);
+                        if (item.repeat == true) {
+                            repeat = '예';
+                        } else {
+                            repeat = '아니오';
+                        }
+                        html += '<tr id=' + item.id + ' style=`` pushItem><td>' + item.alias + '</td><td>' + item.date + ' ' + item.time + '</td><td>' + repeat + '</td><td>';
+                        html += `<i class="fa-light fa-pen" onclick='updatePush(\`` + jsonString + `\`);'></i> / <i class="fa-light fa-trash" onclick="deletePush('` + item.id + `'');"></i></td></tr>`;
+                    });
+                    document.querySelector('#push_list').innerHTML = html;
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
+
+        updatePush = (item) => {
+            document.querySelectorAll('[pushItem]').forEach((_item, index, arr) => {
+                _item.setAttribute('style', 'background-color: white;');
+            });
+            item = JSON.parse(item);
+            querySelector('#id').value = item.id;
+            document.getElementById(item.id).setAttribute('style', 'background-color: gainsboro;');
+            document.querySelector('#alias').value = item.alias;
+            document.querySelector('#title').value = item.title;
+            document.querySelector('#title').value = item.title;
+            document.querySelector('#message').value = item.message;
+            if(item.repeat) {
+                document.querySelector('#repeat').value = '2';
+                document.querySelector('#date').readOnly = true;
+                document.querySelector('#time').readOnly = false;
+                document.querySelector('#date').value = null;
+                document.querySelector('#time').value = item.time;
+            }else {
+                document.querySelector('#repeat').value = '1';
+                document.querySelector('#date').readOnly = false;
+                document.querySelector('#time').readOnly = false;
+                document.querySelector('#date').value = item.date;
+                document.querySelector('#time').value = item.time;
+            }
+            if(item.ad) {
+                document.querySelector('#ad').value = '1';
+            }else {
+                document.querySelector('#ad').value = '0';
+            }
+
+            document.querySelector('#createPush').setAttribute('style', 'display: none;');
+            document.querySelector('#updatePush').setAttribute('style', '');
+
+            updatePreview();
+        }
+
+        deletePush = (id) => {
+            alert(id);
+        }
+    </script>
+    <!-- Javascript -->
+</body>
+
+</html>
