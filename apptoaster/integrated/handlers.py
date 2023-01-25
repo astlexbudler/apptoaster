@@ -122,7 +122,7 @@ def apiToastPushHandler(request, userInfo):
 ##################################################
 def apiUpdatePushHandler(request, userInfo):
     try:
-        id = request.POST['id']
+        id = request.POST.get('id', '')
         alias = request.POST['alias']
         title = request.POST['title']
         message = request.POST['message']
@@ -150,7 +150,10 @@ def apiUpdatePushHandler(request, userInfo):
         else:
             ad = False
         
-        model.updatePush(id, alias, title, message, date, time, repeat, ad)
+        if id == '':
+            model.updatePushAlias(alias, userInfo.id, title, message, date, time, repeat, ad)
+        else:
+            model.updatePush(id, alias, title, message, date, time, repeat, ad)
 
         return json.dumps({
             'isSucceed': True
@@ -182,9 +185,12 @@ def apiGetPushHandler(request, userInfo):
 ##################################################
 def apiDeletePushHandler(request, userInfo):
     try:
-        id = request.GET['id']
-
-        model.deletePush(id)
+        id = request.GET.get('id', '')
+        if id == '':
+            alias = request.GET.get('alias', '')
+            model.deletePushAlias(alias)
+        else:
+            model.deletePush(id)
 
         return json.dumps({
             'isSucceed': True

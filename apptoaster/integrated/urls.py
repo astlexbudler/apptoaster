@@ -49,5 +49,5 @@ urlpatterns = [
     path('api/push/key/<str:key>', views.apiPush, name='apiPush'),
 
     # PUSH 기록 확인(GET)
-    path('api/push/toasted/key/<str:key>', views.apiPushToasted, name='apiPushToasted')
+    path('api/toasted_push/key/<str:key>', views.apiPushToasted, name='apiPushToasted')
 ]

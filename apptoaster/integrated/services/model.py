@@ -309,6 +309,29 @@ def updatePush(id, alias, title, message, date, time, repeat, ad):
     except Exception() as e:
         createSystemLog(9, 'SYSTEM', 'services.model.updatePush PUSH 예약 수정 실패. ' + e)
 
+# PUSH 예약 수정(alias)
+def updatePushAlias(alias, userId, title, message, date, time, repeat, ad):
+    try:
+        push = SCHEDULED_PUSH_TABLE.objects.get(
+            alias = alias,
+            userId = userId
+        )
+
+        SCHEDULED_PUSH_TABLE(
+            id = push.id,
+            user_id = userId,
+            alias = alias,
+            title = title,
+            message = message,
+            date = date,
+            time = time,
+            repeat = repeat,
+            ad = ad
+        ).save()
+    
+    except Exception() as e:
+        createSystemLog(9, 'SYSTEM', 'services.model.updatePush PUSH 예약 수정 실패. ' + e)
+
 # PUSH 예약 삭제
 def deletePush(id):
     try:
@@ -318,6 +341,17 @@ def deletePush(id):
     
     except Exception() as e:
         createSystemLog(9, 'SYSTEM', 'services.model.deletePush PUSH 예약 삭제 실패. ' + e)
+
+# PUSH 예약 삭제(alias)
+def deletePushAlias(alias):
+    try:
+        SCHEDULED_PUSH_TABLE.objects.all().filter(
+            alias = alias
+        ).delete()
+    
+    except Exception() as e:
+        createSystemLog(9, 'SYSTEM', 'services.model.deletePush PUSH 예약 삭제 실패. ' + e)
+
 
 ##################################################
 # PUSH 기록
