@@ -73,15 +73,47 @@ def getEmail():
 # 이메일 발송하기
 ##################################################
 def sendEmail(to, title, content):
+    # me == my email address
+    # you == recipient's email address
+    me = "astlexbudler@naver.com"
+    you = to
+
+    # Create message container - the correct MIME type is multipart/alternative.
     msg = MIMEMultipart('alternative')
     msg['Subject'] = title
-    msg['From'] = "astlexbudler@naver.com"
-    msg['To'] = to
-    msg.attach(MIMEText(content, 'html'))
+    msg['From'] = me
+    msg['To'] = you
 
-    server = smtplib.SMTP('smtp.naver.com', 995)
-    server.ehlo()
-    server.starttls()
-    server.login("astlexbudler@naver.com", "Mic6142hi@sdq")
-    server.send_message(msg)
-    server.quit()
+    # Create the body of the message (a plain-text and an HTML version).
+    text = "Hi!\nHow are you?\nHere is the link you wanted:\nhttp://www.python.org"
+    html = """\
+    <html>
+    <head></head>
+    <body>
+        <p>Hi!<br>
+        How are you?<br>
+        Here is the <a href="http://www.python.org">link</a> you wanted.
+        </p>
+    </body>
+    </html>
+    """
+
+    # Record the MIME types of both parts - text/plain and text/html.
+    part1 = MIMEText(text, 'plain')
+    part2 = MIMEText(html, 'html')
+
+    # Attach parts into message container.
+    # According to RFC 2046, the last part of a multipart message, in this case
+    # the HTML message, is best and preferred.
+    msg.attach(part1)
+    msg.attach(part2)
+    # Send the message via local SMTP server.
+    mail = smtplib.SMTP('smtp.naver.com', 465)
+
+    mail.ehlo()
+
+    mail.starttls()
+
+    mail.login('astlexbudler', 'Mic6142hi@sdq')
+    mail.sendmail(me, you, msg.as_string())
+    mail.quit()
