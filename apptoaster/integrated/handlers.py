@@ -126,9 +126,20 @@ def apiUpdatePushHandler(request, userInfo):
         alias = request.POST['alias']
         title = request.POST['title']
         message = request.POST['message']
-        date = common.stringToDate(request.POST.get('date', ''))
-        time = common.stringToTime(request.POST.get('time', ''))
+        if request.POST["date"] == 'null':
+            date = ''
+        else:
+            date = request.POST["date"]
+        if request.POST["time"] == 'null':
+            time = ''
+        else:
+            time = request.POST["time"]
+        date = common.stringToDate(date)
+        time = common.stringToTime(time)
         repeat = request.POST['repeat']
+
+        
+
         if repeat == '2':
             repeat = True
         else:
@@ -138,8 +149,8 @@ def apiUpdatePushHandler(request, userInfo):
             ad = True
         else:
             ad = False
-
-            model.updatePush(id, alias, title, message, date, time, repeat, ad)
+        
+        model.updatePush(id, alias, title, message, date, time, repeat, ad)
 
         return json.dumps({
             'isSucceed': True

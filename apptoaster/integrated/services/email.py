@@ -73,25 +73,15 @@ def getEmail():
 # 이메일 발송하기
 ##################################################
 def sendEmail(to, title, content):
-    # 기본정보
-    email_address = "stackable01@naver.com"
-    password = "mic6142xi4aem"
-    smtp_server = 'smtp.naver.com'
-    port = 587
-
-    # 데이터 정리
     msg = MIMEMultipart('alternative')
     msg['Subject'] = title
-    msg['From'] = email_address
+    msg['From'] = "astlexbudler@naver.com"
     msg['To'] = to
     msg.attach(MIMEText(content, 'html'))
 
-    # smtp 발송
-    server = smtplib.SMTP(smtp_server, port)
+    server = smtplib.SMTP('smtp.naver.com', 995)
     server.ehlo()
     server.starttls()
-    server.login(email_address, password)
+    server.login("astlexbudler@naver.com", "Mic6142hi@sdq")
     server.send_message(msg)
     server.quit()
-
-    return

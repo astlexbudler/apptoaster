@@ -10,7 +10,7 @@ urlpatterns = [
     path('', views.webIndex, name='webIndex'),
 
     # 이용약관
-    path('push/policy', views.webPushPolicy, name='webPushPolicy'),
+    path('policy', views.webPolicy, name='webPolicy'),
 
     # 발송 관리 페이지
     path('push/toasting', views.webPushToasting, name='webPushToasting'),
@@ -49,23 +49,5 @@ urlpatterns = [
     path('api/push/key/<str:key>', views.apiPush, name='apiPush'),
 
     # PUSH 기록 확인(GET)
-    path('api/push/toasted/key/<str:key>', views.apiPushToasted, name='apiPushToasted'),
-
-    ##################################################
-    # CIA(ChurchInApp) API
-    ##################################################
-    # 수신인 관리(PUT/GET/PATCH/DELETE)
-    path('cia/target/key/<str:key>', views.ciaTarget, name='ciaTarget'),
-
-    # PUSH 스케줄 추가(POST)
-    path('cia/toast_push/key/<str:key>', views.ciaToastPush, name='ciaToastPush'),
-
-    # PUSH 수정(POST)
-    path('cia/update_push/key/<str:key>', views.ciaUpdatePush, name='ciaUpdatePush'),
-
-    # PUSH 스케줄 확인/삭제(GET/DELETE)
-    path('cia/push/key/<str:key>', views.ciaPush, name='ciaPush'),
-
-    # PUSH 기록 확인(GET)
-    path('cia/push/toasted/key/<str:key>', views.ciaPushToasted, name='ciaPushToasted'),
+    path('api/push/toasted/key/<str:key>', views.apiPushToasted, name='apiPushToasted')
 ]

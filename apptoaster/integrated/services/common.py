@@ -3,6 +3,9 @@ import time
 import random
 import math
 
+import logging
+logger = logging.getLogger('appToaster')
+
 '''
 common.py
 데이터베이스 관련 기능을 관리하는 서비스입니다.
@@ -58,7 +61,7 @@ def getRandomNumber(length):
 ##################################################
 def datetimeToString(datetime):
     try: 
-        return datetime.strftime("%Y%m%d%H%M%S")
+        return datetime.strftime("%Y-%m-%d %H:%M:%S")
     except:
         return ""
 
@@ -69,7 +72,7 @@ def datetimeToString(datetime):
 ##################################################
 def dateToString(date):
     try: 
-        return date.strftime("%Y%m%d")
+        return date.strftime("%Y-%m-%d")
     except:
         return ""
 
@@ -80,7 +83,7 @@ def dateToString(date):
 ##################################################
 def timeToString(date):
     try: 
-        return date.strftime("%H%M%S")
+        return date.strftime("%H:%M:%S")
     except:
         return ""
 
@@ -90,10 +93,10 @@ def timeToString(date):
 # 문자열을 datetime 으로
 ##################################################
 def stringToDatetime(string):
-    try:
-        return datetime.datetime.strptime(string, "%Y%m%d%H%M%S")
-    except:
-        return ""
+    if string != '':
+        return datetime.datetime.strptime(string, "%Y-%m-%d %H:%M:%S")
+    else:
+        return datetime.datetime.now()
 
 
 
@@ -101,10 +104,10 @@ def stringToDatetime(string):
 # 문자열을 date 으로
 ##################################################
 def stringToDate(string):
-    try:
-        return datetime.datetime.strptime(string, "%Y%m%d")
-    except:
-        return ""
+    if string != '':
+        return datetime.datetime.strptime(string, "%Y-%m-%d")
+    else:
+        return datetime.date.today()
 
 
 
@@ -112,28 +115,28 @@ def stringToDate(string):
 # 문자열을 time 으로
 ##################################################
 def stringToTime(string):
-    try:
-        return datetime.datetime.strptime(string, "%H%M%S")
-    except:
-        return ""
+    if string != '':
+        return datetime.datetime.strptime(string, "%H:%M:%S")
+    else:
+        return datetime.datetime.now().time()
 
 
 
 ##################################################
 # 두 시간 사이 차
 ##################################################
-def subtractTimestamp(timestamp1, timestamp2):
-    if timestamp1 == "":
-        timestamp1 = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+def subtractDatetime(datetime1, datetime2):
+    if datetime1 == "":
+        datetime1 = datetime.datetime.now()
 
-    if timestamp2 == "":
-        timestamp2 = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    if datetime2 == "":
+        datetime2 = datetime.datetime.now()
 
-    timestamp1 = datetime.datetime.strptime(timestamp1, "%Y%m%d%H%M%S")
-    timestamp2 = datetime.datetime.strptime(timestamp2, "%Y%m%d%H%M%S")
+    datetime1 = datetime.datetime.strptime(datetime1, "%Y-%m-%d %H:%M:%S")
+    datetime2 = datetime.datetime.strptime(datetime2, "%Y-%m-%d %H:%M:%S")
 
     residual_seconds = 0
-    delta = timestamp1 - timestamp2
+    delta = datetime1 - datetime2
 
     try:
         delta_microseconds = delta.microseconds

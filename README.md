@@ -24,3 +24,33 @@ venv requirements
 pip install Django
 pip install requests
 pip install django-apscheduler
+
+        /*
+        앱에서 실행되는 코드
+        TARGET
+        (PUT) /api/target/key/00000000?deviceType=gcm&token=TEST_TOKEN&isPushAllow=true
+        (GET) /api/target/key/00000000?deviceType=gcm&token=TEST_TOKEN
+        (PATCH) /api/target/key/00000000?id=20230125051653577140&isPushAllow=true&isAdAllow=true&isNightAllow=false
+
+        PUSH
+        (POST) /api/toast_push/key/00000000
+        alias = test_push1
+        title = push_title
+        message = push_message
+        date = 2023-01-25
+        time = 12:00:00
+        repeat = 1
+        ad = 1
+        (POST) /api/update_push/key/00000000
+        id = 20230125060029107002
+        alias = updated_alias
+        title = updated_title
+        message = updated_message
+        date = null
+        time = 11:00:00
+        repeat = 2
+        ad = 0
+        (GET) /api/push/key/00000000
+        (DELETE) /api/push/key/00000000?id=20230125060029107002
+        (GET) /api/push/toasted/key/00000000
+        */

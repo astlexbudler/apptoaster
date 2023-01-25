@@ -1,237 +1,168 @@
 <!DOCTYPE html>
-<html>
-{% load static %}
+<html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <title>AppToaster</title>
-    <meta name="description" content="" />
-    <meta name="keywords" content="" />
-    <meta name="author" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="icon" type="image/png" href="{% static 'default/img/favicon.png' %}">
-
-    <!-- CSS -->
-    <link href="{% static 'default/css/bootstrap.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static 'default/css/style.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static 'default/css/plugin/animate.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static 'default/css/jquery-ui.css' %}" rel="stylesheet" type="text/css" />
-    <!-- CSS -->
-
-    <!-- SDK -->
-    <script src="https://kit.fontawesome.com/37a4d902d2.js" crossorigin="anonymous"></script>
-    <!-- SDK -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
 
 <body>
 
-    <!-- Preloader -->
-    {% include "parts/preloader.html" %}
-    <!-- Preloader -->
-
-    <!-- Site Wraper -->
-    <div class="wrapper">
-
-        <!-- Header ("header--dark", "header-transparent", "header--sticky")-->
-        {% include "parts/header.html" %}
-        <!-- End Header -->
-
-        <!-- CONTENT --------------------------------------------------------------------------------->
-        <!-- Intro Section -->
-        <section class="inner-intro bg-image overlay-light parallax parallax-background1" data-background-img="img/full/02.jpg">
-            <div class="container">
-                <div class="row title">
-                    <h2 class="h2">Contact Us</h2>
-                    <div class="page-breadcrumb">
-                        <a>Home</a>/<span>Contact</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <div class="clearfix"></div>
-        <!-- End Intro Section -->
-
-        <!-- Contact Section -->
-        <section class="ptb ptb-sm-80">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6 offset-md-3 text-center">
-                        <h3>Keep In Touch</h3>
-                        <p class="lead">Nullam dictum felis eu pede mollis pretium leo eget bibendum sodales augue velit cursus. tellus eget condimentum rhoncus sem quam semper libero.</p>
-                    </div>
-                </div>
-                <div class="spacer-75"></div>
-                <div class="row">
-                    <div class="col-md-6 offset-md-3">
-                        <!-- Contact FORM -->
-                        <form class="contact-form" id="contact" role="form">
-
-                            <!-- IF MAIL SENT SUCCESSFULLY -->
-                            <h6 class="successContent">
-                                <i class="fa fa-check left" style="color: #5cb45d;"></i>Your message has been sent successfully.
-                            </h6>
-                            <!-- END IF MAIL SENT SUCCESSFULLY -->
-
-                            <!-- MAIL SENDING UNSUCCESSFULL -->
-                            <h6 class="errorContent">
-                                <i class="fa fa-exclamation-circle left" style="color: #e1534f;"></i>There was a problem validating the form please check!
-                            </h6>
-                            <!-- END MAIL SENDING UNSUCCESSFULL -->
-
-                            <div class="form-field-wrapper">
-                                <input class="input-sm form-full" id="form-name" type="text" name="form-name" placeholder="Your Name" required>
-                            </div>
-
-                            <div class="form-field-wrapper">
-                                <input class="input-sm form-full" id="form-email" type="email" name="form-email" placeholder="Email" required>
-                            </div>
-
-                            <div class="form-field-wrapper">
-                                <input class="input-sm form-full" id="form-subject" type="text" name="form-subject" placeholder="Subject">
-                            </div>
-
-                            <div class="form-field-wrapper">
-                                <textarea class="form-full" id="form-message" rows="7" name="form-message" placeholder="Your Message" required></textarea>
-                            </div>
-
-                            <button class="btn btn-md btn-black form-full" type="submit" id="form-submit" name="submit">Send Message</button>
-                        </form>
-                        <!-- END Contact FORM -->
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Contact Section -->
-
-        <!-- Map Section -->
-        <section class="map">
-            <div id="map"></div>
-        </section>
-        <!-- Map Section -->
-
-        <!-- End CONTENT ------------------------------------------------------------------------------>
-
-        <!-- FOOTER -->
-        <footer class="footer">
-            <div class="ptb-60">
-                <div class="container">
-                    <!--Footer Info -->
-                    <div class="row footer-info">
-                        <div class="col-lg-3 col-md-12 col-sm-12">
-                            <div class="footer-block">
-                                <a class="footer-logo mb-25" href="home.html">
-                                    <img src="img/logo-black.png" />
-                                </a>
-                                <p>Our ante tincidunt tempus, Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros.</p>
-                                <ul class="social">
-                                    <li><a target="_blank" href="https://www.twitter.com/"><i class="fa fa-twitter"></i></a></li>
-                                    <li><a target="_blank" href="https://instagram.com/"><i class="fa fa-instagram"></i></a></li>
-                                    <li><a target="_blank" href="https://www.facebook.com/"><i class="fa fa-facebook"></i></a></li>
-                                    <li><a target="_blank" href="https://vimeo.com/"><i class="fa fa-vimeo-square"></i></a></li>
-                                    <li><a target="_blank" href="https://www.behance.net/"><i class="fa fa-behance"></i></a></li>
-                                </ul>
-                            </div>
+    <form method="POST" action="https://apptoaster.co.kr/api/toast_push/key/00000000" target="_blank">
+        <table style="
+            width: 650px;
+            margin: auto;
+            padding: 25px 75px 25px 75px;
+            color: rgb(50, 50, 50);
+            font-size: 16px;
+            font-weight: 300;
+            word-break: break-all;">
+            <thead>
+                <tr>
+                    <td>
+                        <img src="http://127.0.0.1:8000/static/default/img/logos/APPTOASTER.png" style="
+                            width: 250px;">
+                    </td>
+                    <td colspan="3" style="
+                        text-align: end;">
+                        <span style="background-color: rgb(75, 75, 75); color: white;">
+                            PUSH 보내기
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="
+                    padding: 15px 0px 15px 0px;">
+                        <hr style="
+                        border: 0;
+                        border-top: 1px solid gainsboro;">
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="4" style="font-size: 12px; padding-bottom: 15px;">
+                        push to. 앱 토스터 - 가장 쉽고 빠른 앱 출시!
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <div style="display: inline-block;">
+                            <label style="display: block;">이름(최대 24자)</label>
+                            <input value="제목 없음" maxlength="24"
+                                style="width: 215px; border-radius: 0px; border: 1px solid gainsboro; padding: 10px 15px 10px 15px;">
                         </div>
-                        <div class="col-lg-2 col-md-4 col-sm-4">
-                            <div class="footer-block">
-                                <h6 class="link-title">Company</h6>
-                                <ul class="link">
-                                    <li><a href="#">About Company</a></li>
-                                    <li><a href="#">Our Team</a></li>
-                                    <li><a href="#">Locations</a></li>
-                                    <li><a href="#">History</a></li>
-                                    <li><a href="#">Work With Us</a></li>
-                                    <li><a href="#">FAQ</a></li>
-                                </ul>
-                            </div>
+                        <div style="display: inline-block;">
+                            <label style="display: block;">푸시 제목(최대 32자) <span style="color: red;">*</span></label>
+                            <input value="앱 토스터! - 가장 쉽고 빠른 앱 출시!" maxlength="32"
+                                style="width: 215px; border-radius: 0px; border: 1px solid gainsboro; padding: 10px 15px 10px 15px; margin-left: 4px;">
                         </div>
-                        <div class="col-lg-2 col-md-4 col-sm-4">
-                            <div class="footer-block">
-                                <h6 class="link-title">Service</h6>
-                                <ul class="link">
-                                    <li><a href="#">Service</a></li>
-                                    <li><a href="#">Photography</a></li>
-                                    <li><a href="#">Design</a></li>
-                                    <li><a href="#">Development</a></li>
-                                    <li><a href="#">Branding</a></li>
-                                    <li><a href="#">Marketing</a></li>
-                                </ul>
-                            </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="padding-top: 5px;">
+                        <div style="display: inline-block;">
+                            <label style="display: block;">푸시 내용(최대 255자) <span style="color: red;">*</span></label>
+                            <textarea placeholder="메세지를 입력해주세요." maxlength="255"
+                                style="border-radius: 0px; border: 1px solid gainsboro; padding: 10px 15px 10px 15px; width: 471px;" required></textarea>
                         </div>
-                        <div class="col-lg-2 col-md-4 col-sm-4">
-                            <div class="footer-block">
-                                <h6 class="link-title">Extra</h6>
-                                <ul class="link">
-                                    <li><a href="#">Contact Us</a></li>
-                                    <li><a href="#">Portfolio</a></li>
-                                    <li><a href="#">Blog</a></li>
-                                    <li><a href="#">Help Center</a></li>
-                                    <li><a href="#">Downloads</a></li>
-                                    <li><a href="#">Shop</a></li>
-                                </ul>
-                            </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top: 5px;" colspan="4">
+                        <div style="display: inline-block;">
+                            <label style="display: block;">예약 선택 <span style="color: red;">*</span></label>
+                            <select
+                                style="border-radius: 0px; border: 1px solid gainsboro; padding: 10px 15px 10px 15px; width: 202px; margin-right: 4px;">
+                                <option selected>
+                                    예약 안함
+                                </option>
+                                <option>
+                                    예약하고 한번
+                                </option>
+                                <option>
+                                    매일 반복
+                                </option>
+                            </select>
                         </div>
-                        <div class="col-lg-3 col-md-6 col-sm-12">
-                            <div class="footer-block">
-                                <h6 class="link-title">Contact</h6>
-                                <p>502, DieSachbearbeiter, Schönhauser Allee, 167c10435 Berlin,Germany.</p>
-                                <ul class="link">
-                                    <li><a href="mailto:yourname@domain.com"><i class="fa fa-envelope-o left"></i>yourname@domain.com</a></li>
-                                    <li><a><i class="fa fa-phone left"></i>+40 (0) 012 345 6789</a></li>
-                                </ul>
-                            </div>
+                        <div style="display: inline-block;">
+                            <label style="display: block;">예약 날짜</label>
+                            <input type="date"
+                                style="border-radius: 0px; border: 1px solid gainsboro; padding: 10px 15px 10px 15px; width: 110px; margin-right: 4px;">
                         </div>
-                    </div>
-                    <!-- End Footer Info -->
-                </div>
-            </div>
-            <hr />
+                        <div style="display: inline-block;">
+                            <label style="display: block;">예약 시간</label>
+                            <input type="time"
+                                style="border-radius: 0px; border: 1px solid gainsboro; padding: 10px 15px 10px 15px; width: 110px;">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="font-size: 12px; color: gray;">
+                        * 예약 안함 선택 시 <span style="text-decoration: underline;">예약 날짜</span> 및 <span
+                            style="text-decoration: underline;">예약 시간</span>을 입력하지 않으셔도 됩니다.<br>
+                        * 매일 반복 선택 시 <span style="text-decoration: underline;">예약 날짜</span>을 입력하지 않으셔도 됩니다.
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top: 5px;" colspan="4">
+                        <input type="checkbox">
+                        <label>광고성 푸시 메세지 여부 <small>(광고성 푸시 메세지일 경우 체크박스 클릭)</small></label>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <input type="checkbox" required>
+                        <label>개인정보 처리 방침 및 이용약관 동의 <span style="color: red;">*</span></label>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="padding-top: 50px;">
+                        <button
+                            style="border-radius: 0px; background-color: rgb(75, 75, 75); border: 0; color: white; padding: 10px 15px 10px 15px; width: 503px;">
+                            보내기
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+    <table style="
+    width: 650px;
+    margin: auto;
+    padding: 25px 75px 25px 75px;
+    color: rgb(50, 50, 50);
+    font-size: 16px;
+    font-weight: 300;
+    background-color: gainsboro;">
+        <tr>
+            <td colspan="2">
+                <img src="http://127.0.0.1:8000/static/default/img/logos/APPTOASTER.png" style="
+                    width: 200px;">
+            </td>
+            <td colspan="2" style="font-size: 12px; padding-left: 50px;">
+                <a href="#" style="color: rgb(50, 50, 50);">개인정보 처리방침 및 이용약관 ></a><br>
+                <a href="#" style="color: rgb(50, 50, 50);">한국 인터넷 진흥원 푸시 메세지 안내 확인 ></a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" style="text-align: center; font-size: 12px; padding-top: 50px;">
+                <a href="#" style="color: rgb(50, 50, 50);">계정 관리</a>
+                <span> / </span>
+                <a href="#" style="color: rgb(50, 50, 50);">푸시 삭제/수정</a>
+                <span> / </span>
+                <a href="#" style="color: rgb(50, 50, 50);">푸시 기록 확인</a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" style="text-align: center; font-size: 12px; padding-top: 50px;">
+                © 2023 AppToaster. All Rights Reserved.
+            </td>
+        </tr>
+    </table>
 
-            <!-- Copyright Bar -->
-            <section class="copyright ptb-60">
-                <div class="container">
-                    <p class="">
-                        © 2018 <a><b>Mazel Template</b></a>. All Rights Reserved.
-                        <br />
-                        Template  by <a target="_blank" href="http://nileforest.com/"><b>nileforest</b></a>
-                    </p>
-                </div>
-            </section>
-            <!-- End Copyright Bar -->
-
-        </footer>
-        <!-- END FOOTER -->
-
-        <!-- Scroll Top -->
-        <a class="scroll-top">
-            <i class="fa fa-angle-double-up"></i>
-        </a>
-        <!-- End Scroll Top -->
-
-    </div>
-    <!-- Site Wraper End -->
-
-    <!-- Javascript -->
-    <script src="{% static 'default/js/jquery-1.11.2.min.js' %}" type="text/javascript"></script>
-    <script src="{% static 'default/js/jquery-ui.min.js' %}" type="text/javascript"></script>
-    <script src="{% static 'default/js/plugin/jquery.easing.js' %}" type="text/javascript"></script>
-    <script src="{% static 'default/js/bootstrap.min.js' %}" type="text/javascript"></script>
-    <script src="{% static 'default/js/plugin/jquery.flexslider.js' %}" type="text/javascript"></script>
-    <script src="{% static 'default/js/plugin/jquery.fitvids.js' %}" type="text/javascript"></script>
-    <script src="{% static 'default/js/plugin/jquery.viewportchecker.js' %}" type="text/javascript"></script>
-    <script src="{% static 'default/js/plugin/jquery.stellar.min.js' %}" type="text/javascript"></script>
-    <script src="{% static 'default/js/plugin/wow.min.js' %}" type="text/javascript"></script>
-    <script src="{% static 'default/js/plugin/jquery.colorbox-min.js' %}" type="text/javascript"></script>
-    <script src="{% static 'default/js/plugin/owl.carousel.min.js' %}" type="text/javascript"></script>
-    <script src="{% static 'default/js/plugin/isotope.pkgd.min.js' %}" type="text/javascript"></script>
-    <script src="{% static 'default/js/plugin/masonry.pkgd.min.js' %}" type="text/javascript"></script>
-    <script src="{% static 'default/js/plugin/imagesloaded.pkgd.min.js' %}" type="text/javascript"></script>
-    <script src="{% static 'default/js/plugin/jquery.fs.tipper.min.js' %}" type="text/javascript"></script>
-    <script src="{% static 'default/js/plugin/mediaelement-and-player.min.js' %}"></script>
-    <script src="{% static 'default/js/plugin/jquery.validate.min.js' %}" type="text/javascript"></script>
-    <script src="{% static 'default/js/theme.js' %}" type="text/javascript"></script>
-    <script src="{% static 'default/js/apptoaster.js' %}" type="text/javascript"></script>
-    <!-- Javascript -->
 </body>
 
 </html>

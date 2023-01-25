@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import *
 import logging
 import datetime
+from .services import email
 
 logger = logging.getLogger('appToaster')
 
@@ -16,7 +17,7 @@ def webIndex(request):
     return render(request, "index.html")
 
 # 서비스 이용 약관
-def webPushPolicy(request):
+def webPolicy(request):
     return render(request, "policy.html")
 
 # 발송 관리 페이지
@@ -65,6 +66,7 @@ def apiLogout(request):
 # 내부 테스트 API
 @csrf_exempt
 def apiTest(request):
+    email.sendEmail('astlexbudler@gmail.com', '이메일 제목', '<h1>hello</h1>')
     return HttpResponse()
 
 ##################################################
@@ -124,155 +126,6 @@ def apiPushToasted(request, key):
         )        
         if request.method == 'GET':
             json = apiPushToastedHandler(request, user_info)
-    except:
-        json = ''
-    
-    return HttpResponse(json)
-
-
-
-##################################################
-# CIA(ChurchInApp) API
-##################################################
-# 수신인 관리(PUT/GET/PATCH/DELETE)
-@csrf_exempt
-def ciaTarget(request, key):
-    try:
-        user_info = USER_TABLE.objects.get(
-            key = key
-        )
-
-        if request.method == 'PUT':
-            json = ciaPutTargetHandler(request, user_info)
-        elif request.method == 'GET':
-            json = ciaGetTargetHandler(request, user_info)
-        elif request.method == 'PATCH':
-            json = ciaPatchTargetHandler(request, user_info)
-        elif request.method == 'DELETE':
-            json = ciaDeleteTargetHandler(request, user_info)
-    except:
-        json = ''
-    
-    return HttpResponse(json)
-
-# PUSH 스케줄 추가(POST)
-@csrf_exempt
-def ciaToastPush(request, key):
-    try:
-        user_info = USER_TABLE.objects.get(
-            key = key
-        )        
-        if request.method == 'POST':
-            json = ciaToastPushHandler(request, user_info)
-    except:
-        json = ''
-    
-    return HttpResponse(json)
-
-# PUSH 수정(POST)
-@csrf_exempt
-def ciaUpdatePush(request, key):
-    try:
-        user_info = USER_TABLE.objects.get(
-            key = key
-        )        
-        if request.method == 'POST':
-            json = ciaUpdatePushhandler(request, user_info)
-    except:
-        json = ''
-    
-    return HttpResponse(json)
-
-# PUSH 스케줄 확인/삭제(GET/DELETE)
-@csrf_exempt
-def ciaPush(request, key):
-    try:
-        user_info = USER_TABLE.objects.get(
-            key = key
-        )
-
-        if request.method == 'GET':
-            json = ciaGetPushHandler(request, user_info)
-        elif request.method == 'DELETE':
-            json = ciaDeletePushHandler(request, user_info)
-    except:
-        json = ''
-    
-    return HttpResponse(json)
-
-# PUSH 기록 확인(GET)
-@csrf_exempt
-def ciaPushToasted(request, key):
-    try:
-        user_info = USER_TABLE.objects.get(
-            key = key
-        )        
-        if request.method == 'GET':
-            json = ciaPushToasted(request, user_info)
-    except:
-        json = ''
-    
-    return HttpResponse(json)
-
-
-
-##################################################
-# POPUP API
-##################################################
-# POPUP 스케줄 추가(POST)
-@csrf_exempt
-def apiToastPopup(request, key):
-    try:
-        user_info = USER_TABLE.objects.get(
-            key = key
-        )        
-        if request.method == 'POST':
-            json = apiToastPopupHandler(request, user_info)
-    except:
-        json = ''
-    
-    return HttpResponse(json)
-
-# POPUP 수정(POST)
-@csrf_exempt
-def apiUpdatePopup(request, key):
-    try:
-        user_info = USER_TABLE.objects.get(
-            key = key
-        )        
-        if request.method == 'POST':
-            json = apiUpdatePopupHandler(request, user_info)
-    except:
-        json = ''
-    
-    return HttpResponse(json)
-
-# POPUP 스케줄 확인/삭제(GET/DELETE)
-@csrf_exempt
-def apiPopup(request, key):
-    try:
-        json = ''
-        user_info = USER_TABLE.objects.get(
-            key = key
-        )
-        if request.method == 'GET':
-            json = apiGetPopupHandler(request, user_info)
-        elif request.method == 'DELETE':
-            json = apiDeletePopupHandler(request, user_info)
-    except:
-        json = ''
-    
-    return HttpResponse(json)
-
-# POPUP 기록 확인(GET)
-@csrf_exempt
-def apiPopupToasted(request, key):
-    try:
-        user_info = USER_TABLE.objects.get(
-            key = key
-        )        
-        if request.method == 'GET':
-            json = apiPopupToastedhandler(request, user_info)
     except:
         json = ''
     

@@ -1,6 +1,9 @@
 from ..models import *
 from . import common
 
+import logging
+logger = logging.getLogger('appToaster')
+
 '''
 model.py
 데이터베이스 관련 기능을 관리하는 서비스입니다.
@@ -22,7 +25,7 @@ def createSystemLog(level, applicationName, message):
         ).save()
 
     except Exception() as e:
-        createSystemLog(9, 'SYSTEM', 'services.model.createSystemLog 시스템 기록 생성 실패. ' + e)
+        logger.info('services.model.createSystemLog 시스템 기록 생성 실패.' + e)
 
 ##################################################
 # 로그인 관리 테이블
@@ -119,6 +122,7 @@ def readUser(key):
 def createTarget(userId, deviceType, token, isPushAllow):
     try:
         nowDate = common.stringToDate('')
+        nowDatetime = common.stringToDatetime('')
         id = common.getId()
 
         TARGET_TABLE(
@@ -127,9 +131,12 @@ def createTarget(userId, deviceType, token, isPushAllow):
             user_id = userId,
             device_type = deviceType,
             is_push_allow = isPushAllow,
+            push_allow_datetime = nowDatetime,
             is_ad_allow = False,
+            ad_allow_datetime = nowDatetime,
             is_night_allow = False,
-            last_active_date = nowDate,
+            night_allow_datetime = nowDatetime,
+            last_active_date = nowDate
         ).save()
     
     except Exception() as e:
@@ -139,26 +146,38 @@ def createTarget(userId, deviceType, token, isPushAllow):
 def readTarget(deviceType, token):
     try:
         nowDate = common.stringToDate('')
-
+        
         target = TARGET_TABLE.objects.get(
             device_type = deviceType,
             token = token
         )
-
+        
         TARGET_TABLE(
             id = target.id,
+            token = target.token,
+            user_id = target.user_id,
+            device_type = target.device_type,
+            is_push_allow = target.is_push_allow,
+            push_allow_datetime = target.push_allow_datetime,
+            is_ad_allow = target.is_ad_allow,
+            ad_allow_datetime = target.ad_allow_datetime,
+            is_night_allow = target.is_night_allow,
+            night_allow_datetime = target.night_allow_datetime,
             last_active_date = nowDate
         ).save()
-
+        
         return {
             'id': target.id,
             "token": target.token,
             "userId": target.user_id,
             "deviceType": target.device_type,
             "isPushAllow": target.is_push_allow,
+            'pushAllowDatetime': common.datetimeToString(target.push_allow_datetime),
             "isAdAllow": target.is_ad_allow,
+            "adAllowDatetime": common.datetimeToString(target.ad_allow_datetime),
             "isNightAllow": target.is_night_allow,
-            "last_active_date": target.last_active_date
+            'nightAllowDatetime': common.datetimeToString(target.night_allow_datetime),
+            "lastActiveDate": common.dateToString(target.last_active_date)
         }
     
     except:
@@ -167,11 +186,38 @@ def readTarget(deviceType, token):
 # 앱 사용자 수정
 def updateTarget(id, isPushAllow, isAdAllow, isNightAllow):
     try:
+
+        target = TARGET_TABLE.objects.get(
+            id = id
+        )
+
+        nowDatetime = common.stringToDatetime('')
+        if isPushAllow:
+            pushAllowDatetime = nowDatetime
+        else:
+            pushAllowDatetime = target.push_allow_datetime
+        if isAdAllow:
+            adAllowDatetime = nowDatetime
+        else:
+            adAllowDatetime = target.ad_allow_datetime
+        if isNightAllow:
+            isNightAllow = nowDatetime
+        else:
+            isNightAllow = target.night_allow_datetime
+
+
         TARGET_TABLE(
             id = id,
+            token = target.token,
+            user_id = target.user_id,
+            device_type = target.device_type,
             is_push_allow = isPushAllow,
+            push_allow_datetime = pushAllowDatetime,
             is_ad_allow = isAdAllow,
-            is_night_allow = isNightAllow,
+            ad_allow_datetime = adAllowDatetime,
+            is_night_allow = target.is_night_allow,
+            night_allow_datetime = isNightAllow,
+            last_active_date = target.last_active_date
         ).save()
     
     except Exception() as e:
@@ -219,14 +265,19 @@ def readPush(userId):
 
         list = []
         for push in pushList:
+            if push.repeat:
+                date = ''
+            else:
+                date = common.dateToString(push.date)
+
             list.append({
                 "id": push.id,
                 "userId": push.user_id,
                 "alias": push.alias,
                 "title": push.title,
                 "message": push.message,
-                "date": push.date,
-                "time": push.time,
+                "date": date,
+                "time": common.timeToString(push.time),
                 "repeat": push.repeat,
                 "ad": push.ad
             })
@@ -239,8 +290,13 @@ def readPush(userId):
 # PUSH 예약 수정
 def updatePush(id, alias, title, message, date, time, repeat, ad):
     try:
+        push = SCHEDULED_PUSH_TABLE.objects.get(
+            id = id
+        )
+
         SCHEDULED_PUSH_TABLE(
             id = id,
+            user_id = push.user_id,
             alias = alias,
             title = title,
             message = message,
@@ -298,7 +354,7 @@ def readPushHistory(userId):
                 "alias": pushHistory.alias,
                 "title": pushHistory.title,
                 "message": pushHistory.message,
-                "toastedDatetime": pushHistory.toasted_datetime,
+                "toastedDatetime": common.datetimeToString(pushHistory.toasted_datetime),
                 "repeat": pushHistory.repeat,
                 "ad": pushHistory.ad
             })

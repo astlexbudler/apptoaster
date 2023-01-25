@@ -36,17 +36,13 @@ class USER_TABLE(models.Model):
     # API/로그인용 인증키
     key = models.CharField(max_length=8)
     # 등록된 어플리케이션 아이콘
-    application_icon = models.ImageField(upload_to='application_icons')
+    application_icon = models.ImageField(upload_to='icons')
     # 등록된 어플리케이션 이름
     application_name = models.CharField(max_length=64)
     # 전화번호
     tel = models.CharField(max_length=64)
-    # 카카오 서비스 아이디
-    service_id = models.CharField(max_length=255)
-    # 카카오 엑세스 키
-    access_key = models.CharField(max_length=255)
-    # 카카오 시크릿 키
-    secret_key = models.CharField(max_length=255)
+    # 카카오 키
+    app_admin_key = models.CharField(max_length=255)
     # 만료일
     expire_date = models.DateField()
 
@@ -73,11 +69,17 @@ class TARGET_TABLE(models.Model):
     device_type = models.CharField(max_length=8)
     # 푸시 허용
     is_push_allow = models.BooleanField()
+    # 푸시 허용 동의 시간
+    push_allow_datetime = models.DateTimeField(null=True, blank=True)
     # 광고 허용
     is_ad_allow = models.BooleanField()
+    # 광고 허용 동의 시간
+    ad_allow_datetime = models.DateTimeField(null=True, blank=True)
     # 야간 허용
     is_night_allow = models.BooleanField()
-    # 마지막 활성화 날짜
+    # 야간 허용 동의 시간
+    night_allow_datetime = models.DateTimeField(null=True, blank=True)
+    # 마지막 활동 날짜
     last_active_date = models.DateField()
 
 
@@ -120,7 +122,7 @@ class PUSH_HISTORY_TABLE(models.Model):
     # 푸시 메세지
     message = models.CharField(max_length=255)
     # 발송 시간
-    toasted_datetime = models.TimeField()
+    toasted_datetime = models.DateTimeField()
     # 반복 여부
     repeat = models.BooleanField()
     # 광고 여부
