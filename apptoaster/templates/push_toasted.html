@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+
+<head>
+    <meta charset="utf-8" />
+    <title>AppToaster</title>
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/png" href="{% static 'default/img/favicon.png' %}">
+
+    <!-- CSS -->
+    <link href="{% static 'default/css/bootstrap.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'default/css/style.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'default/css/plugin/animate.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'default/css/jquery-ui.css' %}" rel="stylesheet" type="text/css" />
+    <!-- CSS -->
+
+    <!-- SDK -->
+    <script src="{% static 'apptoaster/js/apptoaster.js' %}" type="text/javascript"></script>
+    <script src="https://kit.fontawesome.com/37a4d902d2.js" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- SDK -->
+</head>
+
+<body>
+
+    <!-- Preloader -->
+    {% include "parts/preloader.html" %}
+    <!-- Preloader -->
+
+    <!-- Wrapper -->
+    <div class="wrapper">
+
+        <!-- Header-->
+        <header id="header" class="header header--dark header-transparent header--sticky">
+            <nav id="navigation" class="header-nav">
+                <div class="container">
+                    <div class="row d-flex flex-md-row align-items-center">
+                        <div class="logo mr-auto">
+                            <img src="static/apptoaster/images/logo/logo_black.png" style="width: 200px;">
+                        </div>
+
+                        <div class="nav-menu ml-auto">
+                            <ul class="">
+                                <li class="nav-menu-item">
+                                    PUSH 기록
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="nav-menu">
+                            <ul class="">
+                                <li class="nav-menu-item">
+                                    <a href="#"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <!-- Header -->
+
+        <section class="ptb ptb-sm-80 " style="min-height: 100vh;">
+            <div class="container">
+                <div class="col-md-8 offset-md-2">
+
+                    <h4>푸시 메세지 기록</h4>
+
+                    <br />
+                    <hr />
+                    <br />
+
+                    <!-- 푸시 기록 -->
+                    <div>
+                        <table class="col-12">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">
+                                        이름
+                                    </th>
+                                    <th class="text-center">
+                                        보낸 날짜
+                                    </th>
+                                    <th class="text-center">
+                                        푸시 제목
+                                    </th>
+                                    <th class="text-center">
+                                        상세보기
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="4"><br /></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for push in pushList %}
+                                <tr>
+                                    <td>{{ push.alias }}</td>
+                                    <td>
+                                        {{ push.toastedDatetime }}
+                                    </td>
+                                    <td class="text-center">
+                                        {{ push.title }}
+                                    </td>
+                                    <td class="text-center">
+                                        <i class="fa-light fa-magnifying-glass" onclick="detailModal('{{ push.alias }}', '{{ push.title }}', '{{ push.message }}', '{{ push.toastedDatetime }}', '{{ push.repeat }}', '{{ push.ad }}');"></i>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- 푸시 기록 -->
+
+                    <!-- 페이지 -->
+                    <div class="pagination-nav mtb-30">
+                        <ul id="pageList">
+                            <li><a href="#"><i class="fa fa-angle-left"></i></a></li>
+                            <li><a href="#"></a></li>
+                            <li><a href="#"></a></li>
+                            <li class="active"><a href="#">{{ page.now }}</a></li>
+                            <li><a href="#"></a></li>
+                            <li><a href="#"></a></li>
+                            <li><a href="#"><i class="fa fa-angle-right"></i></a></li>
+                        </ul>
+                    </div>
+                    <!-- 페이지 -->
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- FOOTER -->
+        {% include "parts/footer.html" %}
+        <!-- END FOOTER -->
+
+        <!-- Scroll Top -->
+        {% include "parts/top.html" %}
+        <!-- End Scroll Top -->
+
+    </div>
+    <!-- Wrapper -->
+
+    <!-- Javascript -->
+    <script src="{% static 'default/js/jquery-1.11.2.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/jquery-ui.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.easing.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/bootstrap.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.flexslider.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.fitvids.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.viewportchecker.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.stellar.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/wow.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.colorbox-min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/owl.carousel.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/isotope.pkgd.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/masonry.pkgd.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/imagesloaded.pkgd.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.fs.tipper.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/mediaelement-and-player.min.js' %}"></script>
+    <script src="{% static 'default/js/plugin/jquery.validate.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/theme.js' %}" type="text/javascript"></script>
+    <script>
+        window.onload = () => {
+            html = ''
+            nowPage = parseInt('{{ page.now }}');
+            lastPage = parseInt('{{ page.lastPage }}');
+
+            for(i = -2; i < 3; i++) {
+                page = nowPage + i
+                if(page == nowPage) {
+                    html += '<li class="active"><a href="#">' + page + '</a></li>';
+                }else if((page > 0 & page <= lastPage)) {
+                    html += '<li><a href="/push_toasted?key={{toaster.key}}&page=' + page + '">' + page + '</a></li>';
+                }
+            }
+            document.querySelector("#pageList").innerHTML = html;
+        }
+        
+        detailModal = (alias, title, message, toastedDatetime, repeat, ad) => {
+            if(repeat == "True") {
+                repeat = '예';
+            }else {
+                repeat = '아니오';
+            }
+            if(ad == 'True') {
+                ad = '예';
+            }else {
+                ad = '아니오';
+            }
+            Swal.fire({
+                title: 'PUSH 기록',
+                html: 
+                '<p style="text-align: left; font-size: 16px;">' + 
+                '푸시 이름 : ' + alias + '<br>' + 
+                '푸시 제목 : ' + title + '<br>' + 
+                '푸시 내용 : ' + message  + '<br>' + 
+                '보낸 날짜 : ' + toastedDatetime + '<br>' + 
+                '반복 메세지 여부 : ' + repeat + '<br>' + 
+                '광고 메세지 여부 : ' + ad + 
+                '수신 인원 : ' + count + '명(Android 및 Ios 합계)' +  
+                '</p>',
+                confirmButtonText: `확인`,
+            }).then((result) => {
+                return
+            });
+        }
+    </script>
+    <!-- Javascript -->
+</body>
+
+</html>

@@ -78,39 +78,75 @@ def initLoginControl():
 # 앱 토스터 고객 테이블
 ##################################################
 # 앱 토스터 고객 확인
-def readUser(key):
+def readToaster(key):
     try:
-        user = USER_TABLE.objects.get(
+        toaster = TOASTER_TABLE.objects.get(
             key = key
         )
-
-        if len(user['application_name']) > 16:
-            applicationShortName = user['application_name'][0:16] + '..'
+        
+        if len(toaster.application_name) > 16:
+            applicationShortName = toaster.application_name[0:16] + '..'
         else:
-            applicationShortName = user['application_name']
+            applicationShortName = toaster.application_name
+        
+        return {
+            'id': toaster.id,
+            'key': toaster.key,
+            'applicationIcon': '/media/icons/' + toaster.id + '.png',
+            'applicationName': toaster.application_name,
+            'applicationShortName': applicationShortName,
+            'email': toaster.email,
+            'tel': toaster.tel,
+            'appAdminKey': toaster.app_admin_key,
+            'createDate': toaster.create_date,
+            'expireDate': toaster.expire_date,
+        }
 
-        emailList = USER_EMAIL_TABLE.objects.all().filter(
-            user_id = user.id
+    except:
+        return
+
+# 앱 토스터 고객 확인
+def readToasterById(id):
+    try:
+        toaster = TOASTER_TABLE.objects.get(
+            id = id
         )
+        
+        return {
+            'id': toaster.id,
+            'key': toaster.key,
+            'applicationIcon': '/media/icons/' + toaster.id + '.png',
+            'applicationName': toaster.application_name,
+            'email': toaster.email,
+            'tel': toaster.tel,
+            'appAdminKey': toaster.app_admin_key,
+            'createDate': toaster.create_date,
+            'expireDate': toaster.expire_date,
+        }
+
+    except:
+        return
+
+# 앱 토스터 고객 목록
+def readToasterAll():
+    try:
+        toasterList = TOASTER_TABLE.objects.all()
 
         list = []
-        for email in emailList:
-            list.append(email.email)
-        emailList = list
-
-        return {
-            'id': user.id,
-            'key': user.key,
-            'applicationIcon': '/media/icons/' + user.id + '.png',
-            'applicationName': user.application_name,
-            'applicationShortName': applicationShortName,
-            'tel': user.tel,
-            'serviceId': user.service_id,
-            'accessKey': user.access_key,
-            'secretKey': user.secret_key,
-            'expireDate': user.expire_date,
-            'email': emailList
-        }
+        for toaster in toasterList:
+            list.append({
+            'id': toaster.id,
+            'key': toaster.key,
+            'applicationIcon': '/media/icons/' + toaster.id + '.png',
+            'applicationName': toaster.application_name,
+            'email': toaster.email,
+            'tel': toaster.tel,
+            'appAdminKey': toaster.app_admin_key,
+            'createDate': toaster.create_date,
+            'expireDate': toaster.expire_date,
+        })
+        
+        return list
 
     except:
         return
@@ -119,7 +155,7 @@ def readUser(key):
 # 앱 사용자 테이블
 ##################################################
 # 앱 사용자 생성
-def createTarget(userId, deviceType, token, isPushAllow):
+def createTarget(toasterId, deviceType, token, isPushAllow):
     try:
         nowDate = common.stringToDate('')
         nowDatetime = common.stringToDatetime('')
@@ -128,7 +164,7 @@ def createTarget(userId, deviceType, token, isPushAllow):
         TARGET_TABLE(
             id = id,
             token = token,
-            user_id = userId,
+            toaster_id = toasterId,
             device_type = deviceType,
             is_push_allow = isPushAllow,
             push_allow_datetime = nowDatetime,
@@ -155,7 +191,7 @@ def readTarget(deviceType, token):
         TARGET_TABLE(
             id = target.id,
             token = target.token,
-            user_id = target.user_id,
+            toaster_id = target.toaster_id,
             device_type = target.device_type,
             is_push_allow = target.is_push_allow,
             push_allow_datetime = target.push_allow_datetime,
@@ -169,7 +205,7 @@ def readTarget(deviceType, token):
         return {
             'id': target.id,
             "token": target.token,
-            "userId": target.user_id,
+            "toasterId": target.toaster_id,
             "deviceType": target.device_type,
             "isPushAllow": target.is_push_allow,
             'pushAllowDatetime': common.datetimeToString(target.push_allow_datetime),
@@ -179,6 +215,34 @@ def readTarget(deviceType, token):
             'nightAllowDatetime': common.datetimeToString(target.night_allow_datetime),
             "lastActiveDate": common.dateToString(target.last_active_date)
         }
+    
+    except:
+        return
+
+# 사용자의 타겟 모두 확인
+def readToasterTarget(toasterId):
+    try:
+        targetList = TARGET_TABLE.objects.all().filter(
+            toaster_id = toasterId
+        )
+        
+        list = []
+        for target in targetList:
+            list.append({
+            'id': target.id,
+            "token": target.token,
+            "toasterId": target.toaster_id,
+            "deviceType": target.device_type,
+            "isPushAllow": target.is_push_allow,
+            'pushAllowDatetime': common.datetimeToString(target.push_allow_datetime),
+            "isAdAllow": target.is_ad_allow,
+            "adAllowDatetime": common.datetimeToString(target.ad_allow_datetime),
+            "isNightAllow": target.is_night_allow,
+            'nightAllowDatetime': common.datetimeToString(target.night_allow_datetime),
+            "lastActiveDate": common.dateToString(target.last_active_date)
+        })
+        
+        return list
     
     except:
         return
@@ -209,7 +273,7 @@ def updateTarget(id, isPushAllow, isAdAllow, isNightAllow):
         TARGET_TABLE(
             id = id,
             token = target.token,
-            user_id = target.user_id,
+            toaster_id = target.toaster_id,
             device_type = target.device_type,
             is_push_allow = isPushAllow,
             push_allow_datetime = pushAllowDatetime,
@@ -237,13 +301,13 @@ def deleteTarget(id):
 # PUSH 예약 테이블
 ##################################################
 # PUSH 예약 생성
-def createPush(userId, alias, title, message, date, time, repeat, ad):
+def createPush(toasterId, alias, title, message, date, time, repeat, ad):
     try:
         id = common.getId()
-
+        
         SCHEDULED_PUSH_TABLE(
             id = id,
-            user_id = userId,
+            toaster_id = toasterId,
             alias = alias,
             title = title,
             message = message,
@@ -257,10 +321,10 @@ def createPush(userId, alias, title, message, date, time, repeat, ad):
         createSystemLog(9, 'SYSTEM', 'services.model.createPush PUSH 예약 생성 실패. ' + e)
 
 # PUSH 예약 확인
-def readPush(userId):
+def readPush(toasterId):
     try:
         pushList = SCHEDULED_PUSH_TABLE.objects.all().filter(
-            user_id = userId
+            toaster_id = toasterId
         )
 
         list = []
@@ -272,7 +336,7 @@ def readPush(userId):
 
             list.append({
                 "id": push.id,
-                "userId": push.user_id,
+                "toasterId": push.toaster_id,
                 "alias": push.alias,
                 "title": push.title,
                 "message": push.message,
@@ -287,6 +351,31 @@ def readPush(userId):
     except Exception() as e:
         createSystemLog(9, 'SYSTEM', 'services.model.readPush PUSH 예약 확인 실패. ' + e)
 
+# 모든 PUSH 예약 확인
+def readPushAll():
+    try:
+        pushList = SCHEDULED_PUSH_TABLE.objects.all()
+
+        list = []
+        for push in pushList:
+            list.append({
+                "id": push.id,
+                "toasterId": push.toaster_id,
+                "alias": push.alias,
+                "title": push.title,
+                "message": push.message,
+                "date": push.date,
+                "time": push.time,
+                "repeat": push.repeat,
+                "ad": push.ad
+            })
+
+        return list
+
+    except Exception() as e:
+        createSystemLog(9, 'SYSTEM', 'services.model.readPushAll PUSH 예약 확인 실패. ' + e)
+
+
 # PUSH 예약 수정
 def updatePush(id, alias, title, message, date, time, repeat, ad):
     try:
@@ -296,7 +385,7 @@ def updatePush(id, alias, title, message, date, time, repeat, ad):
 
         SCHEDULED_PUSH_TABLE(
             id = id,
-            user_id = push.user_id,
+            toaster_id = push.toaster_id,
             alias = alias,
             title = title,
             message = message,
@@ -310,16 +399,16 @@ def updatePush(id, alias, title, message, date, time, repeat, ad):
         createSystemLog(9, 'SYSTEM', 'services.model.updatePush PUSH 예약 수정 실패. ' + e)
 
 # PUSH 예약 수정(alias)
-def updatePushAlias(alias, userId, title, message, date, time, repeat, ad):
+def updatePushAlias(alias, toasterId, title, message, date, time, repeat, ad):
     try:
         push = SCHEDULED_PUSH_TABLE.objects.get(
             alias = alias,
-            userId = userId
+            toasterId = toasterId
         )
 
         SCHEDULED_PUSH_TABLE(
             id = push.id,
-            user_id = userId,
+            toaster_id = toasterId,
             alias = alias,
             title = title,
             message = message,
@@ -357,40 +446,42 @@ def deletePushAlias(alias):
 # PUSH 기록
 ##################################################
 # PUSH 기록 생성
-def createPushHistory(userId, alias, title, message, date, time, repeat, ad):
+def createPushHistory(toasterId, alias, title, message, repeat, ad, count):
     try:
         nowDatetime = common.stringToDatetime('')
 
         PUSH_HISTORY_TABLE(
-            user_id = userId,
+            toaster_id = toasterId,
             alias = alias,
             title = title,
             message = message,
             toasted_datetime = nowDatetime,
             repeat = repeat,
-            ad = ad
+            ad = ad,
+            count = count
         ).save()
     
     except Exception() as e:
         createSystemLog(9, 'SYSTEM', 'services.model.createPushHistory PUSH 기록 생성 실패. ' + e)
 
 # PUSH 기록 확인
-def readPushHistory(userId):
+def readPushHistory(toasterId):
     try:
         pushHistoryList = PUSH_HISTORY_TABLE.objects.all().filter(
-            user_id = userId
+            toaster_id = toasterId
         )
 
         list = []
         for pushHistory in pushHistoryList:
             list.append({
-                "userId": pushHistory.user_id,
+                "toasterId": pushHistory.toaster_id,
                 "alias": pushHistory.alias,
                 "title": pushHistory.title,
                 "message": pushHistory.message,
                 "toastedDatetime": common.datetimeToString(pushHistory.toasted_datetime),
                 "repeat": pushHistory.repeat,
-                "ad": pushHistory.ad
+                "ad": pushHistory.ad,
+                'count': pushHistory.count
             })
 
         return list

@@ -3,127 +3,24 @@
         <div class="container">
             <div class="row d-flex flex-md-row align-items-center">
                 <div class="logo mr-auto">
-                    <a href="/">
-                        <h3>APPTOASTER</h3>
-                    </a>
+                    <img src="static/apptoaster/images/logo/logo_black.png" style="width: 200px;">
                 </div>
 
                 <div class="nav-menu ml-auto">
                     <ul class="">
                         <li class="nav-menu-item">
-                            <a href="#">푸시 메세지</a>
-                            <div class="nav-dropdown">
-                                <ul>
-                                    <li><a href="/push/toasting">푸시 메세지 관리</a></li>
-                                    <li><a href="/push/toasted">푸시 메세지 기록</a></li>
-                                </ul>
-                            </div>
+                            PUSH 메세지
                         </li>
                     </ul>
                 </div>
                 
-                {% if user_info.id != '' %}
                 <div class="nav-menu">
                     <ul class="">
                         <li class="nav-menu-item">
-                            <a href="#">{{ user_info.short_application_name }}</a>
-                            <div class="nav-dropdown">
-                                <ul>
-                                    <li><span class="dropdown-title">계정</span></li>
-                                    <li><a id="alert_user_key_button" href="#">인증키 확인</a></li>
-                                    <li><a id="logout_button" href="#">로그아웃</a></li>
-                                </ul>
-                            </div>
-                            <script>
-                                document.querySelector("#alert_user_key_button").onclick = () => {
-                                    Swal.fire({
-                                        title: '사용자 키 확인',
-                                        html: '인증 키: {{ user_info.key }}<br>' + 
-                                        '<small>절대 인증키를 남에게 알려주지 마세요!</small>',
-                                        icon: 'info',
-                                        confirmButtonText: `확인`,
-                                    })
-                                }
-                                document.querySelector("#logout_button").onclick = () => {
-                                    url = '/api/logout';
-                                    fetch(url, {
-                                        method: 'GET'
-                                    }).then((response) => response.json())
-                                    .then((data) => {
-                                        Swal.fire({
-                                            title: '로그아웃',
-                                            html: '로그아웃하였습니다.<br>' + 
-                                            '페이지를 새로고침합니다.',
-                                            icon: 'success',
-                                            confirmButtonText: `새로고침`,
-                                        }).then((result) => {
-                                            document.location.reload();
-                                        })
-                                    })
-                                    .catch((error) => {
-                                        console.error('Error:', error);
-                                    });
-                                }
-                            </script>
+                            <a href="#"></a>
                         </li>
                     </ul>
                 </div>
-                {% else %}
-                <div class="nav-icons">
-                    <div class="nav-icon-item">
-                        <span class="nav-icon-trigger search-menu_btn align-middle fa-sm">
-                            <i class="fa-thin fa-key"></i>
-                        </span>
-                        <div class="search-menu-bar">
-                            <label for="key_input">인증키 입력 <i class="fa-thin fa-key"></i></label>
-                            <input id="key_input" class="seach-input input--sm form-full" type="search" placeholder="8자리 코드 입력">
-                            <button id="login_button" class="btn btn-xs btn-black mt-2" style="float: right;">확인</button>
-                        </div>
-                    </div>
-                    <script>
-                        document.querySelector("#login_button").onclick = () => {
-                            key = document.querySelector("#key_input").value;
-                            url = '/api/login/key/' + key;
-                            fetch(url, {
-                                method: 'GET'
-                            }).then((response) => response.json())
-                            .then((data) => {
-                                console.log('Success:', data.result);
-                                if(data.result == 'success') {
-                                    Swal.fire({
-                                        title: '인증 성공',
-                                        html: '계정 인증에 성공하였습니다.<br>' + 
-                                        '페이지를 새로고침합니다.',
-                                        icon: 'success',
-                                        confirmButtonText: `새로고침`,
-                                    }).then((result) => {
-                                        document.location.reload();
-                                    })
-                                }else if(data.result == 'fail') {
-                                    Swal.fire({
-                                        title: '인증 실패',
-                                        html: '계정 인증에 실패하였습니다.<br>' +
-                                            '인증키를 확인해주세요.',
-                                        icon: 'error',
-                                        confirmButtonText: `확인`,
-                                    })
-                                }else {
-                                    Swal.fire({
-                                        title: '인증 거부',
-                                        html: '너무 많은 인증 시도가 있었습니다.<br>' +
-                                            '2~3분 이후 다시 시도해주세요.',
-                                        icon: 'warning',
-                                        confirmButtonText: `확인`,
-                                    })
-                                }
-                            })
-                            .catch((error) => {
-                                console.error('Error:', error);
-                            });
-                        }
-                    </script>
-                </div>
-                {% endif %}
             </div>
         </div>
     </nav>

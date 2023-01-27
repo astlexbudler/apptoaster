@@ -30,29 +30,26 @@ class LOGIN_CONTROL_TABLE(models.Model):
 ##################################################
 # 앱 토스터 고객 테이블
 ##################################################
-class USER_TABLE(models.Model):
+class TOASTER_TABLE(models.Model):
     # 식별자
     id = models.CharField(primary_key=True, max_length=20)
     # API/로그인용 인증키
-    key = models.CharField(max_length=8)
+    key = models.CharField(max_length=64)
     # 등록된 어플리케이션 아이콘
     application_icon = models.ImageField(upload_to='icons')
     # 등록된 어플리케이션 이름
     application_name = models.CharField(max_length=64)
+    # 이메일
+    email = models.CharField(max_length=64)
     # 전화번호
     tel = models.CharField(max_length=64)
     # 카카오 키
     app_admin_key = models.CharField(max_length=255)
+    # 생성일
+    create_date = models.DateField()
     # 만료일
     expire_date = models.DateField()
-
-# 앱 토스터 고객 이메일 테이블
-class USER_EMAIL_TABLE(models.Model):
-    # 식별자
-    user_id = models.CharField(max_length=20)
-    # 이메일
-    email = models.CharField(max_length=64)
-
+    
 
 
 ##################################################
@@ -64,7 +61,7 @@ class TARGET_TABLE(models.Model):
     # 토큰
     token = models.CharField(max_length=255)
     # 앱 토스터 고객 식별자
-    user_id = models.CharField(max_length=20)
+    toaster_id = models.CharField(max_length=20)
     # 기기 타입/gcm, apns
     device_type = models.CharField(max_length=8)
     # 푸시 허용
@@ -91,7 +88,7 @@ class SCHEDULED_PUSH_TABLE(models.Model):
     # 식별자
     id = models.CharField(primary_key=True, max_length=20)
     # 앱 토스터 고객 식별자
-    user_id = models.CharField(max_length=20)
+    toaster_id = models.CharField(max_length=20)
     # 푸시 이름
     alias = models.CharField(max_length=64)
     # 푸시 제목
@@ -114,7 +111,7 @@ class SCHEDULED_PUSH_TABLE(models.Model):
 ##################################################
 class PUSH_HISTORY_TABLE(models.Model):
     # 앱 토스터 고객 식별자
-    user_id = models.CharField(max_length=20)
+    toaster_id = models.CharField(max_length=20)
     # 푸시 이름
     alias = models.CharField(max_length=64)
     # 푸시 제목
@@ -127,3 +124,5 @@ class PUSH_HISTORY_TABLE(models.Model):
     repeat = models.BooleanField()
     # 광고 여부
     ad = models.BooleanField()
+    # 수신 카운트
+    count = models.DecimalField(decimal_places=0 ,max_digits=10)

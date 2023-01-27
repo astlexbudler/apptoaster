@@ -9,7 +9,7 @@
     <meta name="keywords" content="" />
     <meta name="author" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="icon" type="image/png" href="{% static 'default/img/favicon.png' %}">
+    <link rel="icon" type="image/png" href="{% static 'apptoaster/images/icon/icon.png' %}">
 
     <!-- CSS -->
     <link href="{% static 'default/css/bootstrap.css' %}" rel="stylesheet" type="text/css" />
@@ -19,13 +19,13 @@
     <!-- CSS -->
 
     <!-- SDK -->
-    <script src="{% static 'default/js/apptoaster.js' %}" type="text/javascript"></script>
+    <script src="{% static 'apptoaster/js/apptoaster.js' %}" type="text/javascript"></script>
     <script src="https://kit.fontawesome.com/37a4d902d2.js" crossorigin="anonymous"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- SDK -->
 </head>
 
-<body>
+<body class="full-intro">
 
     <!-- Preloader -->
     {% include "parts/preloader.html" %}
@@ -34,73 +34,36 @@
     <!-- Wrapper -->
     <div class="wrapper">
 
-        <!-- Header-->
-        {% include "parts/header.html" %}
-        <!-- Header -->
+        <!--Header-->
+        <header id="header" class="header" style="display:none;">
+            <nav id="navigation" class="header-nav"></nav>
+        </header>
+        <!--Header--><!--End Header-->
 
-        <section class="ptb ptb-sm-80 " style="min-height: 100vh;">
-            <div class="container">
-                <div class="col-md-6 offset-md-3">
-
-                    <h4>푸시 메세지 기록</h4>
-
-                    <br />
-                    <hr />
-                    <br />
-
-                    <!-- 푸시 기록 -->
-                    <div>
-                        <table class="col-12">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        이름
-                                    </th>
-                                    <th>
-                                        예약 날짜
-                                    </th>
-                                    <th>
-                                        반복 여부
-                                    </th>
-                                    <th class="text-center">
-                                        수정
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <th colspan="4"><br /></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="4" class="text-center">
-                                        -- 먼저 인증키를 입력하고 계정을 인증해주세요. --
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+        <!-- Content -->
+        <section id="intro" class="intro">
+            <!-- Static Intro -->
+            <div class="bg-image parallax parallax-background2">
+                <div class="full-screen-intro container" style="min-height: 400px;">
+                    <div class="intro-content">
+                        <div class="intro-content-inner">
+                            <h1 class="large mb-25">
+                                404 Error
+                            </h1>
+                            <h2>
+                                페이지를 찾을 수 없습니다.
+                            </h2>
+                            <p class="lead content-wd650">
+                                존재하지 않는 주소를 입력하셨거나,<br>
+                                요청하신 페이지의 주소가 변경, 삭제되었을 수 있습니다.
+                            </p>
+                        </div>
                     </div>
-                    <!-- 푸시 기록 -->
-
-                    <!-- 페이지 -->
-                    <div class="pagination-nav mtb-30">
-                        <ul>
-                            <li><a href="#"><i class="fa fa-angle-left"></i></a></li>
-                            <li class="active"><a href="#">1</a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#"><i class="fa fa-angle-right"></i></a></li>
-                        </ul>
-                    </div>
-                    <!-- 페이지 -->
-
                 </div>
             </div>
+            <!-- End Static Intro -->
         </section>
-
-
-        <!-- FOOTER -->
-        {% include "parts/footer.html" %}
-        <!-- END FOOTER -->
+        <!-- Content -->
 
         <!-- Scroll Top -->
         {% include "parts/top.html" %}
@@ -108,6 +71,7 @@
 
     </div>
     <!-- Wrapper -->
+
 
     <!-- Javascript -->
     <script src="{% static 'default/js/jquery-1.11.2.min.js' %}" type="text/javascript"></script>
@@ -129,6 +93,7 @@
     <script src="{% static 'default/js/plugin/jquery.validate.min.js' %}" type="text/javascript"></script>
     <script src="{% static 'default/js/theme.js' %}" type="text/javascript"></script>
     <!-- Javascript -->
+
 </body>
 
 </html>

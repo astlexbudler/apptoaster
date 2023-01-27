@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+
+<head>
+    <meta charset="utf-8" />
+    <title>AppToaster</title>
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/png" href="{% static 'default/img/favicon.png' %}">
+
+    <!-- CSS -->
+    <link href="{% static 'default/css/bootstrap.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'default/css/style.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'default/css/plugin/animate.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'default/css/jquery-ui.css' %}" rel="stylesheet" type="text/css" />
+    <!-- CSS -->
+
+    <!-- SDK -->
+    <script src="{% static 'apptoaster/js/apptoaster.js' %}" type="text/javascript"></script>
+    <script src="https://kit.fontawesome.com/37a4d902d2.js" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- SDK -->
+</head>
+
+<body>
+
+    <!-- Preloader -->
+    {% include "parts/preloader.html" %}
+    <!-- Preloader -->
+
+    <!-- Wrapper -->
+    <div class="wrapper">
+
+        <!-- Header-->
+        <header id="header" class="header header--dark header-transparent header--sticky">
+            <nav id="navigation" class="header-nav">
+                <div class="container">
+                    <div class="row d-flex flex-md-row align-items-center">
+                        <div class="logo mr-auto">
+                            <img src="static/apptoaster/images/logo/logo_black.png" style="width: 200px;">
+                        </div>
+
+                        <div class="nav-menu ml-auto">
+                            <ul class="">
+                                <li class="nav-menu-item">
+                                    PUSH 삭제/수정
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="nav-menu">
+                            <ul class="">
+                                <li class="nav-menu-item">
+                                    <a href="#"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <!-- Header -->
+
+        <section class="ptb ptb-sm-80 " style="min-height: 100vh;">
+            <div class="container">
+                <div class="col-md-8 offset-md-2">
+
+                    <h4>PUSH 스케줄 관리</h4>
+
+                    <br />
+                    <hr />
+                    <br />
+
+                    <!-- 푸시 스케줄 -->
+                    <div>
+                        <table class="col-12">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">
+                                        이름
+                                    </th>
+                                    <th class="text-center">
+                                        예약
+                                    </th>
+                                    <th class="text-center">
+                                        반복
+                                    </th>
+                                    <th class="text-center">
+                                        메세지 종류
+                                    </th>
+                                    <th class="text-center">
+                                        수정
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="4"><br /></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for push in pushList %}
+                                <tr id="push{{ push.id }}" pushList>
+                                    <td>{{ push.alias }}</td>
+                                    <td>
+                                        {% if push.repeat %}
+                                        {{ push.time }}
+                                        {% else %}
+                                        {{ push.date }} {{ push.time }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        {% if push.ad %}
+                                        광고 메세지
+                                        {% else %}
+                                        일반 메세지
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        {% if push.repeat %}
+                                        예
+                                        {% else %}
+                                        아니오
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        <i class="fa-light fa-pen"
+                                            onclick="updatePushForm('{{push.id}}', '{{ push.alias }}', '{{ push.title }}', '{{ push.message }}', '{{ push.repeat }}', '{{ push.ad }}', '{{ push.date }}', '{{ push.time }}');"></i>
+                                        / <i class="fa-light fa-trash-can" onclick="askDeletePush('{{push.id}}');"></i>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr id='push' pushList style="background-color: whitesmoke;">
+                                    <td colspan="5" class="text-center"
+                                        onclick="updatePushForm('', '제목 없음', '{{ toaster.applicationName }}', '', 'False', 'False', '', '');">
+                                        -- 새로운 푸시 메세지 생성 --
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- 푸시 스케줄 -->
+
+                    <br />
+                    <hr />
+                    <br />
+
+                    <!-- 푸시 작성 -->
+                    <div>
+                        <label id="formLabel">새로운 푸시 메세지 생성</label>
+                        <table class="col-12">
+                            <tr>
+                                <td class="p-1" colspan="2">
+                                    <input name="id" class="d-none">
+                                    <label for="alias" id="alias_label">이름(최대24자)</label>
+                                    <input class="input-sm form-full" id="alias" type="text" name="form-subject"
+                                        maxlength="24" value="제목 없음">
+                                    <input id="id" style="display: none;">
+                                </td>
+                                <td class="p-1" colspan="2">
+                                    <label id="title_label" for="title">
+                                        제목(최대32자) <span class="text-danger">*</span>
+                                    </label>
+                                    <input class="input-sm form-full" id="title" type="text" name="form-subject"
+                                        maxlength="32" value="{{ toaster.applicationName }}" required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <label id="message_label" for="message">
+                                        푸시 내용(최대255자) <span class="text-danger">*</span>
+                                    </label>
+                                    <textarea class="form-full" id="message" name="form-message" maxlength="255"
+                                        placeholder="메세지를 입력해주세요." required></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-1">
+                                    <label for="repeat">
+                                        예약 선택 <span class="text-danger">*</span>
+                                    </label>
+                                    <select id="repeat">
+                                        <option value='0' selected>예약 안함</option>
+                                        <option value='1'>예약하고 한번</option>
+                                        <option value="2">매일 반복</option>
+                                    </select>
+                                </td>
+                                <td class="p-1">
+                                    <label for="ad">
+                                        종류 선택 <span class="text-danger">*</span>
+                                    </label>
+                                    <select id="ad">
+                                        <option value="0" selected>일반 메세지</option>
+                                        <option value="1">광고, 마케팅용</option>
+                                    </select>
+                                </td>
+                                <td class="p-1">
+                                    <label for="datetime">
+                                        푸시 발송 날짜
+                                    </label>
+                                    <input class="input-sm form-full" id="date" type="date" name="form-subject"
+                                        style="border-radius: 0px; border: 1px solid gainsboro;" readonly>
+                                </td>
+                                <td class="p-1">
+                                    <label for="datetime">
+                                        푸시 발송 시간
+                                    </label>
+                                    <input class="input-sm form-full" id="time" type="time" name="form-subject"
+                                        style="border-radius: 0px; border: 1px solid gainsboro;" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" style="position: absolute; bottom: 60px;">
+                                    <small>
+                                    * 예약 안함 선택 시 <span style="text-decoration: underline;">예약 날짜</span> 및 <span
+                                        style="text-decoration: underline;">예약 시간</span>을 입력하지 않으셔도 됩니다.<br>
+                                    * 매일 반복 선택 시 <span style="text-decoration: underline;">예약 날짜</span>을 입력하지 않으셔도 됩니다.
+                                    </small>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="pt-5" colspan="4">
+                                    <button class="btn btn-md btn-black form-full" type="submit" id="createPushButton"
+                                        name="submit">
+                                        보내기
+                                    </button>
+                                    <button class="btn btn-md btn-black form-full" type="submit" id="updatePushButton"
+                                        style="display: none;" name="submit">
+                                        수정하기
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <!-- 푸시 작성 -->
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- FOOTER -->
+        {% include "parts/footer.html" %}
+        <!-- END FOOTER -->
+
+        <!-- Scroll Top -->
+        {% include "parts/top.html" %}
+        <!-- End Scroll Top -->
+
+    </div>
+    <!-- Wrapper -->
+
+    <!-- Javascript -->
+    <script src="{% static 'default/js/jquery-1.11.2.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/jquery-ui.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.easing.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/bootstrap.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.flexslider.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.fitvids.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.viewportchecker.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.stellar.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/wow.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.colorbox-min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/owl.carousel.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/isotope.pkgd.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/masonry.pkgd.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/imagesloaded.pkgd.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.fs.tipper.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/mediaelement-and-player.min.js' %}"></script>
+    <script src="{% static 'default/js/plugin/jquery.validate.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/theme.js' %}" type="text/javascript"></script>
+    <script>
+        updateForm = (id, alias, title, message, repeat, ad, date, time) => {
+            if (id == '') {
+                document.querySelector('#formLabel').innerText = '새로운 푸시 메세지 생성';
+                document.querySelector('#id').value = null;
+                document.querySelector('#createPushButton').setAttribute('style', '');
+                document.querySelector('#updatePushButton').setAttribute('style', 'display: none;');
+            } else {
+                document.querySelector('#formLabel').innerText = '푸시 메세지 수정';
+                document.querySelector('#id').value = id;
+                document.querySelector('#createPushButton').setAttribute('style', 'display: none;');
+                document.querySelector('#updatePushButton').setAttribute('style', '');
+            }
+
+            document.querySelector('#alias').value = alias;
+            document.querySelector('#title').value = title;
+            document.querySelector('#message').value = message;
+            if (repeat == 'True') {
+                document.querySelector('#repeat').value = '2';
+                document.querySelector('#date').value = null;
+                document.querySelector('#time').value = time;
+            } else {
+                document.querySelector('#repeat').value = '1';
+                document.querySelector('#date').value = date;
+                document.querySelector('#time').value = time;
+            }
+
+            if (ad == 'True') {
+                document.querySelector('#ad').value = '0';
+            } else {
+                document.querySelector('#ad').value = '1';
+            }
+        }
+
+        updatePushForm = (id, alias, title, message, repeat, ad, date, time) => {
+            document.querySelectorAll("[pushList]").forEach((item, index, arr) => {
+                item.setAttribute('style', 'background-color: white;');
+            });
+            document.querySelector("#push" + id).setAttribute('style', 'background-color: whitesmoke;');
+
+            updateForm(id, alias, title, message, repeat, ad, date, time);
+        }
+
+        askDeletePush = (id) => {
+            Swal.fire({
+                title: 'PUSH 삭제',
+                html: 'PUSH 메세지 스케줄을 지울까요?<br>' +
+                    '<small class="text-danger">삭제된 메세지는 복구할 수 없습니다.</small>',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: `지우기`,
+                cancelButtonText: `취소`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    url = '/api/push/key/{{ toaster.key }}?id=' + id;
+                    fetch(url, {
+                        method: 'DELETE'
+                    }).then((response) => response.json())
+                        .then((data) => {
+                            document.location.reload();
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                } else {
+                    return
+                }
+            });
+        }
+
+        document.querySelector("#repeat").onchange = (e) => {
+            if (e.target.value == '0') {
+                document.querySelector("#date").value = null;
+                document.querySelector("#time").value = null;
+                document.querySelector("#date").readOnly = true;
+                document.querySelector("#time").readOnly = true;
+            } else if (e.target.value == '1') {
+                document.querySelector("#date").readOnly = false;
+                document.querySelector("#time").readOnly = false;
+            } else {
+                document.querySelector("#date").value = null;
+                document.querySelector("#date").readOnly = true;
+                document.querySelector("#time").readOnly = false;
+            }
+        }
+
+        document.querySelector('#createPushButton').onclick = (e) => {
+            Swal.fire({
+                title: '푸시 보내기',
+                html: '푸시 메세지를 보낼까요?<br>' +
+                    '예약 메세지의 경우 지정된 시간에 발송됩니다.<br>' +
+                    '<small class="text-danger">일반 메세지와 광고, 마케팅용 메세지를 꼭 구분해주세요.</small>',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: `보내기`,
+                cancelButtonText: `취소`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    url = '/api/toast_push/key/{{ toaster.key }}';
+                    var formData = new FormData();
+                    title = document.querySelector('#title').value;
+                    message = document.querySelector('#message').value;
+                    repeat = document.querySelector('#repeat').value;
+                    date = document.querySelector('#date').value;
+                    time = document.querySelector('#time').value;
+
+                    if (title == '') {
+                        Swal.fire({
+                            title: '제목 확인',
+                            html: '푸시 제목이 없습니다. 푸시 제목을 확인해주세요.',
+                            icon: 'error',
+                            confirmButtonText: `확인`,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                return
+                            }
+                        });
+                        return
+                    } else if (message == '') {
+                        Swal.fire({
+                            title: '내용 확인',
+                            html: '푸시 내용이 없습니다. 푸시 내용을 확인해주세요.',
+                            icon: 'error',
+                            confirmButtonText: `확인`,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                return
+                            }
+                        });
+                        return
+                    } else if (repeat == 1 & date == '' & time == '') {
+                        Swal.fire({
+                            title: '날짜 오류',
+                            html: '예약 메세지를 보내려면<br>날짜와 시간을 입력해주세요.',
+                            icon: 'error',
+                            confirmButtonText: `확인`,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                return
+                            }
+                        });
+                        return
+                    } else if (repeat == 2 & time == '') {
+                        Swal.fire({
+                            title: '날짜 오류',
+                            html: '반복 메세지를 보내려면 시간을 입력해주세요.',
+                            icon: 'error',
+                            confirmButtonText: `확인`,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                return
+                            }
+                        });
+                        return
+                    }
+
+                    formData.append('alias', document.querySelector('#alias').value);
+                    formData.append('title', title);
+                    formData.append('message', message);
+                    formData.append('repeat', repeat);
+                    formData.append('ad', document.querySelector('#ad').value);
+                    formData.append('date', date);
+                    formData.append('time', time);
+
+                    fetch(url, {
+                        method: 'POST',
+                        body: formData
+                    }).then((response) => response.json())
+                        .then((data) => {
+                            document.location.reload();
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                } else {
+                    return
+                }
+            });
+        }
+
+        document.querySelector('#updatePushButton').onclick = (e) => {
+            Swal.fire({
+                title: '푸시 수정하기',
+                html: '푸시 메세지를 수정할까요?<br>' +
+                    '예약 메세지의 경우 지정된 시간에 발송됩니다.<br>' +
+                    '<small class="text-danger">일반 메세지와 광고, 마케팅용 메세지를 꼭 구분해주세요.</small>',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: `수정하기`,
+                cancelButtonText: `취소`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    url = '/api/update_push/key/{{ toaster.key }}';
+                    var formData = new FormData();
+                    title = document.querySelector('#title').value;
+                    message = document.querySelector('#message').value;
+                    repeat = document.querySelector('#repeat').value;
+                    date = document.querySelector('#date').value;
+                    time = document.querySelector('#time').value;
+
+                    if (title == '') {
+                        Swal.fire({
+                            title: '제목 확인',
+                            html: '푸시 제목이 없습니다. 푸시 제목을 확인해주세요.',
+                            icon: 'error',
+                            confirmButtonText: `확인`,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                return
+                            }
+                        });
+                        return
+                    } else if (message == '') {
+                        Swal.fire({
+                            title: '내용 확인',
+                            html: '푸시 내용이 없습니다. 푸시 내용을 확인해주세요.',
+                            icon: 'error',
+                            confirmButtonText: `확인`,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                return
+                            }
+                        });
+                        return
+                    } else if (repeat == 1 & date == '' & time == '') {
+                        Swal.fire({
+                            title: '날짜 오류',
+                            html: '예약 메세지를 보내려면<br>날짜와 시간을 입력해주세요.',
+                            icon: 'error',
+                            confirmButtonText: `확인`,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                return
+                            }
+                        });
+                        return
+                    } else if (repeat == 2 & time == '') {
+                        Swal.fire({
+                            title: '날짜 오류',
+                            html: '반복 메세지를 보내려면 시간을 입력해주세요.',
+                            icon: 'error',
+                            confirmButtonText: `확인`,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                return
+                            }
+                        });
+                        return
+                    }
+
+                    formData.append('id', document.querySelector('#id').value);
+                    formData.append('alias', document.querySelector('#alias').value);
+                    formData.append('title', title);
+                    formData.append('message', message);
+                    formData.append('repeat', repeat);
+                    formData.append('ad', document.querySelector('#ad').value);
+                    formData.append('date', date);
+                    formData.append('time', time);
+
+                    fetch(url, {
+                        method: 'POST',
+                        body: formData
+                    }).then((response) => response.json())
+                        .then((data) => {
+                            document.location.reload();
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                } else {
+                    return
+                }
+            });
+        }
+    </script>
+    <!-- Javascript -->
+</body>
+
+</html>

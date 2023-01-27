@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>관리도구</title>
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+</head>
+
+<body>
+    <h1>관리도구</h1>
+    <br>
+    <hr><br>
+    <div>
+        <button id="button1">버튼</button>
+        <small>ID 생성</small>
+        <script>
+            document.querySelector("#button1").onclick = () => {
+                var now = new Date();
+                year = now.getFullYear().toString().slice(-2);
+                month = now.getMonth();
+                date = now.getDate();
+                hour = now.getHours();
+                minute = now.getMinutes();
+                second = now.getSeconds();
+                ms = now.getMilliseconds();
+                alert(year + '' + month + '' + date + '' + hour + '' + minute + '' + second + '' + ms);
+            }
+        </script>
+    </div>
+    <br>
+    <hr><br>
+    <div>
+        <button id="button2">버튼</button>
+        <small>KEY 생성</small>
+        <script>
+            pool = "123456789qwertyupasdfghkzxcvbnmQWERTYUPASDFGHJKLZXCVBNM";
+            document.querySelector("#button2").onclick = () => {
+                index = 0;
+                result = '';
+                while (index < 64) {
+                    result += pool.charAt(Math.floor(Math.random() * pool.length));
+                    index += 1;
+                }
+                alert(result)
+            }
+        </script>
+    </div>
+    <br>
+    <hr><br>
+    <div>
+        <form method="POST">
+            {% csrf_token %}
+            <input name="function" value="send_email_tools_to_all">
+            <button id="button3">버튼</button>
+            <small>PUSH 도구 모두 갱신</small>
+        </form>
+    </div>
+    <br>
+    <hr><br>
+    <div>
+        <form method="POST">
+            {% csrf_token %}
+            <input name="function" value="send_email_tools_to">
+            <input name="key" placeholder="to">
+            <button id="button4">버튼</button>
+            <small>PUSH 도구 재발급</small>
+        </form>
+    </div>
+    <br>
+    <hr><br>
+    <div>
+        <form method="POST">
+            {% csrf_token %}
+            <input name="function" value="send_jobs_done">
+            <input name="key" placeholder="key">
+            <input name="url" placeholder="url">
+            <input name="designNote" placeholder="designNote">
+            <input name="downloadLink" placeholder="downloadLink">
+            <button id="button5">버튼</button>
+            <small>완료 메세지</small>
+        </form>
+    </div>
+</body>
+
+</html>

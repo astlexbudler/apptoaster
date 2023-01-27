@@ -87,6 +87,19 @@ def timeToString(date):
     except:
         return ""
 
+##################################################
+# time 을 delta로
+##################################################
+def timeToDelta(time):
+    try: 
+        hour = time.hour
+        minute = time.minute
+        second = time.second
+        
+        return datetime.timedelta(hours=hour, minutes=minute, seconds=second)
+    except:
+        return ""
+
 
 
 ##################################################
