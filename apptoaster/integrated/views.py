@@ -65,11 +65,11 @@ def webOverseer(request):
 
 # 이용약관
 def webPolicy(request):
-    return render(request, "toasted.html")
+    return render(request, "policy.html")
 
 # 개인정보 처리 방침
 def webPrivacy(request):
-    return render(request, "toasted.html")
+    return render(request, "privacy.html")
 
 # 내부 테스트 페이지
 def webTest(request):
