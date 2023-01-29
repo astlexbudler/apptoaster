@@ -71,6 +71,10 @@ def webPolicy(request):
 def webPrivacy(request):
     return render(request, "privacy.html")
 
+# 탬플릿 페이지
+def webTemplate(request):
+    return render(request, "template.html")
+
 # 내부 테스트 페이지
 def webTest(request):
     return render(request, "test.html")

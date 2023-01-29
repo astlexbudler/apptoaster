@@ -27,6 +27,9 @@ urlpatterns = [
     # 개인정보 처리 방침
     path('privacy', views.webPrivacy, name='webPrivacy'),
 
+    # 템플릿 페이지
+    path('template', views.webTemplate, name='webTemplate'),
+
     # 내부 테스트 페이지
     path('test', views.webTest, name='webTest'),
 
