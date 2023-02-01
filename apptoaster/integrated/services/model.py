@@ -170,8 +170,6 @@ def createTarget(toasterId, deviceType, token, isPushAllow):
             push_allow_datetime = nowDatetime,
             is_ad_allow = False,
             ad_allow_datetime = nowDatetime,
-            is_night_allow = False,
-            night_allow_datetime = nowDatetime,
             last_active_date = nowDate
         ).save()
     
@@ -233,8 +231,6 @@ def readToasterTarget(toasterId):
             'pushAllowDatetime': common.datetimeToString(target.push_allow_datetime),
             "isAdAllow": target.is_ad_allow,
             "adAllowDatetime": common.datetimeToString(target.ad_allow_datetime),
-            "isNightAllow": target.is_night_allow,
-            'nightAllowDatetime': common.datetimeToString(target.night_allow_datetime),
             "lastActiveDate": common.dateToString(target.last_active_date)
         })
         
