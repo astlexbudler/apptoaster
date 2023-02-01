@@ -197,8 +197,6 @@ def readTarget(deviceType, token):
             push_allow_datetime = target.push_allow_datetime,
             is_ad_allow = target.is_ad_allow,
             ad_allow_datetime = target.ad_allow_datetime,
-            is_night_allow = target.is_night_allow,
-            night_allow_datetime = target.night_allow_datetime,
             last_active_date = nowDate
         ).save()
         
@@ -211,8 +209,6 @@ def readTarget(deviceType, token):
             'pushAllowDatetime': common.datetimeToString(target.push_allow_datetime),
             "isAdAllow": target.is_ad_allow,
             "adAllowDatetime": common.datetimeToString(target.ad_allow_datetime),
-            "isNightAllow": target.is_night_allow,
-            'nightAllowDatetime': common.datetimeToString(target.night_allow_datetime),
             "lastActiveDate": common.dateToString(target.last_active_date)
         }
     
@@ -248,7 +244,7 @@ def readToasterTarget(toasterId):
         return
 
 # 앱 사용자 수정
-def updateTarget(id, isPushAllow, isAdAllow, isNightAllow):
+def updateTarget(id, isPushAllow, isAdAllow):
     try:
 
         target = TARGET_TABLE.objects.get(
@@ -264,10 +260,6 @@ def updateTarget(id, isPushAllow, isAdAllow, isNightAllow):
             adAllowDatetime = nowDatetime
         else:
             adAllowDatetime = target.ad_allow_datetime
-        if isNightAllow:
-            isNightAllow = nowDatetime
-        else:
-            isNightAllow = target.night_allow_datetime
 
 
         TARGET_TABLE(
@@ -279,10 +271,24 @@ def updateTarget(id, isPushAllow, isAdAllow, isNightAllow):
             push_allow_datetime = pushAllowDatetime,
             is_ad_allow = isAdAllow,
             ad_allow_datetime = adAllowDatetime,
-            is_night_allow = target.is_night_allow,
-            night_allow_datetime = isNightAllow,
             last_active_date = target.last_active_date
         ).save()
+
+        target = TARGET_TABLE.objects.get(
+            id = id
+        )
+
+        return {
+            'id': target.id,
+            "token": target.token,
+            "toasterId": target.toaster_id,
+            "deviceType": target.device_type,
+            "isPushAllow": target.is_push_allow,
+            'pushAllowDatetime': common.datetimeToString(target.push_allow_datetime),
+            "isAdAllow": target.is_ad_allow,
+            "adAllowDatetime": common.datetimeToString(target.ad_allow_datetime),
+            "lastActiveDate": common.dateToString(target.last_active_date)
+        }
     
     except Exception() as e:
         createSystemLog(9, 'SYSTEM', 'services.model.updateTarget 앱 사용자 수정 실패. ' + e)

@@ -82,17 +82,13 @@ def webTest(request):
 ##################################################
 # 앱 토스터 API
 ##################################################
-# 수신인 관리(PUT/GET/PATCH)
+# 수신인 관리(GET/PATCH)
 @csrf_exempt
 def apiTarget(request, key):
     try:
         toaster = model.readToaster(key)
-        if toaster == None:
-            raise Exception()
 
-        if request.method == 'PUT':
-            json = apiPutTargetHandler(request, toaster)
-        elif request.method == 'GET':
+        if request.method == 'GET':
             json = apiGetTargetHandler(request, toaster)
         elif request.method == 'PATCH':
             json = apiPatchTargetHandler(request, toaster)

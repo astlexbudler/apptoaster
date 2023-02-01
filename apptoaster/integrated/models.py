@@ -72,10 +72,6 @@ class TARGET_TABLE(models.Model):
     is_ad_allow = models.BooleanField()
     # 광고 허용 동의 시간
     ad_allow_datetime = models.DateTimeField(null=True, blank=True)
-    # 야간 허용
-    is_night_allow = models.BooleanField()
-    # 야간 허용 동의 시간
-    night_allow_datetime = models.DateTimeField(null=True, blank=True)
     # 마지막 활동 날짜
     last_active_date = models.DateField()
 

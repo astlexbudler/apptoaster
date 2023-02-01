@@ -150,22 +150,32 @@ def apiPutTargetHandler(request, toasterInfo):
         })
 
 ##################################################
-# 수신인 확인
+# 수신인 확인(없을경우 생성)
 ##################################################
 def apiGetTargetHandler(request, toasterInfo):
     try:
+        if toasterInfo == None:
+            raise Exception()
+
         deviceType = request.GET['deviceType']
         token = request.GET['token']
-
         targetInfo = model.readTarget(deviceType, token)
 
+        if targetInfo == None:
+            model.createTarget(toasterInfo['id'], deviceType, token, False)
+            targetInfo = model.readTarget(deviceType, token)
+            return json.dumps({
+                'status': 'new',
+                'targetInfo': targetInfo
+            })
+
         return json.dumps({
-            'isSucceed': True,
+            'status': 'exist',
             'targetInfo': targetInfo
         })
     except:
         return json.dumps({
-            'isSucceed': False,
+            'status': "denied",
             'targetInfo': None
         })
 
@@ -185,20 +195,15 @@ def apiPatchTargetHandler(request, toasterInfo):
             isAdAllow = True
         else:
             isAdAllow = False
-        isNightAllow = request.GET['isNightAllow']
-        if isNightAllow == 'true':
-            isNightAllow = True
-        else:
-            isNightAllow = False
 
-        model.updateTarget(id, isPushAllow, isAdAllow, isNightAllow)
+        target = model.updateTarget(id, isPushAllow, isAdAllow)
 
         return json.dumps({
-            'isSucceed': True
+            'target': target
         })
     except:
         return json.dumps({
-            'isSucceed': False
+            'target': None
         })
 
 ##################################################
