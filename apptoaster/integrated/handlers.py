@@ -152,37 +152,37 @@ def apiPutTargetHandler(request, toasterInfo):
 ##################################################
 # 수신인 확인(없을경우 생성)
 ##################################################
-def apiGetTargetHandler(request, toasterInfo):
+def apiGetTargetHandler(request, toaster):
     try:
-        if toasterInfo == None:
+        if toaster == None:
             raise Exception()
 
         deviceType = request.GET['deviceType']
         token = request.GET['token']
-        targetInfo = model.readTarget(deviceType, token)
+        target = model.readTarget(deviceType, token)
 
-        if targetInfo == None:
-            model.createTarget(toasterInfo['id'], deviceType, token, False)
-            targetInfo = model.readTarget(deviceType, token)
+        if target == None:
+            model.createTarget(toaster['id'], deviceType, token, False)
+            target = model.readTarget(deviceType, token)
             return json.dumps({
                 'status': 'new',
-                'targetInfo': targetInfo
+                'target': target
             })
 
         return json.dumps({
             'status': 'exist',
-            'targetInfo': targetInfo
+            'target': target
         })
     except:
         return json.dumps({
             'status': "denied",
-            'targetInfo': None
+            'target': None
         })
 
 ##################################################
 # 수신인 수정
 ##################################################
-def apiPatchTargetHandler(request, toasterInfo):
+def apiPatchTargetHandler(request, toaster):
     try:
         id = request.GET['id']
         isPushAllow = request.GET['isPushAllow']
