@@ -49,6 +49,8 @@ class TOASTER_TABLE(models.Model):
     create_date = models.DateField()
     # 만료일
     expire_date = models.DateField()
+    # 푸시 서비스
+    is_push = models.BooleanField()
     
 
 

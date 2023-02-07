@@ -127,29 +127,6 @@ def webOverseerHandler(request):
 # 앱 토스터 API
 ##################################################
 ##################################################
-# 수신인 등록
-##################################################
-def apiPutTargetHandler(request, toasterInfo):
-    try:
-        deviceType = request.GET['deviceType']
-        token = request.GET['token']
-        isPushAllow = request.GET['isPushAllow']
-        if isPushAllow == 'true':
-            isPushAllow = True
-        else:
-            isPushAllow = False
-
-        model.createTarget(toasterInfo.id, deviceType, token, isPushAllow)
-
-        return json.dumps({
-            'isSucceed': True
-        })
-    except:
-        return json.dumps({
-            'isSucceed': False
-        })
-
-##################################################
 # 수신인 확인(없을경우 생성)
 ##################################################
 def apiGetTargetHandler(request, toaster):
@@ -161,8 +138,9 @@ def apiGetTargetHandler(request, toaster):
         token = request.GET['token']
         target = model.readTarget(deviceType, token)
 
+        # 없을경우 생성
         if target == None:
-            model.createTarget(toaster['id'], deviceType, token, False)
+            model.createTarget(toaster['id'], deviceType, token)
             target = model.readTarget(deviceType, token)
             return json.dumps({
                 'status': 'new',
@@ -182,7 +160,7 @@ def apiGetTargetHandler(request, toaster):
 ##################################################
 # 수신인 수정
 ##################################################
-def apiPatchTargetHandler(request, toaster):
+def apiPatchTargetHandler(request):
     try:
         id = request.GET['id']
         isPushAllow = request.GET['isPushAllow']
@@ -196,15 +174,11 @@ def apiPatchTargetHandler(request, toaster):
         else:
             isAdAllow = False
 
-        target = model.updateTarget(id, isPushAllow, isAdAllow)
+        model.updateTarget(id, isPushAllow, isAdAllow)
 
-        return json.dumps({
-            'target': target
-        })
+        return
     except:
-        return json.dumps({
-            'target': None
-        })
+        return
 
 ##################################################
 # PUSH API

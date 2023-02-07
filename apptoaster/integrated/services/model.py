@@ -155,7 +155,7 @@ def readToasterAll():
 # 앱 사용자 테이블
 ##################################################
 # 앱 사용자 생성
-def createTarget(toasterId, deviceType, token, isPushAllow):
+def createTarget(toasterId, deviceType, token):
     try:
         nowDate = common.stringToDate('')
         nowDatetime = common.stringToDatetime('')
@@ -166,7 +166,7 @@ def createTarget(toasterId, deviceType, token, isPushAllow):
             token = token,
             toaster_id = toasterId,
             device_type = deviceType,
-            is_push_allow = isPushAllow,
+            is_push_allow = False,
             push_allow_datetime = nowDatetime,
             is_ad_allow = False,
             ad_allow_datetime = nowDatetime,
@@ -269,22 +269,6 @@ def updateTarget(id, isPushAllow, isAdAllow):
             ad_allow_datetime = adAllowDatetime,
             last_active_date = target.last_active_date
         ).save()
-
-        target = TARGET_TABLE.objects.get(
-            id = id
-        )
-
-        return {
-            'id': target.id,
-            "token": target.token,
-            "toasterId": target.toaster_id,
-            "deviceType": target.device_type,
-            "isPushAllow": target.is_push_allow,
-            'pushAllowDatetime': common.datetimeToString(target.push_allow_datetime),
-            "isAdAllow": target.is_ad_allow,
-            "adAllowDatetime": common.datetimeToString(target.ad_allow_datetime),
-            "lastActiveDate": common.dateToString(target.last_active_date)
-        }
     
     except Exception() as e:
         createSystemLog(9, 'SYSTEM', 'services.model.updateTarget 앱 사용자 수정 실패. ' + e)
