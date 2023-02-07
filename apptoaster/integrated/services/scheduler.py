@@ -52,9 +52,9 @@ def scheduled_job():
         toasterTarget = model.readToasterTarget(toaster['id'])
         index = 0
         loop = math.ceil(len(toasterTarget)/100)
-        for i in range(loop):
-            api.kakaoSendPush(toaster['appAdminKey'], push['title'], push['message'], toasterTarget[index * 100:(index + 1)*100])
-            index = index + 1
         model.createPushHistory(toaster['id'], push['alias'], push['title'], push['message'], push['repeat'], push['ad'], len(toasterTarget))
+        for i in range(loop):
+            api.kakaoSendPush(toaster['appAdminKey'], push['title'], push['message'], toasterTarget[index * 100:(index + 1)*100 - 1])
+            index = index + 1
         
     return
