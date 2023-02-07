@@ -349,10 +349,12 @@
         document.querySelector("#preview").onclick = () => {
             Swal.fire({
                 title: '미리보기',
-                html: '아래 예시 주소를 입력해주세요!<br>' + 
-                '<input class="input-sm form-full" id="url" type="text" name="form-subject" placeholder="url 주소 입력.." required>',
+                html: '아래 예시 주소를 입력해주세요!<br><br>' + 
+                '<input class="input-sm form-full" id="url" type="text" name="form-subject" value="https://www.your_website_here.com">',
                 icon: 'question',
+                showCancelButton: true,
                 confirmButtonText: `확인`,
+                cancelButtonText: `취소`,
             }).then((result) => {
                 if (result.isConfirmed) {
                     document.location.href = document.querySelector("#url").value;
