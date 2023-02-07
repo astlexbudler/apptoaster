@@ -205,9 +205,9 @@ def apiToastPushHandler(request, toaster):
             
         model.createPush(toaster['id'], alias, title, message, date, time, repeat, ad)
 
-        return '/toast_push_success.html'
+        return 'toast_push_success.html'
     except:
-        return '/toast_push_fail.html'
+        return 'toast_push_fail.html'
 
 ##################################################
 # PUSH 수정

@@ -20,7 +20,7 @@ scheduler.py
 ##################################################
 def startScheduler():
     scheduler = BackgroundScheduler()
-    scheduler.add_job(scheduled_job, 'interval', seconds=100)
+    scheduler.add_job(scheduled_job, 'interval', seconds=180)
     scheduler.start()
 
 def scheduled_job():
@@ -55,6 +55,6 @@ def scheduled_job():
         for i in range(loop):
             api.kakaoSendPush(toaster['appAdminKey'], push['title'], push['message'], toasterTarget[index * 100:(index + 1)*100])
             index = index + 1
-        # model.createPushHistory(toaster['id'], push['alias'], push['title'], push['message'], push['repeat'], push['ad'], len(toasterTarget))
+        model.createPushHistory(toaster['id'], push['alias'], push['title'], push['message'], push['repeat'], push['ad'], len(toasterTarget))
         
     return
