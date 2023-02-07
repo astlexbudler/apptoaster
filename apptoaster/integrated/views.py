@@ -121,11 +121,11 @@ def apiToastPush(request, key):
             raise Exception()
 
         if request.method == 'POST':
-            json = apiToastPushHandler(request, toaster)
+            url = apiToastPushHandler(request, toaster)
     except:
-        json = ''
+        url = '/toast_push_fail'
     
-    return HttpResponse(json)
+    return redirect(url)
 
 # PUSH 수정(POST)
 @csrf_exempt

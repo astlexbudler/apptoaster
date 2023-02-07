@@ -199,20 +199,12 @@ def apiToastPushHandler(request, toaster):
         else:
             repeat = False
         ad = request.POST['ad']
-        if ad == '1':
-            ad = True
-        else:
-            ad = False
             
         model.createPush(toaster['id'], alias, title, message, date, time, repeat, ad)
 
-        return json.dumps({
-            'isSucceed': True
-        })
+        return '/toast_push_success'
     except:
-        return json.dumps({
-            'isSucceed': False
-        })
+        return '/toast_push_fail'
 
 ##################################################
 # PUSH 수정

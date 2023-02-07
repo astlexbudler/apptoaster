@@ -70,6 +70,10 @@ urlpatterns = [
     ##################################################
     # PUSH 스케줄 추가(POST)
     path('api/toast_push/key/<str:key>', views.apiToastPush, name='apiToastPush'),
+    # PUSH 스케줄 추가(POST)
+    # request https://apptoaster.co.kr/api/toast_push/key/{key}
+    # data : alias, title, message, repeat, date, time, ad
+    # response 성공/실패
 
     # PUSH 수정(POST)
     path('api/update_push/key/<str:key>', views.apiUpdatePush, name='apiUpdatePush'),
