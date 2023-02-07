@@ -101,7 +101,7 @@ def kakaoSendPush(kakaoAppAdminKey, title, message, targetList):
 
     uuids = '['
     for target in targetList:
-        uuids += '"' + target.id + '",'
+        uuids += '"' + target['id'] + '",'
     uuids = uuids[0:-1] + ']'
 
     body = {

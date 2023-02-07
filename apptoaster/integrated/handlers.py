@@ -48,7 +48,6 @@ def webPushToastingHandler(request):
 ##################################################
 def webPushToastedHandler(request):
     try:
-        logger.debug(1)
         toaster = model.readToaster(request.GET['key'])
 
         pushList = model.readPushHistory(toaster['id'])
@@ -58,7 +57,6 @@ def webPushToastedHandler(request):
         if page > lastPage:
             page = lastPage
 
-        logger.debug(pushList)
         index = 0
         _pushList = []
         for push in pushList:
@@ -66,7 +64,6 @@ def webPushToastedHandler(request):
                 _pushList.append(push)
             index = index + 1
 
-        logger.debug(3)
         return {
             "toaster": toaster,
             'page': {
@@ -192,13 +189,13 @@ def apiToastPushHandler(request, toaster):
         title = request.POST['title']
         message = request.POST['message']
         date = common.stringToDate(request.POST.get('date', ''))
-        time = common.stringToTime(request.POST.get('time', ''))
+        time = common.stringToTime(request.POST.get('time', '') + ':00')
         repeat = request.POST['repeat']
         if repeat == '2':
             repeat = True
         else:
             repeat = False
-        if request.POST['ad'] == 'true':
+        if request.POST['ad'] == 'on':
             ad = True
         else:
             ad = False

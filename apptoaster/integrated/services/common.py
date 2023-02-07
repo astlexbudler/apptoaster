@@ -128,9 +128,12 @@ def stringToDate(string):
 # 문자열을 time 으로
 ##################################################
 def stringToTime(string):
-    if string != '':
-        return datetime.datetime.strptime(string, "%H:%M:%S")
-    else:
+    try:
+        if string != '':
+            return datetime.datetime.strptime(string, "%H:%M:%S")
+        else:
+            return datetime.datetime.now().time()
+    except:
         return datetime.datetime.now().time()
 
 

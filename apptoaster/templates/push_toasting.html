@@ -294,15 +294,15 @@
                 document.querySelector('#date').value = null;
                 document.querySelector('#time').value = time;
             } else {
-                document.querySelector('#repeat').value = '1';
+                document.querySelector('#repeat').value = '0';
                 document.querySelector('#date').value = date;
                 document.querySelector('#time').value = time;
             }
 
             if (ad == 'True') {
-                document.querySelector('#ad').value = '0';
-            } else {
                 document.querySelector('#ad').value = '1';
+            } else {
+                document.querySelector('#ad').value = '0';
             }
         }
 
@@ -432,20 +432,14 @@
                     formData.append('title', title);
                     formData.append('message', message);
                     formData.append('repeat', repeat);
-                    formData.append('ad', document.querySelector('#ad').value);
+                    formData.append('ad', document.querySelector('#ad').value == '0'? 'off' : 'on');
                     formData.append('date', date);
                     formData.append('time', time);
 
                     fetch(url, {
                         method: 'POST',
                         body: formData
-                    }).then((response) => response.json())
-                        .then((data) => {
-                            document.location.reload();
-                        })
-                        .catch((error) => {
-                            console.error('Error:', error);
-                        });
+                    }).then(() => document.location.reload());
                 } else {
                     return
                 }
@@ -534,13 +528,8 @@
                     fetch(url, {
                         method: 'POST',
                         body: formData
-                    }).then((response) => response.json())
-                        .then((data) => {
-                            document.location.reload();
-                        })
-                        .catch((error) => {
-                            console.error('Error:', error);
-                        });
+                    }).then(() => document.location.reload());
+                       
                 } else {
                     return
                 }

@@ -101,6 +101,15 @@ class SCHEDULED_PUSH_TABLE(models.Model):
     repeat = models.BooleanField()
     # 광고 여부
     ad = models.BooleanField()
+    # 직접 대상 지정 여부
+    is_assigned = models.BooleanField()
+
+class ASSIGNED_TARGET(models.Model):
+    # 푸시 식별자
+    push_id = models.CharField(max_length=20)
+    # 타겟 식별자
+    target_id = models.CharField(max_length=20)
+
 
 
 

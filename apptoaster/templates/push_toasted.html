@@ -106,8 +106,8 @@
                                     <td class="text-center">
                                         {{ push.title }}
                                     </td>
-                                    <td class="text-center">
-                                        <i class="fa-light fa-magnifying-glass" onclick="detailModal('{{ push.alias }}', '{{ push.title }}', '{{ push.message }}', '{{ push.toastedDatetime }}', '{{ push.repeat }}', '{{ push.ad }}');"></i>
+                                    <td class="text-center" onclick="detailModal('{{ push.alias }}', '{{ push.title }}', '{{ push.message }}', '{{ push.toastedDatetime }}', '{{ push.repeat }}', '{{ push.ad }}', '{{ push.count }}');">
+                                        <i class="fa-light fa-magnifying-glass"></i>
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -182,7 +182,7 @@
             document.querySelector("#pageList").innerHTML = html;
         }
         
-        detailModal = (alias, title, message, toastedDatetime, repeat, ad) => {
+        detailModal = (alias, title, message, toastedDatetime, repeat, ad, count) => {
             if(repeat == "True") {
                 repeat = '예';
             }else {
@@ -197,13 +197,13 @@
                 title: 'PUSH 기록',
                 html: 
                 '<p style="text-align: left; font-size: 16px;">' + 
-                '푸시 이름 : ' + alias + '<br>' + 
-                '푸시 제목 : ' + title + '<br>' + 
-                '푸시 내용 : ' + message  + '<br>' + 
-                '보낸 날짜 : ' + toastedDatetime + '<br>' + 
-                '반복 메세지 여부 : ' + repeat + '<br>' + 
-                '광고 메세지 여부 : ' + ad + 
-                '수신 인원 : ' + count + '명(Android 및 Ios 합계)' +  
+                '<b>푸시 이름</b> : ' + alias + '<br>' + 
+                '<b>푸시 제목</b> : ' + title + '<br>' + 
+                '<b>푸시 내용</b> : ' + message  + '<br>' + 
+                '<b>보낸 날짜</b> : ' + toastedDatetime + '<br>' + 
+                '<b>반복 메세지 여부</b> : ' + repeat + '<br>' + 
+                '<b>광고 메세지 여부</b> : ' + ad + '<br>' +
+                '<b>수신 인원</b> : ' + count + '명(Android 및 Ios 합계)' +  
                 '</p>',
                 confirmButtonText: `확인`,
             }).then((result) => {
