@@ -100,6 +100,7 @@ def readToaster(key):
             'appAdminKey': toaster.app_admin_key,
             'createDate': toaster.create_date,
             'expireDate': toaster.expire_date,
+            'isPush': toaster.is_push,
         }
 
     except:

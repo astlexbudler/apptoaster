@@ -121,7 +121,6 @@ def apiToastPush(request, key):
             raise Exception()
         if toaster['isPush'] == False:
             raise Exception()
-
         if request.method == 'POST':
             url = apiToastPushHandler(request, toaster)
     except:

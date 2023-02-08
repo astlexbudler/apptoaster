@@ -195,7 +195,7 @@ def apiToastPushHandler(request, toaster):
             repeat = True
         else:
             repeat = False
-        if request.POST['ad'] == 'on':
+        if request.POST.get('ad', '') == 'on':
             ad = True
         else:
             ad = False

@@ -24,8 +24,6 @@ def startScheduler():
     scheduler.start()
 
 def scheduled_job():
-    model.createSystemLog(0, 'SYSTEM', 'scheduler run')
-
     nowDate = common.stringToDate('')
     nowTime = common.stringToTime('')
     now = common.stringToDatetime('')
