@@ -103,10 +103,10 @@ def apiSendEmailTools(request):
 # 내부 테스트 API
 @csrf_exempt
 def apiTest(request):
-    date = common.stringToDate('2020-01-01')
-    time = common.stringToTime('24:00:00')
+    res = api.kakaoRegisterTarget('19518771a918f2698b3aed03373c36f6', '208182828669954', 'apns', 'cjilrJCvhU4im8mQRMyCpK:APA91bGQnuaom4B7MdPWaff4P33PAOQnipJiB9kfY-YnQ0fsjeHHa_Z7iwaZreKFp_jyb8ZHqglmCbzeCOQmG4R7rAUDueRirRUwhqKTRWTydbief3-t0nBRRnZTGUA0oYz6V0607SmS')
+    api.kakaoGetTarget('19518771a918f2698b3aed03373c36f6', '208182828669954')
 
-    return HttpResponse(datetime.datetime.combine())
+    return HttpResponse(res)
 
 ##################################################
 # PUSH
