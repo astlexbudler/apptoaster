@@ -4,6 +4,8 @@ from . import api
 from . import common
 import math
 import datetime
+import logging
+logger = logging.getLogger('appToaster')
 
 '''
 scheduler.py
@@ -20,7 +22,7 @@ scheduler.py
 ##################################################
 def startScheduler():
     scheduler = BackgroundScheduler()
-    scheduler.add_job(scheduled_job, 'interval', seconds=180)
+    scheduler.add_job(scheduled_job, 'interval', seconds=40)
     scheduler.start()
 
 def scheduled_job():
@@ -33,16 +35,14 @@ def scheduled_job():
     workList = []
     for push in pushList:
         pushDate = push['date']
-        if push['repeat']:
-            pushDate = nowDate
         pushTime = push['time']
         pushDatetime = datetime.datetime.combine(pushDate, pushTime)
-        if (pushDatetime - now).days < 0:
+        if int((pushDatetime - now).days) < 0:
             workList.append(push)
-            if push['repeat'] == True:
-                model.updatePush(push['id'], push['alias'], push['title'], push['message'], push['date'] + datetime.timedelta(days=1), push['time'], push['repeat'], push['ad'], 'pass')
-        if push['repeat'] == False:
-            model.deletePush(push['id'])
+            if push['repeat']:
+                model.updatePush(push['id'], push['alias'], push['title'], push['message'], push['date'] + datetime.timedelta(days=1), push['time'], push['repeat'], push['ad'], push['to'])
+            else:
+                model.deletePush(push['id'])
 
     # 푸시 발송. 푸시 기록 추가
     for push in workList:

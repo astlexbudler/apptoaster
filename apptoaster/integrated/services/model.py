@@ -444,7 +444,9 @@ def updatePush(id, alias, title, message, date, time, repeat, ad, to):
             )
 
         targetAssigned = False
-        if to != '':
+        if to == 'all':
+            targetAssigned = False
+        elif to != '':
             targetAssigned = True
             ASSIGNED_TARGET_TABLE.objects.all().filter(
                 push_id = push.id
@@ -458,8 +460,6 @@ def updatePush(id, alias, title, message, date, time, repeat, ad, to):
                     push_id = push.id,
                     target_id = targetTable.id
                 )
-        elif to == 'pass':
-            targetAssigned = True
 
         SCHEDULED_PUSH_TABLE(
             id = push.id,
