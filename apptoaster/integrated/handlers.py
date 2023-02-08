@@ -157,14 +157,17 @@ def apiGetTargetHandler(request, toaster):
 ##################################################
 # 수신인 수정
 ##################################################
-def apiPatchTargetHandler(request):
+def apiPatchTargetHandler(request, toaster):
     try:
         id = request.GET['id']
+        target = model.readTargetId(id)
         isPushAllow = request.GET['isPushAllow']
         if isPushAllow == 'true':
+            api.kakaoRegisterTarget(toaster['app_admin_key'], target['id'], target['deviceType'], target['token'])
             isPushAllow = True
         else:
             isPushAllow = False
+            api.kakaoDeleteTarget(toaster['app_admin_key'], target['id'], target['deviceType'])
         isAdAllow = request.GET['isAdAllow']
         if isAdAllow == 'true':
             isAdAllow = True

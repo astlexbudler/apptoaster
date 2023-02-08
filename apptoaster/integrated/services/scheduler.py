@@ -57,6 +57,11 @@ def scheduled_job():
         loop = math.ceil(len(toasterTarget)/100)
         if push['ad']:
             push['message'] = '(광고)' + push['message'] + '\n(수신거부:앱 메뉴 알림 설정)'
+            list = []
+            for target in toasterTarget:
+                if target['isAdAllow']:
+                    list.append(target)
+            toasterTarget = list
         model.createPushHistory(toaster['id'], push['alias'], push['title'], push['message'], push['repeat'], push['ad'], len(toasterTarget))
         for i in range(loop):
             api.kakaoSendPush(toaster['appAdminKey'], push['title'], push['message'], toasterTarget[index * 100:(index + 1)*100 - 1])

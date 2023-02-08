@@ -90,7 +90,7 @@ def apiTarget(request, key):
         if request.method == 'GET':
             json = apiGetTargetHandler(request, toaster)
         elif request.method == 'PATCH':
-            json = apiPatchTargetHandler(request)
+            json = apiPatchTargetHandler(request, toaster)
     except:
         json = ''
     
