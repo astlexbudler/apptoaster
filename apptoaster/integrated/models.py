@@ -102,9 +102,9 @@ class SCHEDULED_PUSH_TABLE(models.Model):
     # 광고 여부
     ad = models.BooleanField()
     # 직접 대상 지정 여부
-    is_assigned = models.BooleanField()
+    target_assign = models.BooleanField()
 
-class ASSIGNED_TARGET(models.Model):
+class ASSIGNED_TARGET_TABLE(models.Model):
     # 푸시 식별자
     push_id = models.CharField(max_length=20)
     # 타겟 식별자

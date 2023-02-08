@@ -110,7 +110,7 @@ def apiTest(request):
     return HttpResponse(datetime.datetime.combine())
 
 ##################################################
-# PUSH API
+# PUSH
 ##################################################
 # PUSH 스케줄 추가(POST)
 @csrf_exempt
@@ -118,6 +118,8 @@ def apiToastPush(request, key):
     try:
         toaster = model.readToaster(key)
         if toaster == None:
+            raise Exception()
+        if toaster['isPush'] == False:
             raise Exception()
 
         if request.method == 'POST':

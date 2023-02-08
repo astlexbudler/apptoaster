@@ -66,21 +66,31 @@ urlpatterns = [
     path('api/test', views.apiTest, name='apiTest'),
 
     ##################################################
-    # PUSH API
+    # PUSH
     ##################################################
     # PUSH 스케줄 추가(POST)
     path('api/toast_push/key/<str:key>', views.apiToastPush, name='apiToastPush'),
-    # PUSH 스케줄 추가(POST)
     # request https://apptoaster.co.kr/api/toast_push/key/{key}
-    # data : alias, title, message, repeat, date, time, ad
-    # response 성공/실패
+    # data : alias, title, message, repeat, date, time, ad, to?
+    # response toast_push_success.html/toast_push_fail.html
 
     # PUSH 수정(POST)
     path('api/update_push/key/<str:key>', views.apiUpdatePush, name='apiUpdatePush'),
+    # request https://apptoaster.co.kr/api/toast_push/key/{key}
+    # data : id?, alias, title, message, repeat, date, time, ad, to?
+    # response isSucceed
 
     # PUSH 스케줄 확인/삭제(GET/DELETE)
     path('api/push/key/<str:key>', views.apiPush, name='apiPush'),
+    # PUSH 스케줄 확인(GET)
+    # request https://apptoaster.co.kr/api/push/key/{key}
+    # response isSucceed, pushList
+    # PUSH 스케줄 삭제(DELETE)
+    # request https://apptoaster.co.kr/api/push/key/{key}?id={id}&alias={alias}
+    # response isSucceed
 
     # PUSH 기록 확인(GET)
     path('api/toasted_push/key/<str:key>', views.apiPushToasted, name='apiPushToasted')
+    # request https://apptoaster.co.kr/api/toasted_push/key/{key}?page={page}
+    # response page, pushList
 ]

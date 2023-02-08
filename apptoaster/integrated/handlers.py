@@ -199,8 +199,9 @@ def apiToastPushHandler(request, toaster):
             ad = True
         else:
             ad = False
+        to = request.POST.get('to', '')
             
-        model.createPush(toaster['id'], alias, title, message, date, time, repeat, ad)
+        model.createPush(toaster['id'], alias, title, message, date, time, repeat, ad, to)
 
         return 'toast_push_success.html'
     except:
@@ -215,34 +216,20 @@ def apiUpdatePushHandler(request, toasterInfo):
         alias = request.POST['alias']
         title = request.POST['title']
         message = request.POST['message']
-        if request.POST["date"] == 'null':
-            date = ''
-        else:
-            date = request.POST["date"]
-        if request.POST["time"] == 'null':
-            time = ''
-        else:
-            time = request.POST["time"]
-        date = common.stringToDate(date)
-        time = common.stringToTime(time)
+        date = common.stringToDate(request.POST.get('date', ''))
+        time = common.stringToTime(request.POST.get('time', '') + ':00')
         repeat = request.POST['repeat']
-
-        
-
         if repeat == '2':
             repeat = True
         else:
             repeat = False
-        ad = request.POST['ad']
-        if ad == '1':
+        if request.POST['ad'] == 'on':
             ad = True
         else:
             ad = False
+        to = request.POST.get('to', '')
         
-        if id == '':
-            model.updatePushAlias(alias, toasterInfo.id, title, message, date, time, repeat, ad)
-        else:
-            model.updatePush(id, alias, title, message, date, time, repeat, ad)
+        model.updatePush(id, alias, title, message, date, time, repeat, ad, to)
 
         return json.dumps({
             'isSucceed': True
@@ -295,14 +282,34 @@ def apiDeletePushHandler(request, toasterInfo):
 ##################################################
 def apiPushToastedHandler(request, toasterInfo):
     try:
+        page = request.GET.get('page', '1')
+
         pushList = model.readPushHistory(toasterInfo.id)
+        read = 100
+        page = int(request.GET.get('page', '1')) - 1
+        lastPage = math.floor(len(pushList) / 100)
+        if page > lastPage:
+            page = lastPage
+
+        index = 0
+        _pushList = []
+        for push in pushList:
+            if (index >= read * page) & (index < read * (page + 1)):
+                _pushList.append(push)
+            index = index + 1
 
         return json.dumps({
-            'isSucceed': True,
-            'pushList': pushList
+            'page': {
+                'now': page + 1,
+                'lastPage': lastPage + 1
+            },
+            'pushList': _pushList
         })
     except:
         return json.dumps({
-            'isSucceed': False,
+            'page': {
+                'now': 1,
+                'lastPage': 1
+            },
             'pushList': None
         })

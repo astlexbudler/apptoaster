@@ -213,6 +213,28 @@ def readTarget(deviceType, token):
     except:
         return
 
+# 앱 사용자 확인(ID)
+def readTargetId(id):
+    try:
+        target = TARGET_TABLE.objects.get(
+            id = id
+        )
+        
+        return {
+            'id': target.id,
+            "token": target.token,
+            "toasterId": target.toaster_id,
+            "deviceType": target.device_type,
+            "isPushAllow": target.is_push_allow,
+            'pushAllowDatetime': common.datetimeToString(target.push_allow_datetime),
+            "isAdAllow": target.is_ad_allow,
+            "adAllowDatetime": common.datetimeToString(target.ad_allow_datetime),
+            "lastActiveDate": common.dateToString(target.last_active_date)
+        }
+    
+    except:
+        return
+
 # 사용자의 타겟 모두 확인
 def readToasterTarget(toasterId):
     try:
@@ -287,10 +309,35 @@ def deleteTarget(id):
 # PUSH 예약 테이블
 ##################################################
 # PUSH 예약 생성
-def createPush(toasterId, alias, title, message, date, time, repeat, ad):
+def createPush(toasterId, alias, title, message, date, time, repeat, ad, to):
     try:
         id = common.getId()
         
+        if to != '':
+            for target in to:
+                targetTable = TARGET_TABLE.objects.get(
+                    device_type = target['deviceType'],
+                    token = target['token']
+                )
+
+                ASSIGNED_TARGET_TABLE(
+                    push_id = id,
+                    target_id = targetTable.id
+                )
+            
+            SCHEDULED_PUSH_TABLE(
+                id = id,
+                toaster_id = toasterId,
+                alias = alias,
+                title = title,
+                message = message,
+                date = date,
+                time = time,
+                repeat = repeat,
+                ad = ad,
+                target_assign = True
+            ).save()      
+
         SCHEDULED_PUSH_TABLE(
             id = id,
             toaster_id = toasterId,
@@ -300,7 +347,8 @@ def createPush(toasterId, alias, title, message, date, time, repeat, ad):
             date = date,
             time = time,
             repeat = repeat,
-            ad = ad
+            ad = ad,
+            target_assign = False
         ).save()
     
     except Exception() as e:
@@ -319,6 +367,15 @@ def readPush(toasterId):
                 date = ''
             else:
                 date = common.dateToString(push.date)
+            
+            to = 'all'
+            if push.target_assign:
+                to = []
+                assignedList = ASSIGNED_TARGET_TABLE.objects.all().filter(
+                    push_id = push.id
+                )
+                for assigned in assignedList:
+                    to.append(assigned.target_id)
 
             list.append({
                 "id": push.id,
@@ -329,7 +386,8 @@ def readPush(toasterId):
                 "date": date,
                 "time": common.timeToString(push.time),
                 "repeat": push.repeat,
-                "ad": push.ad
+                "ad": push.ad,
+                'to': to
             })
 
         return list
@@ -344,6 +402,15 @@ def readPushAll():
 
         list = []
         for push in pushList:
+            to = 'all'
+            if push.target_assign:
+                to = []
+                assignedList = ASSIGNED_TARGET_TABLE.objects.all().filter(
+                    push_id = push.id
+                )
+                for assigned in assignedList:
+                    to.append(assigned.target_id)
+
             list.append({
                 "id": push.id,
                 "toasterId": push.toaster_id,
@@ -353,7 +420,8 @@ def readPushAll():
                 "date": push.date,
                 "time": push.time,
                 "repeat": push.repeat,
-                "ad": push.ad
+                "ad": push.ad,
+                'to': to
             })
 
         return list
@@ -363,14 +431,37 @@ def readPushAll():
 
 
 # PUSH 예약 수정
-def updatePush(id, alias, title, message, date, time, repeat, ad):
+def updatePush(id, alias, title, message, date, time, repeat, ad, to):
     try:
-        push = SCHEDULED_PUSH_TABLE.objects.get(
-            id = id
-        )
+        try:
+            push = SCHEDULED_PUSH_TABLE.objects.get(
+                id = id
+            )
+        except:
+            push = SCHEDULED_PUSH_TABLE.objects.get(
+                alias = alias
+            )
+
+        targetAssigned = False
+        if to != '':
+            targetAssigned = True
+            ASSIGNED_TARGET_TABLE.objects.all().filter(
+                push_id = push.id
+            ).delete()
+            for target in to:
+                targetTable = TARGET_TABLE.objects.get(
+                    device_type = target['deviceType'],
+                    token = target['token']
+                )
+                ASSIGNED_TARGET_TABLE(
+                    push_id = push.id,
+                    target_id = targetTable.id
+                )
+        elif to == 'pass':
+            targetAssigned = True
 
         SCHEDULED_PUSH_TABLE(
-            id = id,
+            id = push.id,
             toaster_id = push.toaster_id,
             alias = alias,
             title = title,
@@ -378,30 +469,8 @@ def updatePush(id, alias, title, message, date, time, repeat, ad):
             date = date,
             time = time,
             repeat = repeat,
-            ad = ad
-        ).save()
-    
-    except Exception() as e:
-        createSystemLog(9, 'SYSTEM', 'services.model.updatePush PUSH 예약 수정 실패. ' + e)
-
-# PUSH 예약 수정(alias)
-def updatePushAlias(alias, toasterId, title, message, date, time, repeat, ad):
-    try:
-        push = SCHEDULED_PUSH_TABLE.objects.get(
-            alias = alias,
-            toasterId = toasterId
-        )
-
-        SCHEDULED_PUSH_TABLE(
-            id = push.id,
-            toaster_id = toasterId,
-            alias = alias,
-            title = title,
-            message = message,
-            date = date,
-            time = time,
-            repeat = repeat,
-            ad = ad
+            ad = ad,
+            target_assign = targetAssigned
         ).save()
     
     except Exception() as e:
@@ -410,6 +479,10 @@ def updatePushAlias(alias, toasterId, title, message, date, time, repeat, ad):
 # PUSH 예약 삭제
 def deletePush(id):
     try:
+        ASSIGNED_TARGET_TABLE.objects.all().filter(
+            push_id = id
+        ).delete()
+
         SCHEDULED_PUSH_TABLE.objects.get(
             id = id
         ).delete()
@@ -420,6 +493,15 @@ def deletePush(id):
 # PUSH 예약 삭제(alias)
 def deletePushAlias(alias):
     try:
+        pushList = SCHEDULED_PUSH_TABLE.objects.all().filter(
+            alias = alias
+        )
+
+        for push in pushList:
+            ASSIGNED_TARGET_TABLE.objects.all().filter(
+                push_id = push.id
+            ).delete()
+
         SCHEDULED_PUSH_TABLE.objects.all().filter(
             alias = alias
         ).delete()

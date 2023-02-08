@@ -42,14 +42,19 @@ def scheduled_job():
         if (pushDatetime - now).days < 0:
             workList.append(push)
             if push['repeat'] == True:
-                model.updatePush(push['id'], push['alias'], push['title'], push['message'], push['date'] + datetime.timedelta(days=1), push['time'], push['repeat'], push['ad'])
+                model.updatePush(push['id'], push['alias'], push['title'], push['message'], push['date'] + datetime.timedelta(days=1), push['time'], push['repeat'], push['ad'], 'pass')
         if push['repeat'] == False:
             model.deletePush(push['id'])
 
     # 푸시 발송. 푸시 기록 추가
     for push in workList:
         toaster = model.readToasterById(push['toasterId'])
-        toasterTarget = model.readToasterTarget(toaster['id'])
+        if push['to'] != 'all':
+            toasterTarget = []
+            for targetId in push['to']:
+                toasterTarget.append(model.readTargetId(targetId))
+        else:
+            toasterTarget = model.readToasterTarget(toaster['id'])
         index = 0
         loop = math.ceil(len(toasterTarget)/100)
         if push['ad']:

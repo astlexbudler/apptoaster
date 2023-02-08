@@ -47,24 +47,101 @@
                 <div class="full-screen-intro container" style="min-height: 400px;">
                     <div class="intro-content">
                         <div class="intro-content-inner">
-                            <button id="button" class="btn btn-lg btn-black">Button</button>
+                            <!-- target(GET) -->
+                            <table class="col-12">
+                                <tr>
+                                    <td colspan="2">
+                                        <button id="a" class="btn btn-lg btn-black">(A) target(GET)</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>
+                                            deviceType
+                                        </label>
+                                        <select class="input-sm form-full" id="a1">
+                                            <option value="gcm" selected>gcm</option>
+                                            <option value="apns">apns</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <label>
+                                            token
+                                        </label>
+                                        <input class="input-sm form-full" id="a2">
+                                    </td>
+                                </tr>
+                            </table>
                             <script>
-                                document.querySelector("#button").onclick = () => {
-                                    Swal.fire({
-                                        title: 'Title',
-                                        html: 'Message<br>' +
-                                            '<small>Small message</small>',
-                                        icon: 'success',
-                                        showCancelButton: true,
-                                        confirmButtonText: `Ok`,
-                                        cancelButtonText: `Cancel`,
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            return
-                                        } else {
-                                            return
-                                        }
-                                    })
+                                document.querySelector("#a").onclick = () => {
+                                    deviceType = document.querySelector('#a1').value;
+                                    token = document.querySelector('#a2').value;
+                                    url = '/api/target/key/TESTKEY?deviceType=' + deviceType + '&token=' + token;
+                                    console.log(url);
+                                    fetch(url, {
+                                        method: 'GET'
+                                    }).then((response) => response.json())
+                                        .then((data) => {
+                                            console.log(data);
+                                        })
+                                        .catch((error) => {
+                                            console.error('Error:', error);
+                                        });
+                                }
+                            </script>
+
+                            <!-- target(PATCH) -->
+                            <table class="col-12">
+                                <tr>
+                                    <td colspan="2">
+                                        <button id="b" class="btn btn-lg btn-black">(B) target(PATCH)</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <label>
+                                            id
+                                        </label>
+                                        <input class="input-sm form-full" id="b1">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>
+                                            isPush
+                                        </label>
+                                        <select class="input-sm form-full" id="b2">
+                                            <option value="true">true</option>
+                                            <option value="false">false</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <label>
+                                            isAd
+                                        </label>
+                                        <select class="input-sm form-full" id="b3">
+                                            <option value="true">true</option>
+                                            <option value="false">false</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+                            <script>
+                                document.querySelector("#b").onclick = () => {
+                                    id = document.querySelector('#b1').value;
+                                    isPush = document.querySelector('#b2').value;
+                                    isAd = document.querySelector('#b3').value;
+                                    url = '/api/target/key/TESTKEY?id=' + id + '&isPushAllow=' + isPush + '&isAdAllow=' + isAd;
+                                    console.log(url);
+                                    fetch(url, {
+                                        method: 'PATCH'
+                                    }).then((response) => response.json())
+                                        .then((data) => {
+                                            console.log(data);
+                                        })
+                                        .catch((error) => {
+                                            console.error('Error:', error);
+                                        });
                                 }
                             </script>
                         </div>
