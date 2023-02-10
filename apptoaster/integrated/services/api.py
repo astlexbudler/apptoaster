@@ -12,7 +12,7 @@ API 관련 기능을 관리하는 서비스입니다.
 ##################################################
 # 푸시 토큰 등록하기
 ##################################################
-def kakaoRegisterTarget(kakaoAppAdminKey, targetId, deviceType, token):
+def kakaoRegisterTarget(kakaoAppAdminKey, uuid, token):
     # 기본정보
     url = 'https://kapi.kakao.com/v2/push/register'
 
@@ -22,9 +22,9 @@ def kakaoRegisterTarget(kakaoAppAdminKey, targetId, deviceType, token):
         'Authorization': 'KakaoAK ' + kakaoAppAdminKey,
     }
     body = {
-        'uuid':targetId,
-        'device_id':targetId,
-        'push_type':deviceType,
+        'uuid':uuid,
+        'device_id':uuid,
+        'push_type':'fcm',
         'push_token':token
     }
 
@@ -36,9 +36,9 @@ def kakaoRegisterTarget(kakaoAppAdminKey, targetId, deviceType, token):
 ##################################################
 # 푸시 토큰 보기
 ##################################################
-def kakaoGetTarget(kakaoAppAdminKey, targetId):
+def kakaoGetTarget(kakaoAppAdminKey, uuid):
     # 기본정보
-    url = 'https://kapi.kakao.com/v2/push/tokens?uuid=' + targetId
+    url = 'https://kapi.kakao.com/v2/push/tokens?uuid=' + uuid
 
     # header 및 body 작성
     header = {
@@ -53,7 +53,7 @@ def kakaoGetTarget(kakaoAppAdminKey, targetId):
 ##################################################
 # 푸시 토큰 삭제하기
 ##################################################
-def kakaoDeleteTarget(kakaoAppAdminKey, targetId, deviceType):
+def kakaoDeleteTarget(kakaoAppAdminKey, uuid):
     # 기본정보
     url = 'https://kapi.kakao.com/v2/push/deregister'
 
@@ -63,9 +63,9 @@ def kakaoDeleteTarget(kakaoAppAdminKey, targetId, deviceType):
         'Authorization': 'KakaoAK ' + kakaoAppAdminKey,
     }
     body = {
-        'uuid':targetId,
-        'device_id':targetId,
-        'push_type':deviceType
+        'uuid':uuid,
+        'device_id':uuid,
+        'push_type':'fcm'
     }
 
     # API 요청
@@ -91,17 +91,12 @@ def kakaoSendPush(kakaoAppAdminKey, title, message, targetList):
                 "title":title,
                 "body":message
             }
-        },
-        "for_apns":{
-            "sound":"default",
-            "push_alert":True,
-            "message":title + message
         }
     }
 
     uuids = '['
     for target in targetList:
-        uuids += '"' + target['id'] + '",'
+        uuids += '"' + target['uuid'] + '",'
     uuids = uuids[0:-1] + ']'
 
     body = {

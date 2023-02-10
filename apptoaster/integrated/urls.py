@@ -39,27 +39,27 @@ urlpatterns = [
     # 수신인 관리(GET/PATCH)
     path('api/target/key/<str:key>', views.apiTarget, name='apiTarget'),
     # 수신인 확인(GET)
-    # request https://apptoaster.co.kr/api/target/key/{key}?deviceType={gcm/apns}&token={token}
+    # request https://apptoaster.co.kr/api/target/key/{key}?token={token}
     # response
     # 1. 사용자가 등록되지 않았을 경우 사용자 테이블 생성 후
     # status: new
     # target: {
-    #     id, token, toasterId, deviceType, isPushAllow, pushAllowDatetime, isAdAllow, adAllowDatetime, lastActivateDate
+    #     token, toasterId, uuid, isPushAllow, pushAllowDatetime, isAdAllow, adAllowDatetime, lastActivateDate
     # }
     # 2. 사용자가 등록되어있을 경우
     # status: exist
     # target: {
-    #     id, token, toasterId, deviceType, isPushAllow, pushAllowDatetime, isAdAllow, adAllowDatetime, lastActivateDate
+    #     token, toasterId, uuid, isPushAllow, pushAllowDatetime, isAdAllow, adAllowDatetime, lastActivateDate
     # }
     # 3. 키 정보가 없을 경우
     # status: denied
     # target: null
     #
     # 수신인 업데이트(PATCH)
-    # request https://apptoaster.co.kr/api/target/key/{key}?id={id}&isPush={isPush}&isAd={isAd}
+    # request https://apptoaster.co.kr/api/target/key/{key}?token={token}&isPush={isPush}&isAd={isAd}
     # response
     # target: {
-    #    id, token, toasterId, deviceType, isPushAllow, pushAllowDatetime, isAdAllow, adAllowDatetime, lastActivateDate
+    #    token, toasterId, uuid, isPushAllow, pushAllowDatetime, isAdAllow, adAllowDatetime, lastActivateDate
     # }
     
     # 내부 테스트 API
@@ -86,11 +86,12 @@ urlpatterns = [
     # request https://apptoaster.co.kr/api/push/key/{key}
     # response isSucceed, pushList
     # PUSH 스케줄 삭제(DELETE)
-    # request https://apptoaster.co.kr/api/push/key/{key}?id={id}&alias={alias}
+    # request https://apptoaster.co.kr/api/push/key/{key}?id={id?}&alias={alias?}
     # response isSucceed
 
     # PUSH 기록 확인(GET)
     path('api/toasted_push/key/<str:key>', views.apiPushToasted, name='apiPushToasted')
     # request https://apptoaster.co.kr/api/toasted_push/key/{key}?page={page}
     # response page, pushList
+    # page는 1부터 시작
 ]

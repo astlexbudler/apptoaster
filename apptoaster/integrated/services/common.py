@@ -24,7 +24,8 @@ def getTimestamp():
 ##################################################
 def getId():
     # 예 - 20231231235517000000
-    return  datetime.datetime.now().strftime("%m%d%H%M%S%f")
+    str = datetime.datetime.now().strftime("%m%d%H%M%S%f") + '000000'
+    return  str[0:20]
 
 
 

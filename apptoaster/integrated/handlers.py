@@ -131,14 +131,13 @@ def apiGetTargetHandler(request, toaster):
         if toaster == None:
             raise Exception()
 
-        deviceType = request.GET['deviceType']
         token = request.GET['token']
-        target = model.readTarget(deviceType, token)
+        target = model.readTarget(token)
 
         # 없을경우 생성
         if target == None:
-            model.createTarget(toaster['id'], deviceType, token)
-            target = model.readTarget(deviceType, token)
+            model.createTarget(toaster['id'], token)
+            target = model.readTarget(token)
             return json.dumps({
                 'status': 'new',
                 'target': target
@@ -159,22 +158,22 @@ def apiGetTargetHandler(request, toaster):
 ##################################################
 def apiPatchTargetHandler(request, toaster):
     try:
-        id = request.GET['id']
-        target = model.readTargetId(id)
+        token = request.GET['token']
+        target = model.readTarget(token)
         isPushAllow = request.GET['isPushAllow']
         if isPushAllow == 'true':
-            api.kakaoRegisterTarget(toaster['appAdminKey'], target['id'], target['deviceType'], target['token'])
+            api.kakaoRegisterTarget(toaster['appAdminKey'], target['uuid'], target['token'])
             isPushAllow = True
         else:
             isPushAllow = False
-            api.kakaoDeleteTarget(toaster['appAdminKey'], target['id'], target['deviceType'])
+            api.kakaoDeleteTarget(toaster['appAdminKey'], target['uuid'])
         isAdAllow = request.GET['isAdAllow']
         if isAdAllow == 'true':
             isAdAllow = True
         else:
             isAdAllow = False
 
-        model.updateTarget(id, isPushAllow, isAdAllow)
+        model.updateTarget(token, isPushAllow, isAdAllow)
 
         return
     except:

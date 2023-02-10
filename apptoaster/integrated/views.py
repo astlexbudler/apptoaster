@@ -4,6 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 import datetime
 from .handlers import *
 from .services import model
+import requests
+import json
 import logging
 logger = logging.getLogger('appToaster')
 
@@ -96,17 +98,11 @@ def apiTarget(request, key):
     
     return HttpResponse(json)
 
-# 이메일 관리 도구 발송
-def apiSendEmailTools(request):
-    return HttpResponse()
-
 # 내부 테스트 API
 @csrf_exempt
 def apiTest(request):
-    res = api.kakaoRegisterTarget('19518771a918f2698b3aed03373c36f6', '208182828669954', 'apns', 'cjilrJCvhU4im8mQRMyCpK:APA91bGQnuaom4B7MdPWaff4P33PAOQnipJiB9kfY-YnQ0fsjeHHa_Z7iwaZreKFp_jyb8ZHqglmCbzeCOQmG4R7rAUDueRirRUwhqKTRWTydbief3-t0nBRRnZTGUA0oYz6V0607SmS')
-    api.kakaoGetTarget('19518771a918f2698b3aed03373c36f6', '208182828669954')
 
-    return HttpResponse(res)
+    return HttpResponse("test")
 
 ##################################################
 # PUSH
@@ -134,7 +130,8 @@ def apiUpdatePush(request, key):
         toaster = model.readToaster(key)
         if toaster == None:
             raise Exception()
-
+        if toaster['isPush'] == False:
+            raise Exception()
         if request.method == 'POST':
             json = apiUpdatePushHandler(request, toaster)
     except:

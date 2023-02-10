@@ -156,17 +156,16 @@ def readToasterAll():
 # 앱 사용자 테이블
 ##################################################
 # 앱 사용자 생성
-def createTarget(toasterId, deviceType, token):
+def createTarget(toasterId, token):
     try:
         nowDate = common.stringToDate('')
         nowDatetime = common.stringToDatetime('')
-        id = common.getId()
+        uuid = common.getId()
 
         TARGET_TABLE(
-            id = id,
             token = token,
             toaster_id = toasterId,
-            device_type = deviceType,
+            uuid = uuid,
             is_push_allow = False,
             push_allow_datetime = nowDatetime,
             is_ad_allow = False,
@@ -178,20 +177,18 @@ def createTarget(toasterId, deviceType, token):
         createSystemLog(9, 'SYSTEM', 'services.model.createTarget 앱 사용자 생성 실패. ' + e)
 
 # 앱 사용자 확인
-def readTarget(deviceType, token):
+def readTarget(token):
     try:
         nowDate = common.stringToDate('')
         
         target = TARGET_TABLE.objects.get(
-            device_type = deviceType,
             token = token
         )
         
         TARGET_TABLE(
-            id = target.id,
             token = target.token,
             toaster_id = target.toaster_id,
-            device_type = target.device_type,
+            uuid = target.uuid,
             is_push_allow = target.is_push_allow,
             push_allow_datetime = target.push_allow_datetime,
             is_ad_allow = target.is_ad_allow,
@@ -200,32 +197,9 @@ def readTarget(deviceType, token):
         ).save()
         
         return {
-            'id': target.id,
             "token": target.token,
             "toasterId": target.toaster_id,
-            "deviceType": target.device_type,
-            "isPushAllow": target.is_push_allow,
-            'pushAllowDatetime': common.datetimeToString(target.push_allow_datetime),
-            "isAdAllow": target.is_ad_allow,
-            "adAllowDatetime": common.datetimeToString(target.ad_allow_datetime),
-            "lastActiveDate": common.dateToString(target.last_active_date)
-        }
-    
-    except:
-        return
-
-# 앱 사용자 확인(ID)
-def readTargetId(id):
-    try:
-        target = TARGET_TABLE.objects.get(
-            id = id
-        )
-        
-        return {
-            'id': target.id,
-            "token": target.token,
-            "toasterId": target.toaster_id,
-            "deviceType": target.device_type,
+            'uuid': target.uuid,
             "isPushAllow": target.is_push_allow,
             'pushAllowDatetime': common.datetimeToString(target.push_allow_datetime),
             "isAdAllow": target.is_ad_allow,
@@ -246,10 +220,9 @@ def readToasterTarget(toasterId):
         list = []
         for target in targetList:
             list.append({
-            'id': target.id,
             "token": target.token,
             "toasterId": target.toaster_id,
-            "deviceType": target.device_type,
+            'uuid': target.uuid,
             "isPushAllow": target.is_push_allow,
             'pushAllowDatetime': common.datetimeToString(target.push_allow_datetime),
             "isAdAllow": target.is_ad_allow,
@@ -263,11 +236,11 @@ def readToasterTarget(toasterId):
         return
 
 # 앱 사용자 수정
-def updateTarget(id, isPushAllow, isAdAllow):
+def updateTarget(token, isPushAllow, isAdAllow):
     try:
 
         target = TARGET_TABLE.objects.get(
-            id = id
+            token = token
         )
 
         nowDatetime = common.stringToDatetime('')
@@ -282,10 +255,9 @@ def updateTarget(id, isPushAllow, isAdAllow):
 
 
         TARGET_TABLE(
-            id = id,
             token = target.token,
             toaster_id = target.toaster_id,
-            device_type = target.device_type,
+            uuid = uuid,
             is_push_allow = isPushAllow,
             push_allow_datetime = pushAllowDatetime,
             is_ad_allow = isAdAllow,
@@ -297,10 +269,10 @@ def updateTarget(id, isPushAllow, isAdAllow):
         createSystemLog(9, 'SYSTEM', 'services.model.updateTarget 앱 사용자 수정 실패. ' + e)
 
 # 앱 사용자 삭제
-def deleteTarget(id):
+def deleteTarget(token):
     try:
         TARGET_TABLE.objects.get(
-            id = id
+            token = token
         ).delete()
 
     except Exception() as e:
@@ -315,16 +287,18 @@ def createPush(toasterId, alias, title, message, date, time, repeat, ad, to):
         id = common.getId()
         
         if to != '':
-            for target in to:
-                targetTable = TARGET_TABLE.objects.get(
-                    device_type = target['deviceType'],
-                    token = target['token']
-                )
+            for token in to:
+                try:
+                    targetTable = TARGET_TABLE.objects.get(
+                        token = token
+                    )
 
-                ASSIGNED_TARGET_TABLE(
-                    push_id = id,
-                    target_id = targetTable.id
-                )
+                    ASSIGNED_TARGET_TABLE(
+                        push_id = id,
+                        token = token
+                    ).save()
+                except:
+                    continue
             
             SCHEDULED_PUSH_TABLE(
                 id = id,
@@ -376,7 +350,7 @@ def readPush(toasterId):
                     push_id = push.id
                 )
                 for assigned in assignedList:
-                    to.append(assigned.target_id)
+                    to.append(assigned.token)
 
             list.append({
                 "id": push.id,
@@ -410,7 +384,7 @@ def readPushAll():
                     push_id = push.id
                 )
                 for assigned in assignedList:
-                    to.append(assigned.target_id)
+                    to.append(assigned.token)
 
             list.append({
                 "id": push.id,
@@ -451,15 +425,18 @@ def updatePush(id, alias, title, message, date, time, repeat, ad, to):
             ASSIGNED_TARGET_TABLE.objects.all().filter(
                 push_id = push.id
             ).delete()
-            for target in to:
-                targetTable = TARGET_TABLE.objects.get(
-                    device_type = target['deviceType'],
-                    token = target['token']
-                )
-                ASSIGNED_TARGET_TABLE(
-                    push_id = push.id,
-                    target_id = targetTable.id
-                )
+            for token in to:
+                try:
+                    targetTable = TARGET_TABLE.objects.get(
+                        token = token
+                    )
+
+                    ASSIGNED_TARGET_TABLE(
+                        push_id = id,
+                        token = token
+                    ).save()
+                except:
+                    continue
 
         SCHEDULED_PUSH_TABLE(
             id = push.id,

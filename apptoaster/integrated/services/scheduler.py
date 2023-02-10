@@ -49,8 +49,8 @@ def scheduled_job():
         toaster = model.readToasterById(push['toasterId'])
         if push['to'] != 'all':
             toasterTarget = []
-            for targetId in push['to']:
-                toasterTarget.append(model.readTargetId(targetId))
+            for token in push['to']:
+                toasterTarget.append(model.readTarget(token))
         else:
             toasterTarget = model.readToasterTarget(toaster['id'])
         index = 0

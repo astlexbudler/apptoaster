@@ -58,14 +58,12 @@ class TOASTER_TABLE(models.Model):
 # 앱 사용자 테이블
 ##################################################
 class TARGET_TABLE(models.Model):
-    # 식볗자
-    id = models.CharField(primary_key=True, max_length=20)
-    # 토큰
-    token = models.CharField(max_length=255)
+    # 토큰(식별자)
+    token = models.CharField(primary_key=True, max_length=200)
     # 앱 토스터 고객 식별자
     toaster_id = models.CharField(max_length=20)
-    # 기기 타입/gcm, apns
-    device_type = models.CharField(max_length=8)
+    # 사용자 식별자(카카오)
+    uuid = models.CharField(max_length=20)
     # 푸시 허용
     is_push_allow = models.BooleanField()
     # 푸시 허용 동의 시간
@@ -107,8 +105,8 @@ class SCHEDULED_PUSH_TABLE(models.Model):
 class ASSIGNED_TARGET_TABLE(models.Model):
     # 푸시 식별자
     push_id = models.CharField(max_length=20)
-    # 타겟 식별자
-    target_id = models.CharField(max_length=20)
+    # 토큰
+    token = models.CharField(max_length=200)
 
 
 
