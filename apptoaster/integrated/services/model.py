@@ -257,7 +257,7 @@ def updateTarget(token, isPushAllow, isAdAllow):
         TARGET_TABLE(
             token = target.token,
             toaster_id = target.toaster_id,
-            uuid = uuid,
+            uuid = target.uuid,
             is_push_allow = isPushAllow,
             push_allow_datetime = pushAllowDatetime,
             is_ad_allow = isAdAllow,

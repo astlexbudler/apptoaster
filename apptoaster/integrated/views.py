@@ -101,7 +101,6 @@ def apiTarget(request, key):
 # 내부 테스트 API
 @csrf_exempt
 def apiTest(request):
-
     return HttpResponse("test")
 
 ##################################################

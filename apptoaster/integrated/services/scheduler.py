@@ -50,9 +50,15 @@ def scheduled_job():
         if push['to'] != 'all':
             toasterTarget = []
             for token in push['to']:
-                toasterTarget.append(model.readTarget(token))
+                target = model.readTarget(token)
+                if target['isPushAllow']:
+                    toasterTarget.append(target)
         else:
-            toasterTarget = model.readToasterTarget(toaster['id'])
+            toasterTarget = []
+            targetList = model.readToasterTarget(toaster['id'])
+            for target in targetList:
+                if target['isPushAllow']:
+                    toasterTarget.append(target)
         index = 0
         loop = math.ceil(len(toasterTarget)/100)
         if push['ad']:

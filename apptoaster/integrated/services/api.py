@@ -1,5 +1,7 @@
 import requests
 import json
+import logging
+logger = logging.getLogger('appToaster')
 
 '''
 api.py
