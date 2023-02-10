@@ -5,3 +5,6 @@ https://apptoaster.co.kr/overseer?key={key} 접속
 1. 사용자 등록
 admin에서 진행
 아이콘 이름은 id.png로 지정
+
+2. push 메세지 중 : '' "" 사용 불가
+버그 수정 중..

@@ -183,16 +183,6 @@
         }
         
         detailModal = (alias, title, message, toastedDatetime, repeat, ad, count) => {
-            if(repeat == "True") {
-                repeat = '예';
-            }else {
-                repeat = '아니오';
-            }
-            if(ad == 'True') {
-                ad = '예';
-            }else {
-                ad = '아니오';
-            }
             Swal.fire({
                 title: 'PUSH 기록',
                 html: 

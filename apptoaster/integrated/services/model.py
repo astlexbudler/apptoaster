@@ -519,14 +519,22 @@ def readPushHistory(toasterId):
 
         list = []
         for pushHistory in pushHistoryList:
+            if pushHistory.repeat:
+                repeat = "예"
+            else:
+                repeat = "아니오"
+            if pushHistory.ad:
+                ad = "예"
+            else:
+                ad = "아니오"
             list.append({
                 "toasterId": pushHistory.toaster_id,
                 "alias": pushHistory.alias,
                 "title": pushHistory.title,
                 "message": pushHistory.message,
                 "toastedDatetime": common.datetimeToString(pushHistory.toasted_datetime),
-                "repeat": pushHistory.repeat,
-                "ad": pushHistory.ad,
+                "repeat": repeat,
+                "ad": ad,
                 'count': pushHistory.count
             })
 
