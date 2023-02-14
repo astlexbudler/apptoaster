@@ -17,17 +17,18 @@
     <div>
         <button id="button1">버튼</button>
         <small>ID 생성</small>
+        <div id="result1"></div>
         <script>
             document.querySelector("#button1").onclick = () => {
                 var now = new Date();
-                year = now.getFullYear().toString().slice(-2);
+                year = now.getFullYear();
                 month = now.getMonth();
                 date = now.getDate();
                 hour = now.getHours();
                 minute = now.getMinutes();
                 second = now.getSeconds();
                 ms = now.getMilliseconds();
-                alert(year + '' + month + '' + date + '' + hour + '' + minute + '' + second + '' + ms);
+                document.querySelector("#result1").innerHTML += 'a' + (year + '' + month + '' + date + '' + hour + '' + minute + '' + second + '' + ms + "0000000000").slice(0, 19) + '<br>';
             }
         </script>
     </div>
