@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+
+<head>
+    <meta charset="utf-8" />
+    <title>AppToaster</title>
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/png" href="{% static 'default/img/favicon.png' %}">
+
+    <!-- CSS -->
+    <link href="{% static 'default/css/bootstrap.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'default/css/style.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'default/css/plugin/animate.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'default/css/jquery-ui.css' %}" rel="stylesheet" type="text/css" />
+    <!-- CSS -->
+
+    <!-- SDK -->
+    <script src="{% static 'apptoaster/js/apptoaster.js' %}" type="text/javascript"></script>
+    <script src="https://kit.fontawesome.com/37a4d902d2.js" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- SDK -->
+</head>
+
+<body>
+
+    <!-- Preloader -->
+    <section id="preloader">
+        <div class="loader" id="loader">
+            <div class="loader-img"></div>
+        </div>
+    </section>
+    <!-- Preloader -->
+
+    <!-- Wrapper -->
+    <div class="wrapper">
+
+        <!-- Header-->
+        {% include "parts/header.html" %}
+        <!-- Header -->
+
+        <section class="ptb ptb-sm-80 " style="min-height: 100vh;">
+            <div class="container">
+                <div class="col-md-8 offset-md-2">
+
+                    <h4>자주 묻는 질문</h4>
+
+                    <br />
+                    <hr />
+                    <br />
+
+                    <div class="container">
+                        <label>FAQ</label><br>
+                        <div class="accordion">
+                            <div class="accordion-section">
+                                <h6 class="accordion-title">플레이스토어에 앱을 출시하려면 어떻게하나요?</h6>
+                                <div class="accordion-content">
+                                    <p>
+                                        플레이스토어에 앱을 출시하려면 구글 플레이 콘솔로 이동하여 구글 플레이스토어  개발자 계정에 로그인합니다. 만약 구글 플레이스토어 개발자 계정이 없을 경우 생성합니다.<br>
+                                        대시보드에 모든 앱에서 앱 만들기 버튼을 눌러 앱 만들기를 진행합니다. 앱 기본 정보를 입력한 후 테스트를 진행하거나 바로 출시 할 수 있습니다.<br>
+                                        앱 설정의 모든 단계를 작성합니다. 이후 스토어 설정에서 앱 이름, 미리보기 아이콘과 스크린샷, 설명 텍스트를 작성하고 프로덕션 메뉴에서 앱 번들을 등록하여 심사를 진행합니다.<br>
+                                        심사가 종료되면 자동으로 앱이 플레이스토어에 등록됩니다.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="accordion-section">
+                                <h6 class="accordion-title">앱스토어에 앱을 출시하려면 어떻게하나요?</h6>
+                                <div class="accordion-content">
+                                    <p>
+                                        앱 스토어에 앱을 출시하려면 앱스토어 커넥트로 이동하여 애플 아이디로 로그인합니다. 만약 애플 개발자 계정이 없을 경우 생성합니다.<br>
+                                        나의 앱에서 + 버튼을 눌러 신규 앱 생성으로 이동합니다. 번들 ID와 SKU를 입력합니다. 번들 ID가 등록되어있지 않을 경우 생성합니다.(푸시 알림 기능 사용 시 항목에서 Push Notification을 체크합니다.)<br>
+                                        앱 이름, 아이콘, 스크린샷 또는 미리보기 이미지와 설명 텍스트등을 작성합니다. 이후 빌드 업로드를 통해 앱을 등록합니다. 앱 등록에는 Transporter 등 프로그램을 이용해 앱을 등록할 수 있습니다.<br>
+                                        추가 정보를 입력한 후 심사 제출 시 심사가 종료되면 자동으로 앱이 앱스토어에 등록됩니다.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="accordion-section">
+                                <h6 class="accordion-title">앱스토어(또는 플레이스토어)에서 앱 등록이 반려되었어요.</h6>
+                                <div class="accordion-content">
+                                    <p>
+                                        플레이스토어 및 앱스토어에서 심사가 반려되는 경우에는 설명 부족, 테스트 아이디 미제출, 버그 발생 등 여러가지 요인이 있습니다. 불가피하게 앱을 수정해야할 경우 앱 업데이트 요청을 해주시면 빠르게 수정해드리겠습니다.<br>
+                                        앱 등록 반려로 인한 업데이트 요청 시 반려 사유 정보를 같이 보내주시면 도움이 됩니다.<br>
+                                        이메일: toast@apptoaster.co.kr
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="accordion-section">
+                                <h6 class="accordion-title">앱을 수정하고 싶어요.</h6>
+                                <div class="accordion-content">
+                                    <p>
+                                        대부분의 기능은 웹 페이지에서 업데이트로 해결이 되지만 가끔은 앱에서 업데이트가 필요할 수 있습니다. 앱 업데이트의 경우 기본적으로는 무료로 진행됩니다.<br>
+                                        앱 업데이트 요청 시 업데이트 요청 사항을 같이 보내주시면 도움이 됩니다. 업데이트는 약 3~4일이 소요될 수 있습니다.<br>
+                                        이메일: toast@apptoaster.co.kr
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="accordion-section">
+                                <h6 class="accordion-title">앱에 버그가 있어요</h6>
+                                <div class="accordion-content">
+                                    <p>
+                                        앱에 버그가 있어 업데이트를 요청할 경우 업데이트는 무료로 진행되며 업데이트까지는 1일 ~ 2일이 소요될 수 있습니다.<br>
+                                        업데이트 요청 시 버그 정보를 같이 보내주시면 도움이 됩니다.<br>
+                                        이메일: toast@apptoaster.co.kr
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="accordion-section">
+                                <h6 class="accordion-title">아이폰에서 푸시 메세지가 안보여요.</h6>
+                                <div class="accordion-content">
+                                    <p>
+                                        IOS의 경우 이미 앱이 실행중일때는 정책상 푸시 메세지를 보낼 수 없게 되어있습니다. 또는 푸시 정책 위반으로 인하여 푸시 계정이 차단되었을 수 있습니다.<br>
+                                        아래 이메일로 문의주시면 문제 확인 후 답변드리도록 하겠습니다.<br>
+                                        이메일: toast@apptoaster.co.kr
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="accordion-section">
+                                <h6 class="accordion-title">광고성 푸시 메세지는 무엇인가요?</h6>
+                                <div class="accordion-content">
+                                    <p>
+                                        광고성 푸시 메세지란 이벤트 알림, 할인, 홍보성 알림입니다. 자세한 내용은 웹 페이지 하단에 한국인터넷진흥원 푸시 참고자료에서 확인할 수 있습니다.<br>
+                                        광고성 푸시 메세지의 경우 반드시 메세지 종류를 광고성 메세지로 설정하셔야합니다. 반복 위반 시 푸시 정책 위반으로 푸시 계정이 차단될 수 있습니다.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="accordion-section">
+                                <h6 class="accordion-title">아이디를 변경할 수 있나요?</h6>
+                                <div class="accordion-content">
+                                    <p>
+                                        아이디는 변경할 수 없습니다. 만약 아이디가 노출되어 불가피하게 아이디를 변경해야 할 경우 앱 업데이트를 진행해야하며 이 경우 모든 앱 정보가 초기화됩니다.<br>
+                                        비용이 발생할 수 있습니다. 아이디 변경 요청 시 아래 이메일로 문의 바랍니다.<br>
+                                        이메일: toast@apptoaster.co.kr
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="accordion-section">
+                                <h6 class="accordion-title">앱 통계 정보의 기준은 어떻게 되나요?</h6>
+                                <div class="accordion-content">
+                                    <p>
+                                        앱 통계는 총 다운로드 횟수, 앱 사용자 수, 총 방문자 수, 일일 방문자 수 이렇게 4개를 수집 후 제공하고 있으며, 각 기준은 다음과 같습니다.<br>
+                                        다운로드 횟수: 앱 설치 후 실행 시 +1<br>
+                                        앱 사용자 수: 앱 설치 후 처음 실행 시 +1 해당 사용자가 100일동안 미접속 시 -1<br>
+                                        총 방문자 수: 일일 방문자 수의 합<br>
+                                        일일 방문자 수: 당일 앱을 처음 실행했을 경우 +1
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <p>
+                            찾는 질문에 대한 대답이 없나요?<br>
+                            1:1 질문하기에서 직접 질문하고 답변을 받아보세요.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- FOOTER -->
+        {% include "parts/footer.html" %}
+        <!-- END FOOTER -->
+
+        <!-- Scroll Top -->
+        <a class="scroll-top">
+            <i class="fa-light fa-arrow-up"></i>
+        </a>
+        <!-- End Scroll Top -->
+
+    </div>
+    <!-- Wrapper -->
+
+    <!-- Javascript -->
+    <script src="{% static 'default/js/jquery-1.11.2.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/jquery-ui.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.easing.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/bootstrap.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.flexslider.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.fitvids.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.viewportchecker.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.stellar.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/wow.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.colorbox-min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/owl.carousel.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/isotope.pkgd.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/masonry.pkgd.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/imagesloaded.pkgd.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.fs.tipper.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/mediaelement-and-player.min.js' %}"></script>
+    <script src="{% static 'default/js/plugin/jquery.validate.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/theme.js' %}" type="text/javascript"></script>
+    <script>
+        window.onload = () => {
+            if (now_url.indexOf('everypush') != -1) {
+                document.querySelector("#headerLogo").innerHTML = '<img src="static/apptoaster/images/logo/logo_black2.png" style="max-width: 200px;">';
+            } else {
+                document.querySelector("#headerLogo").innerHTML = '<img src="static/apptoaster/images/logo/logo_black.png" style="max-width: 200px;">';
+            }
+        }
+    </script>
+    <!-- Javascript -->
+</body>
+
+</html>

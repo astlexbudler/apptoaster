@@ -1,9 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import datetime
-from .handlers import *
+from . import handlers
 from .services import model
+from .services import session
+from .services import common
+from . import models
 import requests
 import json
 import logging
@@ -12,160 +15,219 @@ logger = logging.getLogger('appToaster')
 ##################################################
 # 웹 페이지 경로
 ##################################################
-# 메인 페이지
-def webIndex(request):
+########################################
+# 메인
+########################################
+def index(request):
     return render(request, "index.html")
 
-# 계정 관리 페이지
-def webToaster(request):
-    try:
-        toaster = model.readToaster(request.GET['key'])
-        if toaster == None:
-            raise Exception()
-
-        return render(request, "toaster.html", webToasterHandler(request))
-
-    except:
-        return render(request, '404.html')
-
-# PUSH 발송 관리 페이지
-def webPushToasting(request):
-    try:
-        toaster = model.readToaster(request.GET['key'])
-        if toaster == None:
-            raise Exception()
-
-        return render(request, "push_toasting.html", webPushToastingHandler(request))
-        
-    except:
-        return render(request, '404.html')
-
-# PUSH 발송 기록 페이지
-def webPushToasted(request):
-    try:
-        toaster = model.readToaster(request.GET['key'])
-        if toaster == None:
-            raise Exception()
-
-        return render(request, "push_toasted.html", webPushToastedHandler(request))
-        
-    except:
-        return render(request, '404.html')
-
-# 관리자 페이지
-def webOverseer(request):
-    try:
-        toaster = model.readToaster(request.GET['key'])
-        if toaster['id'] != '0':
-            raise Exception()
-
-        return render(request, "overseer.html", webOverseerHandler(request))
-        
-    except:
-        return render(request, '404.html')
-
-# 이용약관
-def webPolicy(request):
-    return render(request, "policy.html")
-
-# 개인정보 처리 방침
-def webPrivacy(request):
-    return render(request, "privacy.html")
-
-# 탬플릿 페이지
-def webTemplate(request):
+########################################
+# 템플릿
+########################################
+def template(request):
     return render(request, "template.html")
 
-# 내부 테스트 페이지
-def webTest(request):
-    return render(request, "test.html")
+########################################
+# 이용약관
+########################################
+def policy(request):
+    return render(request, "policy.html")
+
+########################################
+# 개인정보 처리방침
+########################################
+def privacy(request):
+    return render(request, "privacy.html")
+
+
+
+##################################################
+# 앱 관리
+##################################################
+########################################
+# 로그인
+########################################
+def login(request):
+    user = model.getUser(session.getId(request))
+    if user != None:
+        return redirect('/dash')
+    return render(request, "login.html")
+
+def apiLogin(request):
+    return HttpResponse(json.dumps(handlers.apiLogin(request)))
+
+def apiLogout(request):
+    return HttpResponse(json.dumps(handlers.apiLogout(request)))
+
+########################################
+# 대시보드
+########################################
+def dash(request):
+    context = handlers.dash(request)
+
+    if context['user'] == None:
+        return redirect("/login")
+    
+    return render(request, "dash.html", context)
+
+########################################
+# 푸시 관리
+########################################
+def push(request):
+    context = handlers.push(request)
+
+    if context['user'] == None:
+        return redirect("/login")
+    
+    return render(request, "push.html", context)
+
+########################################
+# 일반 설정
+########################################
+def general(request):
+    context = handlers.general(request)
+
+    if context['user'] == None:
+        return redirect("/login")
+    
+    return render(request, "general.html", context)
+
+def generalUpdate(request):
+    context = handlers.generalUpdate(request)
+
+    if context['user'] == None:
+        return redirect("/login")
+    
+    return render(request, "general_update.html", context)
+
+def apiGeneralUpdate(request):
+    return HttpResponse(handlers.apiGeneralUpdate(request))
+
+########################################
+# 로딩 설정
+########################################
+def splash(request):
+    context = handlers.splash(request)
+
+    if context['user'] == None:
+        return redirect("/login")
+    
+    return render(request, "splash.html", context)
+
+########################################
+# 레이아웃 설정
+########################################
+def layout(request):
+    context = handlers.layout(request)
+
+    if context['user'] == None:
+        return redirect("/login")
+    
+    return render(request, "layout.html", context)
+
+########################################
+# 질문하기
+########################################
+def faq(request):
+    context = handlers.faq(request)
+
+    if context['user'] == None:
+        return redirect("/login")
+    
+    return render(request, "faq.html", context)
+
+def qna(request):
+    context = handlers.qna(request)
+
+    if context['user'] == None:
+        return redirect("/login")
+    
+    return render(request, "qna.html", context)
+
+def apiQnaCreate(request):
+    handlers.apiQnaCreate(request)
+    return HttpResponse()
+
+########################################
+# 접속 기록
+########################################
+def accessLog(request):
+    context = handlers.accessLog(request)
+
+    if context['user'] == None:
+        return redirect("/login")
+    
+    return render(request, "access_log.html", context)
+
+########################################
+# 업데이트 기록
+########################################
+def updateLog(request):
+    context = handlers.updateLog(request)
+
+    if context['user'] == None:
+        return redirect("/login")
+    
+    return render(request, "update_log.html", context)
+
+
 
 ##################################################
 # 앱 토스터 API
 ##################################################
-# 수신인 관리(GET/PATCH)
+########################################
+# 타겟 관리(GET/PATCH)
+########################################
 @csrf_exempt
-def apiTarget(request, key):
-    try:
-        toaster = model.readToaster(key)
+def apiTarget(request, id):
 
-        if request.method == 'GET':
-            json = apiGetTargetHandler(request, toaster)
-        elif request.method == 'PATCH':
-            json = apiPatchTargetHandler(request, toaster)
-    except:
-        json = ''
-    
+    if request.method == 'GET':
+        json = handlers.apiGetTarget(request, id)
+    elif request.method == 'PATCH':
+        json = handlers.apiPatchTarget(request, id)
+
     return HttpResponse(json)
 
-# 내부 테스트 API
+########################################
+# 타겟 관리(GET/POST)
+########################################
+@csrf_exempt
+def apiId(request):
+    list = []
+    for i in range(100):
+        list.append(common.id() + '<br>')
+    
+    return HttpResponse(list)
+
+########################################
+# 테스트
+########################################
 @csrf_exempt
 def apiTest(request):
     return HttpResponse("test")
 
+
+
 ##################################################
-# PUSH
+# 푸시
 ##################################################
-# PUSH 스케줄 추가(POST)
+########################################
+# 푸시 관리(POST/DELETE)
+########################################
 @csrf_exempt
-def apiToastPush(request, key):
+def apiPush(request, id):
     try:
-        toaster = model.readToaster(key)
-        if toaster == None:
+        user = model.getUser(id)
+
+        if user == None:
             raise Exception()
-        if toaster['isPush'] == False:
-            raise Exception()
+
         if request.method == 'POST':
-            url = apiToastPushHandler(request, toaster)
+            url = handlers.apiPostPush(request, user)
+        if request.method == 'DELETE':
+            url = handlers.apiDeletePush(request, user)
+
     except:
         url = 'toast_push_fail.html'
     
     return render(request, url)
-
-# PUSH 수정(POST)
-@csrf_exempt
-def apiUpdatePush(request, key):
-    try:
-        toaster = model.readToaster(key)
-        if toaster == None:
-            raise Exception()
-        if toaster['isPush'] == False:
-            raise Exception()
-        if request.method == 'POST':
-            json = apiUpdatePushHandler(request, toaster)
-    except:
-        json = ''
-    
-    return HttpResponse(json)
-
-# PUSH 스케줄 확인/삭제(GET/DELETE)
-@csrf_exempt
-def apiPush(request, key):
-    try:
-        toaster = model.readToaster(key)
-        if toaster == None:
-            raise Exception()
-
-        if request.method == 'GET':
-            json = apiGetPushHandler(request, toaster)
-        elif request.method == 'DELETE':
-            json = apiDeletePushHandler(request, toaster)
-    except:
-        json = ''
-    
-    return HttpResponse(json)
-
-# PUSH 기록 확인(GET)
-@csrf_exempt
-def apiPushToasted(request, key):
-    try:
-        toaster = model.readToaster(key)
-        if toaster == None:
-            raise Exception()
-
-        if request.method == 'GET':
-            json = apiPushToastedHandler(request, toaster)
-    except:
-        json = ''
-    
-    return HttpResponse(json)

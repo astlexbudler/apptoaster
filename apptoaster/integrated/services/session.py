@@ -24,19 +24,19 @@ def getIp(request):
 
 
 ##################################################
-# Key 정보 저장
+# set id
 ##################################################
-def setKeySession(request, key):
-    try:
-        request.session['key'] = key
-
-    except Exception() as e:
-        model.createSystemLog(9, 'SYSTEM', 'services.session.setKeySession key 세션 생성 실패. ' + e)
-
-
+def setId(request, id):
+    request.session['id'] = id
 
 ##################################################
-# key 정보 확인
+# get id
 ##################################################
-def getSessionKey(request):
-    return request.session.get('key', '')
+def getId(request):
+    return request.session.get('id')
+
+##################################################
+# init session
+##################################################
+def initSession(request):
+    request.session.flush()

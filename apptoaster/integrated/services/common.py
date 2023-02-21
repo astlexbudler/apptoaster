@@ -14,46 +14,38 @@ common.py
 ##################################################
 # 타임스탬프 생성(1970년부터 timedelta)
 ##################################################
-def getTimestamp():
+def timestamp():
     return str(int(time.time()*1000))
 
 
 
 ##################################################
-# 아이디 생성(오늘 날짜)
+# 아이디 생성
 ##################################################
-def getId():
-    # 예 - 20231231235517000000
-    str = datetime.datetime.now().strftime("%m%d%H%M%S%f") + '000000'
-    return  str[0:18]
-
-
-
-##################################################
-# 랜덤 문자열 생성
-##################################################
-def getRandomString(length):
+def id():
     str = ""
-    pool = "123456789qwertyupasdfghkzxcvbnmQWERTYUPASDFGHJKLZXCVBNM"
+    pool1 = "qwertyupasdfghkzxcvbnm"
+    pool2 = "1234567890"
 
-    for i in range(length):
+    str += random.choice(pool1)
+    for i in range(9):
+        str += random.choice(pool2)
+
+    return  str
+
+
+
+##################################################
+# uuid
+##################################################
+def uuid():
+    str = ""
+    pool = "1234567890"
+
+    for i in range(19):
         str += random.choice(pool)
 
-    return str
-
-
-
-##################################################
-# 랜덤 숫자 생성
-##################################################
-def getRandomNumber(length):
-    str = ""
-    pool = "123456789"
-
-    for i in range(length):
-        str += random.choice(pool)
-
-    return str
+    return  str
 
 
 

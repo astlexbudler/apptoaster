@@ -6,92 +6,109 @@ urlpatterns = [
     ##################################################
     # 웹 페이지 경로
     ##################################################
-    # 메인 페이지
-    path('', views.webIndex, name='webIndex'),
+    ########################################
+    # 메인
+    ########################################
+    path('', views.index, name='index'),
 
-    # 계정 관리 페이지
-    path('toaster', views.webToaster, name='webToaster'),
+    ########################################
+    # 템플릿
+    ########################################
+    path('template', views.template, name='template'),
 
-    # PUSH 발송 관리 페이지
-    path('push_toasting', views.webPushToasting, name='webPushToasting'),
-
-    # PUSH 발송 기록 페이지
-    path('push_toasted', views.webPushToasted, name='webPushToasted'),
-
-    # 관리자 페이지
-    path('overseer', views.webOverseer, name='webOverseer'),
-
+    ########################################
     # 이용약관
-    path('policy', views.webPolicy, name='webPolicy'),
+    ########################################
+    path('policy', views.policy, name='policy'),
 
-    # 개인정보 처리 방침
-    path('privacy', views.webPrivacy, name='webPrivacy'),
+    ########################################
+    # 개인정보 처리방침
+    ########################################
+    path('privacy', views.privacy, name='privacy'),
 
-    # 템플릿 페이지
-    path('template', views.webTemplate, name='webTemplate'),
 
-    # 내부 테스트 페이지
-    path('test', views.webTest, name='webTest'),
+
+    ##################################################
+    # 앱 관리
+    ##################################################
+    ########################################
+    # 로그인
+    ########################################
+    path('login', views.login, name='login'),
+    path('api/login', views.apiLogin, name='apiLogin'),
+    path('api/logout', views.apiLogout, name='apiLogout'),
+
+    ########################################
+    # 대시보드
+    ########################################
+    path('dash', views.dash, name='dash'),
+
+    ########################################
+    # 푸시 관리
+    ########################################
+    path('push', views.push, name='push'),
+
+    ########################################
+    # 일반 설정
+    ########################################
+    path('general', views.general, name='general'),
+    path('general_update', views.generalUpdate, name='generalUpdate'),
+    path('api/general_update', views.apiGeneralUpdate, name='apiGeneralUpdate'),
+
+    ########################################
+    # 로딩 설정
+    ########################################
+    path('splash', views.splash, name='splash'),
+
+    ########################################
+    # 레이아웃 설정
+    ########################################
+    path('layout', views.layout, name='layout'),
+
+    ########################################
+    # 질문하기
+    ########################################
+    path('faq', views.faq, name='faq'),
+    path('qna', views.qna, name='qna'),
+    path('api/qna_create', views.apiQnaCreate, name='apiQnaCreate'),
+
+    ########################################
+    # 접속 기록
+    ########################################
+    path('access_log', views.accessLog, name='accessLog'),
+
+    ########################################
+    # 업데이트 기록
+    ########################################
+    path('update_log', views.updateLog, name='updateLog'),
+
+
 
     ##################################################
     # 앱 토스터 API
     ##################################################
-    # 수신인 관리(GET/PATCH)
-    path('api/target/key/<str:key>', views.apiTarget, name='apiTarget'),
-    # 수신인 확인(GET)
-    # request https://apptoaster.co.kr/api/target/key/{key}?token={token}
-    # response
-    # 1. 사용자가 등록되지 않았을 경우 사용자 테이블 생성 후
-    # status: new
-    # target: {
-    #     token, toasterId, uuid, isPushAllow, pushAllowDatetime, isAdAllow, adAllowDatetime, lastActivateDate
-    # }
-    # 2. 사용자가 등록되어있을 경우
-    # status: exist
-    # target: {
-    #     token, toasterId, uuid, isPushAllow, pushAllowDatetime, isAdAllow, adAllowDatetime, lastActivateDate
-    # }
-    # 3. 키 정보가 없을 경우
-    # status: denied
-    # target: null
-    #
-    # 수신인 업데이트(PATCH)
-    # request https://apptoaster.co.kr/api/target/key/{key}?token={token}&isPush={isPush}&isAd={isAd}
-    # response
-    # target: {
-    #    token, toasterId, uuid, isPushAllow, pushAllowDatetime, isAdAllow, adAllowDatetime, lastActivateDate
-    # }
+    ########################################
+    # 타겟 관리(GET/PATCH)
+    ########################################
+    path('api/target/id/<str:id>', views.apiTarget, name='apiTarget'),
+
+    ########################################
+    # 아이디 생성기
+    ########################################
+    path('api/id', views.apiId, name='apiId'),
     
-    # 내부 테스트 API
+    ########################################
+    # 테스트
+    ########################################
     path('api/test', views.apiTest, name='apiTest'),
 
+
+
     ##################################################
-    # PUSH
+    # 푸시
     ##################################################
-    # PUSH 스케줄 추가(POST)
-    path('api/toast_push/key/<str:key>', views.apiToastPush, name='apiToastPush'),
-    # request https://apptoaster.co.kr/api/toast_push/key/{key}
-    # data : alias, title, message, repeat, date, time, ad, to?
-    # response toast_push_success.html/toast_push_fail.html
-
-    # PUSH 수정(POST)
-    path('api/update_push/key/<str:key>', views.apiUpdatePush, name='apiUpdatePush'),
-    # request https://apptoaster.co.kr/api/toast_push/key/{key}
-    # data : id?, alias, title, message, repeat, date, time, ad, to?
-    # response isSucceed
-
-    # PUSH 스케줄 확인/삭제(GET/DELETE)
-    path('api/push/key/<str:key>', views.apiPush, name='apiPush'),
-    # PUSH 스케줄 확인(GET)
-    # request https://apptoaster.co.kr/api/push/key/{key}
-    # response isSucceed, pushList
-    # PUSH 스케줄 삭제(DELETE)
-    # request https://apptoaster.co.kr/api/push/key/{key}?id={id?}&alias={alias?}
-    # response isSucceed
-
-    # PUSH 기록 확인(GET)
-    path('api/toasted_push/key/<str:key>', views.apiPushToasted, name='apiPushToasted')
-    # request https://apptoaster.co.kr/api/toasted_push/key/{key}?page={page}
-    # response page, pushList
-    # page는 1부터 시작
+    ########################################
+    # 푸시 관리(POST/DELETE)
+    ########################################
+    path('api/push/id/<str:id>', views.apiPush, name='apiPush'),
 ]

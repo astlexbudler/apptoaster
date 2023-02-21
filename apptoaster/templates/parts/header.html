@@ -2,24 +2,59 @@
     <nav id="navigation" class="header-nav">
         <div class="container">
             <div class="row d-flex flex-md-row align-items-center">
-                <div class="logo mr-auto">
-                    <img src="static/apptoaster/images/logo/logo_black.png" style="width: 200px;">
+                <div class="logo mr-auto" id="headerLogo">
                 </div>
 
                 <div class="nav-menu ml-auto">
                     <ul class="">
                         <li class="nav-menu-item">
-                            PUSH 메세지
+                            <a href="/dash">대시보드</a>
+                        </li>
+                        <li class="nav-menu-item">
+                            <a href="/push">푸시 관리</a>
+                        </li>
+                        <li class="nav-menu-item">
+                            <a href="#">설정하기</a>
+                            <div class="nav-dropdown">
+                                <ul>
+                                    <li><span class="dropdown-title">설정하기</span></li>
+                                    <li><a href="/general">일반 설정</a></li>
+                                    <li><a href="/splash">로딩 화면 설정</a></li>
+                                    <li><a href="/layout">레이아웃 설정</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-menu-item">
+                            <a href="#">질문하기</a>
+                            <div class="nav-dropdown">
+                                <ul>
+                                    <li><span class="dropdown-title">질문하기</span></li>
+                                    <li><a href="/faq">자주묻는 질문</a></li>
+                                    <li><a href="/qna">1:1 질문하기</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-menu-item">
+                            <a href="#">기록보기</a>
+                            <div class="nav-dropdown">
+                                <ul>
+                                    <li><span class="dropdown-title">기록보기</span></li>
+                                    <li><a href="/access_log">접속 기록</a></li>
+                                    <li><a href="/update_log">업데이트 기록</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-menu-item">
+                            <a href="javascript: logout();">로그아웃</a>
                         </li>
                     </ul>
                 </div>
-                
-                <div class="nav-menu">
-                    <ul class="">
-                        <li class="nav-menu-item">
-                            <a href="#"></a>
-                        </li>
-                    </ul>
+                <div class="nav-icons">
+                    <div class="nav-icon-item d-lg-none">
+                        <span class="nav-icon-trigger menu-mobile-btn align-middle">
+                            <h6 style="position: absolute; top: 5px; right: 0px;">menu</h6>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>

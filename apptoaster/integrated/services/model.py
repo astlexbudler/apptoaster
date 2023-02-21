@@ -1,6 +1,5 @@
 from ..models import *
 from . import common
-
 import logging
 logger = logging.getLogger('appToaster')
 
@@ -8,537 +7,540 @@ logger = logging.getLogger('appToaster')
 model.py
 데이터베이스 관련 기능을 관리하는 서비스입니다.
 '''
+##################################################
+# 사용자
+##################################################
+########################################
+# 사용자 set
+########################################
+def setUser(user):
+    USER_TABLE(
+        id = user['id'],
+        app_icon = user['appIcon'],
+        app_name = user['appName'],
+        email = user['email'],
+        tel = user['tel'],
+        url = user['url'],
+        kakao_admin_key = user['kakaoAdminKey'],
+        create_datetime = user['createDatetime'],
+        request_update = user['requestUpdate'],
+        google_form_url = user['googleFormUrl'],
+        download_count = user['downloadCount'],
+        user_count = user['userCount'],
+        visit_today_count = user['visitTodayCount'],
+        total_visit_count = user['totalVisitCount'],
+        is_splash = user['isSplash'],
+        splash_background = user['splashBackground'],
+        splash_logo = user['splashLogo'],
+        splash_min_time = user['splashMinTime'],
+        layout_type = user['layoutType'],
+        theme = user['theme'],
+    ).save()
 
-##################################################
-# 시스템 기록 테이블
-##################################################
-# 시스템 기록 생성
-def createSystemLog(level, applicationName, message):
+########################################
+# 사용자 get
+########################################
+def getUser(id):
     try:
-        id = common.getId()
+        user = USER_TABLE.objects.get(
+            id = id
+        )
 
-        SYSTEM_LOG_TABLE(
-            id = id,
-            level = level,
-            application_name = applicationName,
-            message = message,
-        ).save()
+        return {
+            "id": user.id,
+            "appIcon": 'media/' + str(user.app_icon),
+            "appName": user.app_name,
+            "email": user.email,
+            "tel": user.tel,
+            "url": user.url,
+            "kakaoAdminKey": user.kakao_admin_key,
+            "createDatetime": user.create_datetime,
+            "requestUpdate": user.request_update,
+            "googleFormUrl": user.google_form_url,
+            "downloadCount": user.download_count,
+            "userCount": user.user_count,
+            "visitTodayCount": user.visit_today_count,
+            "totalVisitCount": user.total_visit_count,
+            "isSplash": user.is_splash,
+            "splashBackground": 'media/' + str(user.splash_background),
+            "splashLogo": 'media/' + str(user.splash_logo),
+            "splashMinTime": user.splash_min_time,
+            "layoutType": user.layout_type,
+            "theme": user.theme,
+        }
 
-    except Exception() as e:
-        logger.info('services.model.createSystemLog 시스템 기록 생성 실패.' + e)
+    except Exception as e:
+        logger.info(e)
+        return
+
+########################################
+# 사용자 get all
+########################################
+def getUserAll():
+    try:
+        list = USER_TABLE.objects.all()
+
+        userList = []
+        for user in list:
+            userList.append({
+                "id": user.id,
+                "appIcon": 'media/' + str(user.app_icon),
+                "appName": user.app_name,
+                "email": user.email,
+                "tel": user.tel,
+                "url": user.url,
+                "kakaoAdminKey": user.kakao_admin_key,
+                "createDatetime": user.create_datetime,
+                "requestUpdate": user.request_update,
+                "googleFormUrl": user.google_form_url,
+                "downloadCount": user.download_count,
+                "userCount": user.user_count,
+                "visitTodayCount": user.visit_today_count,
+                "totalVisitCount": user.total_visit_count,
+                "isSplash": user.is_splash,
+                "splashBackground": 'media/' + str(user.splash_background),
+                "splashLogo": 'media/' + str(user.splash_logo),
+                "splashMinTime": user.splash_min_time,
+                "layoutType": user.layout_type,
+                "theme": user.theme,
+            })
+
+        return userList
+
+    except Exception as e:
+        logger.info(e)
+        return
+
+########################################
+# 사용자 delete
+########################################
+def deleteUser(userId):
+    try:
+        USER_TABLE.objects.get(
+            id = userId
+        ).delete()
+
+    except:
+        return
+
+
 
 ##################################################
-# 로그인 관리 테이블
+# 로그인 시도
 ##################################################
-# 로그인 관리 생성
-def createLoginControl(ip):
-    try:
-        LOGIN_CONTROL_TABLE(
-            ip = ip,
-            count = 5
-        ).save()
+########################################
+# 로그인 시도 set
+########################################
+def setLoginTry(loginTry):
+    LOGIN_TRY(
+        ip = loginTry['ip'],
+        count = loginTry['count']
+    ).save()
 
-    except Exception() as e:
-        createSystemLog(9, 'SYSTEM', 'services.model.createLoginControl 로그인 관리 테이블 생성 실패. ' + e)
-
-# 로그인 관리 확인
-def readLoginControl(ip):
+########################################
+# 로그인 시도 get
+########################################
+def getLoginTry(ip):
     try:
-        loginControl = LOGIN_CONTROL_TABLE.objects.get(
+        loginTry = LOGIN_TRY.objects.get(
             ip = ip
         )
 
         return {
-            'ip': loginControl.ip,
-            'count': loginControl.count
+            'ip': loginTry.ip,
+            'count': loginTry.count
         }
-
     except:
         return
 
-# 로그인 관리 수정
-def updateLoginControl(ip, count):
-    try:
-        LOGIN_CONTROL_TABLE(
-            ip = ip,
-            count = count
-        ).save()
-    except Exception() as e:
-        createSystemLog(9, 'SYSTEM', 'services.model.updateLoginControl 로그인 관리 테이블 수정 실패. ' + e)
+########################################
+# 로그인 시도 초기화
+########################################
+def initLoginTry():
+    LOGIN_TRY.objects.all().delete()
 
-# 로그인 관리 초기화
-def initLoginControl():
-    try:
-        LOGIN_CONTROL_TABLE.objects.all().delete()
 
-    except Exception() as e:
-        createSystemLog(9, 'SYSTEM', 'services.model.updateLoginControl 로그인 관리 테이블 초기화 실패. ' + e)
 
 ##################################################
-# 앱 토스터 고객 테이블
+# 사용자 접속 기록
 ##################################################
-# 앱 토스터 고객 확인
-def readToaster(key):
+########################################
+# 사용자 접속 기록 set
+########################################
+def setUserAccessLog(userAccessLog):
+    USER_ACCESS_LOG(
+        id = userAccessLog['id'],
+        user_id = userAccessLog['userId'],
+        ip = userAccessLog['ip'],
+        create_datetime = userAccessLog['createDatetime'],
+    ).save()
+
+########################################
+# 사용자 접속 기록 get
+########################################
+def getUserAccessLog(userId):
     try:
-        toaster = TOASTER_TABLE.objects.get(
-            key = key
+        list = USER_ACCESS_LOG.objects.all().filter(
+            user_id = userId
         )
-        
-        if len(toaster.application_name) > 16:
-            applicationShortName = toaster.application_name[0:16] + '..'
-        else:
-            applicationShortName = toaster.application_name
-        
-        return {
-            'id': toaster.id,
-            'key': toaster.key,
-            'applicationIcon': '/media/icons/' + toaster.id + '.png',
-            'applicationName': toaster.application_name,
-            'applicationShortName': applicationShortName,
-            'email': toaster.email,
-            'tel': toaster.tel,
-            'appAdminKey': toaster.app_admin_key,
-            'createDate': toaster.create_date,
-            'expireDate': toaster.expire_date,
-            'isPush': toaster.is_push,
-        }
 
+        userAccessLogList = []
+        for item in list:
+            userAccessLogList.append({
+                "id": item.id,
+                "userId": item.user_id,
+                "ip": item.ip,
+                "createDatetime": item.create_datetime,
+            })
+
+        return userAccessLogList
+    
     except:
-        return
+        return []
 
-# 앱 토스터 고객 확인
-def readToasterById(id):
+########################################
+# 사용자 접속 기록 delete
+########################################
+def deleteUserAccessLog(id):
     try:
-        toaster = TOASTER_TABLE.objects.get(
+        USER_ACCESS_LOG.objects.get(
             id = id
-        )
-        
-        return {
-            'id': toaster.id,
-            'key': toaster.key,
-            'applicationIcon': '/media/icons/' + toaster.id + '.png',
-            'applicationName': toaster.application_name,
-            'email': toaster.email,
-            'tel': toaster.tel,
-            'appAdminKey': toaster.app_admin_key,
-            'createDate': toaster.create_date,
-            'expireDate': toaster.expire_date,
-        }
+        ).delete()
 
     except:
         return
 
-# 앱 토스터 고객 목록
-def readToasterAll():
+########################################
+# 사용자 접속 기록 init
+########################################
+def initUserAccessLog(userId):
     try:
-        toasterList = TOASTER_TABLE.objects.all()
-
-        list = []
-        for toaster in toasterList:
-            list.append({
-            'id': toaster.id,
-            'key': toaster.key,
-            'applicationIcon': '/media/icons/' + toaster.id + '.png',
-            'applicationName': toaster.application_name,
-            'email': toaster.email,
-            'tel': toaster.tel,
-            'appAdminKey': toaster.app_admin_key,
-            'createDate': toaster.create_date,
-            'expireDate': toaster.expire_date,
-        })
-        
-        return list
+        USER_ACCESS_LOG.objects.all().filter(
+            user_id = userId
+        ).delete()
 
     except:
         return
+
+
 
 ##################################################
-# 앱 사용자 테이블
+# 업데이트 기록
 ##################################################
-# 앱 사용자 생성
-def createTarget(toasterId, token):
-    try:
-        nowDate = common.stringToDate('')
-        nowDatetime = common.stringToDatetime('')
-        uuid = common.getId()
+########################################
+# 업데이트 기록 set
+########################################
+def setUserUpdateLog(userUpdateLog):
+    USER_UPDATE_LOG(
+        id = userUpdateLog['id'],
+        user_id = userUpdateLog['userId'],
+        update_log = userUpdateLog['updateLog'],
+        create_datetime = userUpdateLog['createDatetime'],
+    ).save()
 
-        TARGET_TABLE(
-            token = token,
-            toaster_id = toasterId,
-            uuid = uuid,
-            is_push_allow = False,
-            push_allow_datetime = nowDatetime,
-            is_ad_allow = False,
-            ad_allow_datetime = nowDatetime,
-            last_active_date = nowDate
-        ).save()
-    
-    except Exception() as e:
-        createSystemLog(9, 'SYSTEM', 'services.model.createTarget 앱 사용자 생성 실패. ' + e)
-
-# 앱 사용자 확인
-def readTarget(token):
+########################################
+# 업데이트 기록 get
+########################################
+def getUserUpdateLog(id):
     try:
-        nowDate = common.stringToDate('')
-        
-        target = TARGET_TABLE.objects.get(
-            token = token
+        list = USER_UPDATE_LOG.objects.all().filter(
+            user_id = id
         )
-        
-        TARGET_TABLE(
-            token = target.token,
-            toaster_id = target.toaster_id,
-            uuid = target.uuid,
-            is_push_allow = target.is_push_allow,
-            push_allow_datetime = target.push_allow_datetime,
-            is_ad_allow = target.is_ad_allow,
-            ad_allow_datetime = target.ad_allow_datetime,
-            last_active_date = nowDate
-        ).save()
-        
-        return {
-            "token": target.token,
-            "toasterId": target.toaster_id,
-            'uuid': target.uuid,
-            "isPushAllow": target.is_push_allow,
-            'pushAllowDatetime': common.datetimeToString(target.push_allow_datetime),
-            "isAdAllow": target.is_ad_allow,
-            "adAllowDatetime": common.datetimeToString(target.ad_allow_datetime),
-            "lastActiveDate": common.dateToString(target.last_active_date)
-        }
+
+        userUpdateLogList = []
+        for item in list:
+            userUpdateLogList.append({
+                "id": item.id,
+                "userId": item.user_id,
+                "updateLog": item.update_log,
+                "createDatetime": item.create_datetime,
+            })
+
+        return userUpdateLogList
     
+    except:
+        return []
+
+########################################
+# 업데이트 기록 init
+########################################
+def initUserUpdateLog(userId):
+    try:
+        USER_UPDATE_LOG.objects.all().filter(
+            user_id = userId
+        ).delete()
+
     except:
         return
 
-# 사용자의 타겟 모두 확인
-def readToasterTarget(toasterId):
-    try:
-        targetList = TARGET_TABLE.objects.all().filter(
-            toaster_id = toasterId
-        )
-        
-        list = []
-        for target in targetList:
-            list.append({
-            "token": target.token,
-            "toasterId": target.toaster_id,
-            'uuid': target.uuid,
-            "isPushAllow": target.is_push_allow,
-            'pushAllowDatetime': common.datetimeToString(target.push_allow_datetime),
-            "isAdAllow": target.is_ad_allow,
-            "adAllowDatetime": common.datetimeToString(target.ad_allow_datetime),
-            "lastActiveDate": common.dateToString(target.last_active_date)
-        })
-        
-        return list
-    
-    except:
-        return
 
-# 앱 사용자 수정
-def updateTarget(token, isPushAllow, isAdAllow):
-    try:
 
+##################################################
+# 푸시 타겟
+##################################################
+########################################
+# 푸시 타겟 set
+########################################
+def setTarget(target):
+    TARGET_TABLE(
+        token = target["token"],
+        user_id = target["userId"],
+        uuid = target["uuid"],
+        is_push_allow = target["isPushAllow"],
+        push_allow_datetime = target["pushAllowDate"],
+        is_ad_allow = target["isAdAllow"],
+        ad_allow_datetime = target["adAllowDatetime"],
+        last_active_datetime = target["lastActiveDatetime"],
+    ).save()
+
+########################################
+# 푸시 타겟 get
+########################################
+def getTarget(token):
+    try:
         target = TARGET_TABLE.objects.get(
             token = token
         )
 
-        nowDatetime = common.stringToDatetime('')
-        if isPushAllow:
-            pushAllowDatetime = nowDatetime
-        else:
-            pushAllowDatetime = target.push_allow_datetime
-        if isAdAllow:
-            adAllowDatetime = nowDatetime
-        else:
-            adAllowDatetime = target.ad_allow_datetime
+        return {
+            "token": target.token,
+            "userId": target.user_id,
+            "uuid": target.uuid,
+            "isPushAllow": target.is_push_allow,
+            "pushAllowDate": target.push_allow_datetime,
+            "isAdAllow": target.is_ad_allow,
+            "adAllowDatetime": target.ad_allow_datetime,
+            "lastActiveDatetime": target.last_active_datetime,
+        }
+    except:
+        return
 
+########################################
+# 푸시 타겟 get all
+########################################
+def getTargetAll(userId):
+    try:
+        list = TARGET_TABLE.objects.all().filter(
+            user_id = userId
+        )
 
-        TARGET_TABLE(
-            token = target.token,
-            toaster_id = target.toaster_id,
-            uuid = target.uuid,
-            is_push_allow = isPushAllow,
-            push_allow_datetime = pushAllowDatetime,
-            is_ad_allow = isAdAllow,
-            ad_allow_datetime = adAllowDatetime,
-            last_active_date = target.last_active_date
-        ).save()
+        targetList = []
+        for item in list:
+            targetList.append({
+                "token": item.token,
+                "userId": item.user_id,
+                "uuid": item.uuid,
+                "isPushAllow": item.is_push_allow,
+                "pushAllowDate": item.push_allow_datetime,
+                "isAdAllow": item.is_ad_allow,
+                "adAllowDatetime": item.ad_allow_datetime,
+                "lastActiveDatetime": item.last_active_datetime,
+            })
+
+        return targetList
     
-    except Exception() as e:
-        createSystemLog(9, 'SYSTEM', 'services.model.updateTarget 앱 사용자 수정 실패. ' + e)
+    except:
+        return []
 
-# 앱 사용자 삭제
+########################################
+# 푸시 타겟 delete
+########################################
 def deleteTarget(token):
     try:
         TARGET_TABLE.objects.get(
             token = token
         ).delete()
 
-    except Exception() as e:
-        createSystemLog(9, 'SYSTEM', 'services.model.deleteTarget 앱 사용자 삭제 실패. ' + e)
+    except:
+        return
 
-##################################################
-# PUSH 예약 테이블
-##################################################
-# PUSH 예약 생성
-def createPush(toasterId, alias, title, message, date, time, repeat, ad, to):
+########################################
+# 푸시 타겟 init
+########################################
+def deleteTarget(userId):
     try:
-        id = common.getId()
-        
-        if to != '':
-            for token in to:
-                try:
-                    targetTable = TARGET_TABLE.objects.get(
-                        token = token
-                    )
-
-                    ASSIGNED_TARGET_TABLE(
-                        push_id = id,
-                        token = token
-                    ).save()
-                except:
-                    continue
-            
-            SCHEDULED_PUSH_TABLE(
-                id = id,
-                toaster_id = toasterId,
-                alias = alias,
-                title = title,
-                message = message,
-                date = date,
-                time = time,
-                repeat = repeat,
-                ad = ad,
-                target_assign = True
-            ).save()      
-
-        SCHEDULED_PUSH_TABLE(
-            id = id,
-            toaster_id = toasterId,
-            alias = alias,
-            title = title,
-            message = message,
-            date = date,
-            time = time,
-            repeat = repeat,
-            ad = ad,
-            target_assign = False
-        ).save()
-    
-    except Exception() as e:
-        createSystemLog(9, 'SYSTEM', 'services.model.createPush PUSH 예약 생성 실패. ' + e)
-
-# PUSH 예약 확인
-def readPush(toasterId):
-    try:
-        pushList = SCHEDULED_PUSH_TABLE.objects.all().filter(
-            toaster_id = toasterId
-        )
-
-        list = []
-        for push in pushList:
-            if push.repeat:
-                date = ''
-            else:
-                date = common.dateToString(push.date)
-            
-            to = 'all'
-            if push.target_assign:
-                to = []
-                assignedList = ASSIGNED_TARGET_TABLE.objects.all().filter(
-                    push_id = push.id
-                )
-                for assigned in assignedList:
-                    to.append(assigned.token)
-
-            list.append({
-                "id": push.id,
-                "toasterId": push.toaster_id,
-                "alias": push.alias,
-                "title": push.title,
-                "message": push.message,
-                "date": date,
-                "time": common.timeToString(push.time),
-                "repeat": push.repeat,
-                "ad": push.ad,
-                'to': to
-            })
-
-        return list
-
-    except Exception() as e:
-        createSystemLog(9, 'SYSTEM', 'services.model.readPush PUSH 예약 확인 실패. ' + e)
-
-# 모든 PUSH 예약 확인
-def readPushAll():
-    try:
-        pushList = SCHEDULED_PUSH_TABLE.objects.all()
-
-        list = []
-        for push in pushList:
-            to = 'all'
-            if push.target_assign:
-                to = []
-                assignedList = ASSIGNED_TARGET_TABLE.objects.all().filter(
-                    push_id = push.id
-                )
-                for assigned in assignedList:
-                    to.append(assigned.token)
-
-            list.append({
-                "id": push.id,
-                "toasterId": push.toaster_id,
-                "alias": push.alias,
-                "title": push.title,
-                "message": push.message,
-                "date": push.date,
-                "time": push.time,
-                "repeat": push.repeat,
-                "ad": push.ad,
-                'to': to
-            })
-
-        return list
-
-    except Exception() as e:
-        createSystemLog(9, 'SYSTEM', 'services.model.readPushAll PUSH 예약 확인 실패. ' + e)
-
-
-# PUSH 예약 수정
-def updatePush(id, alias, title, message, date, time, repeat, ad, to):
-    try:
-        try:
-            push = SCHEDULED_PUSH_TABLE.objects.get(
-                id = id
-            )
-        except:
-            push = SCHEDULED_PUSH_TABLE.objects.get(
-                alias = alias
-            )
-
-        targetAssigned = False
-        if to == 'all':
-            targetAssigned = False
-        elif to != '':
-            targetAssigned = True
-            ASSIGNED_TARGET_TABLE.objects.all().filter(
-                push_id = push.id
-            ).delete()
-            for token in to:
-                try:
-                    targetTable = TARGET_TABLE.objects.get(
-                        token = token
-                    )
-
-                    ASSIGNED_TARGET_TABLE(
-                        push_id = id,
-                        token = token
-                    ).save()
-                except:
-                    continue
-
-        SCHEDULED_PUSH_TABLE(
-            id = push.id,
-            toaster_id = push.toaster_id,
-            alias = alias,
-            title = title,
-            message = message,
-            date = date,
-            time = time,
-            repeat = repeat,
-            ad = ad,
-            target_assign = targetAssigned
-        ).save()
-    
-    except Exception() as e:
-        createSystemLog(9, 'SYSTEM', 'services.model.updatePush PUSH 예약 수정 실패. ' + e)
-
-# PUSH 예약 삭제
-def deletePush(id):
-    try:
-        ASSIGNED_TARGET_TABLE.objects.all().filter(
-            push_id = id
+        TARGET_TABLE.objects.all().filter(
+            user_id = userId,
         ).delete()
 
-        SCHEDULED_PUSH_TABLE.objects.get(
+    except:
+        return
+
+
+
+##################################################
+# 푸시 스케줄
+##################################################
+########################################
+# 푸시 스케줄 set
+########################################
+def setPushSchedule(pushSchedule):
+    PUSH_SCHEDULE_TABLE(
+        id = pushSchedule['id'],
+        user_id = pushSchedule['userId'],
+        alias = pushSchedule['alias'],
+        title = pushSchedule['title'],
+        message = pushSchedule['message'],
+        date = pushSchedule['date'],
+        time = pushSchedule['time'],
+        repeat = pushSchedule['repeat'],
+        ad = pushSchedule['ad'],
+    ).save()
+
+########################################
+# 푸시 스케줄 get all
+########################################
+def getPushScheduleAll():
+    try:
+        list = PUSH_SCHEDULE_TABLE.objects.all()
+        
+        pushScheduleList = []
+        for item in list:
+            pushScheduleList.append({
+                "id": item.id,
+                "userId": item.user_id,
+                "alias": item.alias,
+                "title": item.title,
+                "message": item.message,
+                "date": item.date,
+                "time": item.time,
+                "repeat": item.repeat,
+                "ad": item.ad,
+            })
+        
+        return pushScheduleList
+
+    except:
+        return []
+
+########################################
+# 푸시 스케줄 get
+########################################
+def getPushSchedule(userId):
+    try:
+        list = PUSH_SCHEDULE_TABLE.objects.all().filter(
+            user_id = userId
+        )
+        
+        pushScheduleList = []
+        for item in list:
+            pushScheduleList.append({
+                "id": item.id,
+                "userId": item.user_id,
+                "alias": item.alias,
+                "title": item.title,
+                "message": item.message,
+                "date": item.date,
+                "time": item.time,
+                "repeat": item.repeat,
+                "ad": item.ad,
+            })
+        
+        return pushScheduleList
+
+    except:
+        return []
+
+########################################
+# 푸시 스케줄 delete
+########################################
+def deletePushSchedule(id):
+    try:
+        PUSH_SCHEDULE_TABLE.objects.get(
             id = id
         ).delete()
-    
-    except Exception() as e:
-        createSystemLog(9, 'SYSTEM', 'services.model.deletePush PUSH 예약 삭제 실패. ' + e)
 
-# PUSH 예약 삭제(alias)
-def deletePushAlias(alias):
+    except:
+        return
+
+########################################
+# 푸시 스케줄 init
+########################################
+def initPushSchedule(userId):
     try:
-        pushList = SCHEDULED_PUSH_TABLE.objects.all().filter(
-            alias = alias
-        )
-
-        for push in pushList:
-            ASSIGNED_TARGET_TABLE.objects.all().filter(
-                push_id = push.id
-            ).delete()
-
-        SCHEDULED_PUSH_TABLE.objects.all().filter(
-            alias = alias
+        PUSH_SCHEDULE_TABLE.objects.all().filter(
+            user_id = userId,
         ).delete()
-    
-    except Exception() as e:
-        createSystemLog(9, 'SYSTEM', 'services.model.deletePush PUSH 예약 삭제 실패. ' + e)
+
+    except:
+        return
+
 
 
 ##################################################
-# PUSH 기록
+# 질문
 ##################################################
-# PUSH 기록 생성
-def createPushHistory(toasterId, alias, title, message, repeat, ad, count):
-    try:
-        nowDatetime = common.stringToDatetime('')
+########################################
+# 질문 set
+########################################
+def setQuestion(question):
+    QUESTION_TABLE(
+        id = question['id'],
+        user_id = question['userId'],
+        title = question['title'],
+        question = question['question'],
+        answer = question['answer'],
+        create_datetime = question['createDatetime'],
+    ).save()
 
-        PUSH_HISTORY_TABLE(
-            toaster_id = toasterId,
-            alias = alias,
-            title = title,
-            message = message,
-            toasted_datetime = nowDatetime,
-            repeat = repeat,
-            ad = ad,
-            count = count
-        ).save()
-    
-    except Exception() as e:
-        createSystemLog(9, 'SYSTEM', 'services.model.createPushHistory PUSH 기록 생성 실패. ' + e)
-
-# PUSH 기록 확인
-def readPushHistory(toasterId):
+########################################
+# 질문 get all(미답변)
+########################################
+def getQuestionAll():
     try:
-        pushHistoryList = PUSH_HISTORY_TABLE.objects.all().filter(
-            toaster_id = toasterId
+        list = QUESTION_TABLE.objects.all().filter(
+            answer = ''
         )
-
-        list = []
-        for pushHistory in pushHistoryList:
-            if pushHistory.repeat:
-                repeat = "예"
-            else:
-                repeat = "아니오"
-            if pushHistory.ad:
-                ad = "예"
-            else:
-                ad = "아니오"
-            list.append({
-                "toasterId": pushHistory.toaster_id,
-                "alias": pushHistory.alias,
-                "title": pushHistory.title,
-                "message": pushHistory.message,
-                "toastedDatetime": common.datetimeToString(pushHistory.toasted_datetime),
-                "repeat": repeat,
-                "ad": ad,
-                'count': pushHistory.count
+        
+        questionList = []
+        for item in list:
+            questionList.append({
+                "id": item.id,
+                "userId": item.user_id,
+                "title": item.title,
+                "question": item.question,
+                "answer": item.answer,
+                "createDatetime": item.create_datetime,
             })
+        
+        return questionList
 
-        return list
+    except:
+        return []
 
-    except Exception() as e:
-        createSystemLog(9, 'SYSTEM', 'services.model.getPushHistory PUSH 기록 확인 실패. ' + e)    
+########################################
+# 질문 get
+########################################
+def getQuestion(userId):
+    try:
+        list = QUESTION_TABLE.objects.all().filter(
+            user_id = userId
+        )
+        
+        questionList = []
+        for item in list:
+            questionList.append({
+                "id": item.id,
+                "userId": item.user_id,
+                "title": item.title,
+                "question": item.question,
+                "answer": item.answer,
+                "createDatetime": common.datetimeToString(item.create_datetime),
+            })
+        
+        return questionList
+
+    except:
+        return []
+
+########################################
+# 질문 init
+########################################
+def initQuestion(userId):
+    try:
+        QUESTION_TABLE.objects.all().filter(
+            user_id = userId,
+        ).delete()
+
+    except:
+        return

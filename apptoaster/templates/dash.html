@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+{% load integrated_extra %}
+
+<head>
+    <meta charset="utf-8" />
+    <title>AppToaster</title>
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/png" href="{% static 'default/img/favicon.png' %}">
+
+    <!-- CSS -->
+    <link href="{% static 'default/css/bootstrap.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'default/css/style.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'default/css/plugin/animate.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'default/css/jquery-ui.css' %}" rel="stylesheet" type="text/css" />
+    <!-- CSS -->
+
+    <!-- SDK -->
+    <script src="{% static 'apptoaster/js/apptoaster.js' %}" type="text/javascript"></script>
+    <script src="https://kit.fontawesome.com/37a4d902d2.js" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- SDK -->
+</head>
+
+<body>
+
+    <!-- Preloader -->
+    <section id="preloader">
+        <div class="loader" id="loader">
+            <div class="loader-img"></div>
+        </div>
+    </section>
+    <!-- Preloader -->
+
+    <!-- Wrapper -->
+    <div class="wrapper">
+
+        <!-- Header-->
+        {% include "parts/header.html" %}
+        <!-- Header -->
+
+        <section class="ptb ptb-sm-80 " style="min-height: 100vh;">
+            <div class="container">
+                <div class="col-md-8 offset-md-2">
+
+                    <h4>대시보드</h4>
+
+                    <br />
+                    <hr />
+                    <br />
+
+                    <div class="container">
+                        <label>앱 정보</label><br>
+                        <table>
+                            <tr>
+                                <td style="width: 100px;">
+                                    <img src="{{ user.appIcon }}" style="max-width: 100px; max-height: 100px; border-radius: 25px;">
+                                </td>
+                                <td>
+                                    <div class="ml-4" style="word-break: break-all;">
+                                        <h4>{{ user.appName }}</h4>
+                                        <p class="text-dark">{{ user.url }}</p>
+                                        <p class="text-primary">{{ user.email }}</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <br />
+                    <hr />
+                    <br />
+
+                    <div class="container">
+                        <label>앱 통계</label><br>
+                        <div class="row text-center">
+                            <div class="col-md-3 mb-sm-30 tipped" data-title="앱을 다운로드한 횟수입니다." data-tipper-options='{"direction":"top"}'>
+                                {% if user.downloadCount > 10000 %}
+                                    <h1 class="counter" data-count="{{ user.downloadCount|div:10000 }}">0</h1><small>만+</small>
+                                    <h6>다운로드(회)</h6>
+                                {% elif user.downloadCount > 1000 %}
+                                    <h1 class="counter" data-count="{{ user.downloadCount|div:1000 }}">0</h1><small>천+</small>
+                                    <h6>다운로드(회)</h6>
+                                {% else %}
+                                    <h1 class="counter" data-count="{{ user.downloadCount }}">0</h1>
+                                    <h6>다운로드(회)</h6>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3 mb-sm-30 tipped" data-title="100일동안 한번이라도 앱을 사용한 사용자의 수입니다." data-tipper-options='{"direction":"top"}'>
+                                {% if user.userCount > 10000 %}
+                                    <h1 class="counter" data-count="{{ user.userCount|div:10000 }}">0</h1><small>만+</small>
+                                    <h6>사용자(명)</h6>
+                                {% elif user.userCount > 1000 %}
+                                    <h1 class="counter" data-count="{{ user.userCount|div:1000 }}">0</h1><small>천+</small>
+                                    <h6>사용자(명)</h6>
+                                {% else %}
+                                    <h1 class="counter" data-count="{{ user.userCount }}">0</h1>
+                                    <h6>사용자(명)</h6>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3 mb-sm-30 tipped" data-title="지금까지의 일일 방문자수의 총합입니다." data-tipper-options='{"direction":"top"}'>
+                                {% if user.totalVisitCount > 10000 %}
+                                    <h1 class="counter" data-count="{{ user.totalVisitCount|div:10000 }}">0</h1><small>만+</small>
+                                    <h6>총 방문자(명)</h6>
+                                {% elif user.totalVisitCount > 1000 %}
+                                    <h1 class="counter" data-count="{{ user.totalVisitCount|div:1000 }}">0</h1><small>천+</small>
+                                    <h6>총 방문자(명)</h6>
+                                {% else %}
+                                    <h1 class="counter" data-count="{{ user.totalVisitCount }}">0</h1>
+                                    <h6>총 방문자(명)</h6>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3 mb-sm-30 tipped" data-title="오늘 한번이라도 앱을 실행한 사용자의 수입니다." data-tipper-options='{"direction":"top"}'>
+                                {% if user.visitTodayCount > 10000 %}
+                                    <h1 class="counter" data-count="{{ user.visitTodayCount|div:10000 }}">0</h1><small>만+</small>
+                                    <h6>일일 방문자(명)</h6>
+                                {% elif user.visitTodayCount > 1000 %}
+                                    <h1 class="counter" data-count="{{ user.visitTodayCount|div:1000 }}">0</h1><small>천+</small>
+                                    <h6>일일 방문자(명)</h6>
+                                {% else %}
+                                    <h1 class="counter" data-count="{{ user.visitTodayCount }}">0</h1>
+                                    <h6>일일 방문자(명)</h6>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+                    <hr />
+                    <br />
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- FOOTER -->
+        {% include "parts/footer.html" %}
+        <!-- END FOOTER -->
+
+        <!-- Scroll Top -->
+        <a class="scroll-top">
+            <i class="fa-light fa-arrow-up"></i>
+        </a>
+        <!-- End Scroll Top -->
+
+    </div>
+    <!-- Wrapper -->
+
+    <!-- Javascript -->
+    <script src="{% static 'default/js/jquery-1.11.2.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/jquery-ui.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.easing.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/bootstrap.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.flexslider.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.fitvids.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.viewportchecker.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.stellar.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/wow.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.colorbox-min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/owl.carousel.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/isotope.pkgd.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/masonry.pkgd.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/imagesloaded.pkgd.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.fs.tipper.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/mediaelement-and-player.min.js' %}"></script>
+    <script src="{% static 'default/js/plugin/jquery.validate.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/theme.js' %}" type="text/javascript"></script>
+    <script>
+        window.onload = () => {
+            if (now_url.indexOf('everypush') != -1) {
+                document.querySelector("#headerLogo").innerHTML = '<img src="static/apptoaster/images/logo/logo_black2.png" style="max-width: 200px;">';
+            } else {
+                document.querySelector("#headerLogo").innerHTML = '<img src="static/apptoaster/images/logo/logo_black.png" style="max-width: 200px;">';
+            }
+        }
+    </script>
+    <!-- Javascript -->
+</body>
+
+</html>
