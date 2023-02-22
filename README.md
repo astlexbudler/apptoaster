@@ -1,10 +1,1 @@
-TEST
-0. 관리자 ID 생성
-https://apptoaster.co.kr/overseer?key={key} 접속
-
-1. 사용자 등록
-admin에서 진행
-아이콘 이름은 id.png로 지정
-
-2. push 메세지 중 : '' "" 사용 불가
-버그 수정 중..
+2.0.0 새로운 콘솔 생성, admin 페이지 수정, 기타 알고리즘 개편 및 수정
