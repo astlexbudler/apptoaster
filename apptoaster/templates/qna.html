@@ -4,12 +4,11 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>AppToaster</title>
     <meta name="description" content="" />
     <meta name="keywords" content="" />
     <meta name="author" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="icon" type="image/png" href="{% static 'default/img/favicon.png' %}">
+    <link id="HTMLicon" rel="icon" type="image/png" href="">
 
     <!-- CSS -->
     <link href="{% static 'default/css/bootstrap.css' %}" rel="stylesheet" type="text/css" />
@@ -113,14 +112,6 @@
     <script src="{% static 'default/js/plugin/jquery.validate.min.js' %}" type="text/javascript"></script>
     <script src="{% static 'default/js/theme.js' %}" type="text/javascript"></script>
     <script>
-        window.onload = () => {
-            if (now_url.indexOf('everypush') != -1) {
-                document.querySelector("#headerLogo").innerHTML = '<img src="static/apptoaster/images/logo/logo_black2.png" style="max-width: 200px;">';
-            } else {
-                document.querySelector("#headerLogo").innerHTML = '<img src="static/apptoaster/images/logo/logo_black.png" style="max-width: 200px;">';
-            }
-        }
-        
         createQuestion = () => {
             Swal.fire({
                 title: '문의 작성하기',

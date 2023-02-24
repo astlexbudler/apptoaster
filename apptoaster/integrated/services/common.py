@@ -47,7 +47,15 @@ def uuid():
 
     return  str
 
-
+##################################################
+# RANDOMSTRING(N)
+##################################################
+def getRandomString(length):
+    str = ""
+    pool = "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
+    for i in range(length):
+        str += random.choice(pool)
+    return str
 
 ##################################################
 # datetime 을 문자열로

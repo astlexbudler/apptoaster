@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link id="HTMLicon" rel="icon" type="image/png" href="">
+
+    <!-- CSS -->
+    <link href="{% static 'default/css/bootstrap.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'default/css/style.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'default/css/plugin/animate.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'default/css/jquery-ui.css' %}" rel="stylesheet" type="text/css" />
+    <!-- CSS -->
+
+    <!-- SDK -->
+    <script src="{% static 'apptoaster/js/apptoaster.js' %}" type="text/javascript"></script>
+    <script src="https://kit.fontawesome.com/37a4d902d2.js" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- SDK -->
+    <style>
+        .swal2-height {
+            height: 80vh;
+        }
+
+        input[type="checkbox"] {
+            -webkit-appearance: none;
+            position: relative;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            outline: none !important;
+            border: 1px solid #eeeeee;
+            border-radius: 2px;
+            background: #e7e7e7;
+        }
+     
+        input[type="checkbox"]::before {
+            content: "\1F30F";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            overflow: hidden;
+            transform: scale(0) translate(-100%, -100%);
+            line-height: 1;
+        }
+     
+        input[type="checkbox"]:hover {
+            border-color: rgba(170, 170, 170, 0.5);
+        }
+     
+        input[type="checkbox"]:checked {
+            background-color: #def4ff;
+            border: 1px solid #00a4f6;
+            color: white;
+        }
+     
+        input[type="checkbox"]:checked::before {
+            border-radius: 2px;
+            transform: scale(1) translate(-50%, -50%)
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Preloader -->
+    <section id="preloader">
+        <div class="loader" id="loader">
+            <div class="loader-img"></div>
+        </div>
+    </section>
+    <!-- Preloader -->
+
+    <!-- Wrapper -->
+    <div class="wrapper">
+
+        <!-- Header-->
+        {% include "parts/header.html" %}
+        <!-- Header -->
+
+        <section class="ptb ptb-sm-80 " style="min-height: 100vh;">
+            <div class="container">
+                <div class="col-md-8 offset-md-2">
+
+                    <h4>상품 및 결제관리</h4>
+
+                    <br />
+                    <hr />
+                    <br />
+
+                    <div>
+                        <div class="text-center">
+                            <img src="static/everypush/images/cards.png" style="max-width: 50%;">
+                            <br>
+                            <h5 style="color: black; margin-bottom: 0px;"><b>간편한 정기구독을 시작해보세요!</b></h5>
+                            <sub><p style="color:rgb(0, 153, 248); padding-top:0px;">29개의 결제수단으로 가능합니다.</p></sub>
+                            <br><br>
+                            <hr />
+                        </div>
+                        <table class="col-12">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" style="width:50%">
+                                    </th>
+                                    <th class="text-center" style="width:50%">
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center" style="max-width: 50%;">
+                                        <img src="static/everypush/images/sprout.png" style="max-width: 100%;">
+                                    </td>
+                                    <td class="text-center" style="max-width: 50%;">
+                                        <img src="static/everypush/images/forest.png" style="max-width: 100%;">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="text-center">
+                                        <h4></h4>
+                                    </th>
+                                    <th class="text-center">
+                                        <h4></h4>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th class="text-center">
+                                        <h4>월 정기구독 상품</h4>
+                                    </th>
+                                    <th class="text-center">
+                                        <h4>연 무제한 이용권 상품</h4>
+                                    </th>
+                                </tr>
+                                <tr style="color:rgb(0, 137, 210);">
+                                    <td class="text-center">
+                                        1% 할인 적용
+                                    </td>
+                                    <td class="text-center">
+                                        20%할인 적용
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left" style="padding-left: 10%;">
+                                        - 월 500,000건 무료발송 푸시알림
+                                    </td>
+                                    <td class="text-left" style="padding-left: 10%;">
+                                        - 무제한 푸시알림
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left" style="padding-left: 10%;">
+                                        - 월 10,000건 무료메일발송 푸시알림
+                                    </td>
+                                    <td class="text-left" style="padding-left: 10%;">
+                                        - 무제한 메일발송 푸시알림
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left" style="padding-left: 10%;">
+                                        - 통계 제공(누적 이용 및 활성화 기기 등)
+                                    </td>
+                                    <td class="text-left" style="padding-left: 10%;">
+                                        - 통계 제공(누적 이용 및 활성화 기기 등)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left" style="padding-left: 10%;">
+                                        - 월 1회 유지보수
+                                    </td>
+                                    <td class="text-left" style="padding-left: 10%;">
+                                        - 기간 내 상시 유지보수
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-top: 10%;"> </td>
+                                    <td style="padding-top: 10%;"> </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">
+                                        <a href="javascript:window.scroll({top: 1000,left: 0,behavior:'smooth'});">
+                                        <div style="margin:auto; height: 30px; width: 100px; background-color:rgb(0, 137, 210); color:white; padding-top:4px; cursor:pointer;" onclick="fillMonthPlanBill();">선택하기</div>
+                                        </a>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="javascript:window.scroll({top: 1000,left: 0,behavior:'smooth'});">
+                                        <div style="margin:auto; height: 30px; width: 100px; background-color:rgb(0, 137, 210); color:white; padding-top:4px; cursor:pointer;" onclick="fillYearPlanBill();">선택하기</div>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-top: 5%;"> </td>
+                                    <td style="padding-top: 5%;"> </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <br>
+                        <table id="billSection" class="col-12" style="display: none;">
+                            <hr style="border-top: 0.5px solid rgb(174, 174, 174);">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" style="width:50%">
+                                    </th>
+                                    <th class="text-center" style="width:50%">
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th class="text-center">
+                                        <h4></h4>
+                                    </th>
+                                    <th class="text-center">
+                                        <h4></h4>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th class="text-left">
+                                        <h2 style="font-weight: 300;">계산서</h2>
+                                    </th>
+                                    <th class="text-center">
+                                        <h4 stlye="font-weight: 300;">구매 결정 전 주의사항</h4>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td style="padding-right:50px;">
+                                        <div style="display: flex;">
+                                            <div style="float:none; width:30%;"><p style="margin-bottom:3px;">항목:</p></div>
+                                            <div style="text-align: right; width:70%;"><p id="planName" style="margin-bottom: 3px;"></p></div>
+                                        </div>
+                                        <div style="float:right; width:100%; background-color: rgb(174, 174, 174); height: 0.5px;"></div>
+                                    </td>
+                                    <td>
+                                        서비스 이용결정에 앞서, 다음 사항을 꼭 확인해주세요!
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-right:50px;">
+                                        <div style="display: flex;">
+                                            <div style="float:none; width:50%;"><p style="margin-bottom:3px;">총 금액:</p></div>
+                                            <div style="text-align: right; width:50%;"><p id="wholePrice" style="margin-bottom: 3px;"></div>
+                                        </div>
+                                        <div style="float:right; width:100%; background-color: rgb(174, 174, 174); height: 0.5px;"></div>
+                                    </td>
+                                    <td>
+                                        <p style="line-height: 12px; font-size: 5px;">1.에브리푸시 또는 앱토스터를 통해 어플리케이션을 만드셨나요? 그렇지않은 앱은 해당 서비스를 이용할 수 없습니다.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-right:50px;">
+                                        <div style="display: flex;">
+                                            <div style="float:none; width:40%;"><p style="margin-bottom:3px;">할인:</p></div>
+                                            <div style="text-align: right; width:60%;"><p id="discountAmount" style="margin-bottom: 3px;"></p></div>
+                                        </div>
+                                        <div style="float:right; width:100%; background-color: rgb(174, 174, 174); height: 0.5px;"></div>
+                                    </td>
+                                    <td>
+                                        <p style="line-height: 12px; font-size: 5px;">2.문자, 전자우편 등으로 별도의 앱 키를 발급받으셨나요? 앱 키(배포된 앱의 고유식별 부호)가 없는 경우, 고객센터로 문의, 키 발급 이후 서비스 이용이 가능합니다.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <p style="line-height: 14px; font-size: 7px; color:rgb(210, 0, 0);">위 사항을 확인하지 아니하고 결제하신 경우 3영업일 내 자동환불처리됩니다.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <p style="line-height: 14px; font-size: 12px; color:rgb(0, 157, 255); cursor:pointer;" onclick="swalvin();">상품설명, 서비스제공기간 및 환불정책</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-right:50px;">
+                                        <div style="display: flex;">
+                                            <div style="float:none; width:50%;"><p style="margin-bottom:3px;">최종금액:</p></div>
+                                            <div style="text-align: right; width:50%;"><p id="finalPrice" style="margin-bottom: 3px;"></p></div>
+                                        </div>
+                                        <div style="float:right; width:100%; background-color: rgb(174, 174, 174); height: 0.5px;"></div>
+                                    </td>
+                                    <td>
+                                        <div style="display:flex;">
+                                            <div style="position:relative; padding-top:4px; padding-right:11px;"><p style="color:black; margin-bottom: 0px; font-size: 11px; line-height: 12px;">상품설명 등 위 내용을 읽고 동의합니다.</p></div>
+                                            <div style="position:relative;"><input id="termCheckbox" style="height: 20px; width: 20px; margin:auto; padding-top:0px; padding-bottom:0px; padding-right:0px; padding-left:0px;" name="termCheckbox" type="checkbox"></div>
+                                            <span style="position:relative; color:red; font-size: 30px;">*</span>
+                                        </div>
+                                        <p style="line-height: 12px; font-size: 5px;">결제전후, 고객센터(070-7757-7779)로 연락주시면 문의사항을 친절하게 상담드리고 있습니다.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center" colspan="4">
+                                        <div>
+                                            <div style="margin:auto; border:solid; border-color: rgb(149, 149, 149); border-width: 0.3px; width: 100px; height: 35px; margin-top:40px; cursor: pointer;" onclick="goPaymentsGate();">
+                                                <h4 style="font-weight: 300; margin-bottom: 0px; margin-top:3.5px;">결제확인</h4>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+                    
+        </section>
+
+
+        <!-- FOOTER -->
+        {% include "parts/footer.html" %}
+        <!-- END FOOTER -->
+
+        <!-- Scroll Top -->
+        <a class="scroll-top">
+            <i class="fa-light fa-arrow-up"></i>
+        </a>
+        <!-- End Scroll Top -->
+
+    </div>
+    <!-- Wrapper -->
+
+    <!-- Javascript -->
+    <script src="{% static 'default/js/jquery-1.11.2.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/jquery-ui.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.easing.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/bootstrap.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.flexslider.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.fitvids.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.viewportchecker.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.stellar.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/wow.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.colorbox-min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/owl.carousel.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/isotope.pkgd.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/masonry.pkgd.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/imagesloaded.pkgd.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.fs.tipper.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/mediaelement-and-player.min.js' %}"></script>
+    <script src="{% static 'default/js/plugin/jquery.validate.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/theme.js' %}" type="text/javascript"></script>
+    <script src="{% static 'everypush/js/json_songsusin.js' %}" type="text/javascript"></script>
+    <!--토스 SDK-->
+	<script src="https://js.tosspayments.com/v1/payment-widget"></script> 
+<script>
+var termChecked = false;
+var planwhich;
+var planNameMonth = "[1개월구독]푸시알림서비스";
+var wholePriceMonth = "10,000원";
+var discountAmountMonth = "-1%(100원)";
+var finalPriceMonth = "9,900원";
+var planNameYear = "[1년무제한]푸시알림서비스";
+var wholePriceYear = "120,000원";
+var discountAmountYear = "-20%(24,000원)";
+var finalPriceYear = "96,000원";
+var data;
+
+//월플랜 계산서를 작성합니다.
+fillMonthPlanBill = () => {
+    document.getElementById("billSection").setAttribute("style","display: ;");
+    document.querySelector("#planName").innerText = planNameMonth;
+    document.querySelector("#wholePrice").innerHTML  = `${wholePriceMonth}/<sub style="font-size: 11px;">월</sub>`;
+    document.querySelector("#discountAmount").innerText = discountAmountMonth;
+    document.querySelector("#finalPrice").innerHTML = `${finalPriceMonth}/<sub style="font-size: 11px;">월</sub>`;
+    planwhich = "month";
+}
+//연플랜 계산서를 작성합니다.
+fillYearPlanBill = () => {
+    document.getElementById("billSection").setAttribute("style","display: ;");
+    document.querySelector("#planName").innerText = planNameYear;
+    document.querySelector("#wholePrice").innerText  = wholePriceYear;
+    document.querySelector("#discountAmount").innerText = discountAmountYear;
+    document.querySelector("#finalPrice").innerText = finalPriceYear;
+    planwhich = "year";
+}
+
+//결제창 이동 전 분기처리
+goPaymentsGate = () => {
+    termChecked = document.querySelector("#termCheckbox").checked;
+    //동의확인
+    if (termChecked) {
+    } else {return swalvin();}
+    //분기처리
+    if (planwhich == "month") {
+        goTossBilling();
+    } else if (planwhich == "year") {
+        goTossPayments();
+    } else {}
+}
+
+//토스 결제 위젯 띄우기(일반)
+goTossPayments = () => {
+	var clientKey = 'test_ck_mnRQoOaPz8LyvAR9WZG3y47BMw6v'
+  	var tossPayments = TossPayments(clientKey) // 클라이언트 키로 초기화하기
+    var orderName = planNameMonth;
+	var orderId = getRandomString8();//무작위8자리 발급
+	tossPayments.requestPayment('카드', { // 결제 수단 파라미터
+  	// 결제 정보 파라미터
+  	amount: 96000,
+  	orderId: orderId,
+  	orderName: orderName,
+  	customerName: "{{ user.email }}",
+  	successUrl: 'https://everypush.com/payments_success',
+  	failUrl: 'https://everypush.com/payments_fail',
+	})//http://127.0.0.1:8000/
+	.catch(function (error) {
+  	if (error.code === 'USER_CANCEL') {
+    	// 결제 고객이 결제창을 닫았을 때 에러 처리
+  	} else if (error.code === 'INVALID_CARD_COMPANY') {
+    	// 유효하지 않은 카드 코드에 대한 에러 처리
+  	}
+	})
+}
+
+//토스 결제 위젯 띄우기(빌링)
+goTossBilling = () => {
+	var clientKeyBilling = 'test_ck_mnRQoOaPz8LyvAR9WZG3y47BMw6v';
+	var tossPaymentsBilling = TossPayments(clientKeyBilling);
+	tossPaymentsBilling.requestBillingAuth('카드', { // 결제 수단 파라미터
+  	// 빌링키 발급 요청을 위한 파라미터
+  	customerKey: getRandomString8(),
+  	successUrl: 'https://everypush.com/billing_success',
+  	failUrl: 'https://everypush.com/billing_fail',
+	})
+	.catch(function (error) {
+  	if (error.code === 'USER_CANCEL') {
+    // 결제 고객이 결제창을 닫았을 때 에러 처리
+  	} else if (error.code === 'INVALID_CARD_COMPANY') {
+    // 유효하지 않은 카드 코드에 대한 에러 처리
+  	}
+})
+
+}
+
+
+//상품설명 등의 swal을 띄웁니다.
+swalvin = () => {
+    Swal.fire({
+    heightAuto: false,
+    customClass: 'swal2-height',
+    title: '동의가 필요합니다',
+    html: `<div style="text-align:left; padding-right:30px; padding-left:15px;"><h5>에브리푸시 푸시알림 서비스 상품설명,<br> 서비스 제공기간 및 환불정책</h5><p style="position: relative; font-size: 12px;">
+            본 상품(구독 서비스 및 이용권)은 처치 인 앱, 에브리푸시, 앱토스터 등의 서비스를 통해 작성, 배포된 어플리케이션의 푸시 알림 발송 및 기타 기능을 제공하는 서비스로,<br>
+            처치 인 앱, 에브리푸시, 앱토스터 등을 통해 작성, 배포된 어플리케이션 그 자체와는 관계가 없음을 알립니다.<br>
+            본 구독상품(구독 서비스)는 푸시 알림 발송 및 아래와 같은 기타 서비스를 제공합니다.<br><br>
+            1. https://everypush.com(이하 웹사이트)를 통한 어플리케이션 푸시알림 발송 및 예약발송<br>
+            2. 웹사이트를 통한 어플리케이션의 기본 관리와 통계정보 제공<br>
+            3. 전자우편을 통한 어플리케이션 푸시알림 발송 및 예약발송<br>
+            4. 교회 및 모임 등 공동체에서 필요한 자동화 보조업무 서비스<br>
+			5. 그 외 약관에 명시된 것으로 추가될 수 있는 서비스<br><br>
+            제공일/서비스제공기간: 구독 서비스 결제일로부터 서비스 종류에 따라 월 정기구독 상품의 경우 매월 결제일부터 익월 결제예정일 전까지, 1년 이용권의 경우 당해 결제일로부터 1년(365일). <br>
+            환불/교환 사유에 따른 요청가능기간:<br>
+            1. 상기 상품설명에서 제공하는 서비스를 이용하지 않은 상태에서 결제일 이후 7일 이내 구매의 취소와 전액 환불이 가능합니다.<br>
+            2. 표시/광고와 상이, 계약 내용과 다르게 이행된 경우 서비스 결제일 이후 3개월이내 혹은 표시/광고와 다른 사실을 안 날로부터 30일 이내일 때 둘 중 긴
+            것을 적용하여 환불이 가능합니다.<br>
+			3. 처치 인 앱, 에브리푸시, 앱토스터 등을 통해 작성,배포되지 않은 어플리케이션 소유자의 상품 구입은 원천적으로 무효하며 3영업일 이내 자동환불처리됩니다.<br>
+            <br><sub style="font-size: 10px">
+            환불 및 교환 요청의 기준일은 전자우편 및 우편기준으로 발송일이며,<br>
+			환불 및 교환 요청의 의사표시는 우편 및 전자우편을 원칙으로 하고 있습니다.<br>
+            우편:서울특별시 동대문구 경희대로 26, 406호(회기동, 삼의원창업센터)<br>
+            전자우편:mrchoijk@naver.com<br>
+            대표전화:070-7757-7779(평일 9:00 ~ 17:00) / 010-3162-9830(24시간 연중무휴)<br>
+			</sub>
+        </p></div>`,
+    //icon: '',
+    showCancelButton: true,
+    confirmButtonText: `동의`,
+    cancelButtonText: `취소`,
+}).then((result) => {
+    if (result.isConfirmed) {
+        document.querySelector("#termCheckbox").checked = true;
+        termChecked = true;
+    } else {}
+})
+}
+</script>
+<!-- Javascript -->
+</body>
+
+</html>

@@ -231,3 +231,104 @@ def apiPush(request, id):
         url = 'toast_push_fail.html'
     
     return render(request, url)
+
+##################################################
+# EVERYPUSH ORIGINAL
+##################################################
+########################################
+# 에브리푸시 이용약관 및 개인정보처리방침
+########################################
+def everypushTerms(request):
+    return render(request, 'everypush_terms.html')
+
+########################################
+# 유저 부가정보(ADDITIONAL USER DATA)
+########################################
+@csrf_exempt
+def everypushGetAdditionalData(request):
+    return HttpResponse(handlers.getAdditionalUserData(request))
+
+########################################
+# 결제페이지
+########################################
+def everypushPayments(request):
+    context = handlers.dash(request)
+
+    if context['user'] == None:
+        return redirect("/login")
+    
+    return render(request, "everypush_payments.html", context)
+
+########################################
+# 결제결과페이지(임시)
+########################################
+def everypushPaymentsResult(request):
+    return render(request, 'everypush_payments_result.html')
+
+########################################
+# 일반결제 성공
+########################################
+def everypushPaymentsSuccess(request):
+    result_dict = handlers.paymentsSuccessHandler(request)
+    if result_dict["result"] == "200":
+        context = {
+            "status":"success",
+            "result_dict":result_dict
+        }
+    else:
+        context = {
+            "status":"error",
+            "result_dict":result_dict
+        }
+    return render(request, 'everypush_payments_result.html', context)
+    
+########################################
+# 일반결제 실패(서버외부요인)
+########################################
+def everypushPaymentsFail(request):
+    context = {"status":"fail"}
+    return render(request, 'everypush_payments_result.html', context)
+
+########################################
+# 빌링 성공 = 연동성공, 결제 시도.
+########################################
+def everypushBillingSuccess(request):
+    result_dict = handlers.billingSuccessHandler(request)
+    result_dict = handlers.billingPaymentsHandler(request)
+    if result_dict["result"] == "200":
+        context = {
+            "status":"success",
+            "result_dict":result_dict
+        }
+    else:
+        context = {
+            "status":"error",
+            "result_dict":result_dict
+        }
+    return render(request, 'everypush_payments_result.html', context)
+
+########################################
+# 빌링결제 실패(서버외부요인)
+########################################
+def everypushBillingFail(request):
+    context = {"status":"fail"}
+    return render(request, 'everypush_payments_result.html', context)
+
+########################################
+# 빌링 연장
+########################################
+def everypushRenewBilling(request):
+    result_dict = handlers.billingPaymentsHandler(request)
+    if result_dict["result"] == "200":
+        context = {
+            "status":"success",
+            "result_dict":result_dict
+        }
+    else:
+        context = {
+            "status":"error",
+            "result_dict":result_dict
+        }
+    return render(request, 'everypush_payments_result.html', context)
+
+

@@ -1,5 +1,5 @@
 from django.db import models
-
+import datetime
 ##################################################
 # 사용자
 ##################################################
@@ -24,6 +24,7 @@ class USER_TABLE(models.Model):
     splash_min_time = models.DecimalField(decimal_places=0 ,max_digits=1)
     layout_type = models.CharField(max_length=20)
     theme = models.CharField(max_length=20)
+    sales_channel = models.CharField(max_length=8, blank=True)#영업채널
 ##################################################
 # 로그인 시도
 ##################################################
@@ -87,3 +88,30 @@ class QUESTION_TABLE(models.Model):
 class TIMER(models.Model):
     index =  models.CharField(primary_key=True, max_length=32)
     datetime = models.DateTimeField()
+
+#FOR EVERYPUSH SALES SIDE
+##################################################
+# 결제정보(에브리푸시 모듈+)
+##################################################
+class PAYMENTS_TABLE(models.Model):
+    id = models.CharField(primary_key=True, max_length=20)#OrderId
+    sales_channel = models.CharField(max_length=8, blank=True)
+    payments_gate = models.CharField(max_length=8)
+    payments_user = models.CharField(max_length=64)#From USER_TABLE, id
+    payments_date = models.DateTimeField('date published', default=datetime.datetime.now)
+    payments_amount = models.CharField(max_length=16)
+    payments_key = models.CharField(max_length=128, blank=True)
+    
+
+##################################################
+# 사용자부가정보(에브리푸시 모듈+)
+##################################################
+class ADDITIONAL_USER_TABLE(models.Model):
+    id = models.CharField(primary_key=True, max_length=20)#From USER_TABLE, id.
+    sales_channel = models.CharField(max_length=8, blank=True)#영업채널
+    user_status = models.CharField(max_length=8)
+    user_payday = models.DateTimeField('payments checked', default=datetime.datetime.now, blank=True)
+    user_prev_payday = models.DateTimeField('last payments checked', default=datetime.datetime.now, blank=True)
+    customer_key = models.CharField(max_length=128, blank=True)
+    billing_key = models.CharField(max_length=128, blank=True)
+    

@@ -1,6 +1,7 @@
 from ..models import *
 from . import common
 import logging
+import datetime
 logger = logging.getLogger('appToaster')
 
 '''
@@ -58,6 +59,7 @@ def getUser(id):
             "requestUpdate": user.request_update,
             "googleFormUrl": user.google_form_url,
             "downloadCount": user.download_count,
+
             "userCount": user.user_count,
             "visitTodayCount": user.visit_today_count,
             "totalVisitCount": user.total_visit_count,
@@ -544,3 +546,99 @@ def initQuestion(userId):
 
     except:
         return
+########################################
+# 유저 부가정보(ADDITIONAL USER DATA)
+########################################
+def getUserAdditional(userId):
+    try:
+        table = ADDITIONAL_USER_TABLE.objects.get(
+            id = userId
+        )
+        result = {
+            "id": table.id,
+            "sales_channel": table.sales_channel,
+            "user_status": table.user_status,
+            "user_payday": common.datetimeToString(table.user_payday),
+            "user_prev_payday": common.datetimeToString(table.user_prev_payday),
+            "customer_key": table.customer_key,
+            "billing_key": table.billing_key,
+            "left_time": (table.user_payday - datetime.datetime.now()).days,
+        }
+        if ((result['left_time'] < -1) and (table.user_status == "1")):#빌링이 필요한경우 :즉, 서비스 만료 상태이면서 
+            table.user_status = "B"#알파벳 'B'는 '빌링이 필요한 상태'를 의미함.
+            table.save()
+            result["user_status"] = "B"
+        else:
+            pass
+        return result
+    except Exception as e:
+        logger.info(e)
+        return
+
+########################################
+# 유저 부가정보 UPDATE&SET
+########################################
+def updateUserAdditional(update_dict,userId):
+    try:
+        table = ADDITIONAL_USER_TABLE.objects.get(id=userId)
+    except:
+        ADDITIONAL_USER_TABLE(
+            id = userId,
+            sales_channel = "EVRP",
+            user_status = "0",
+        ).save()
+        table = ADDITIONAL_USER_TABLE.objects.get(id=userId)
+    for key in update_dict:
+        if key == "salesChannel":
+            if update_dict[key] == "":#blank값인 경우, 업데이트 무시.
+                continue
+            else:
+                pass
+            table.sales_channel = update_dict[key]
+        elif key == "userStatus":
+            if update_dict[key] == "":#blank값인 경우, 업데이트 무시.
+                continue
+            else:
+                pass
+            table.user_status = update_dict[key]
+        elif key == "userPayday":#자료형 변경에 주의
+            if update_dict[key] == "":#blank값인 경우, 업데이트 무시.
+                continue
+            else:
+                pass
+            table.user_payday= update_dict[key]
+        elif key == "userPrevPayday":#자료형 변경에 주의
+            if update_dict[key] == "":#blank값인 경우, 업데이트 무시.
+                continue
+            else:
+                pass
+            table.user_prev_payday= update_dict[key]
+        elif key == "customerKey":
+            if update_dict[key] == "":#blank값인 경우, 업데이트 무시.
+                continue
+            else:
+                pass
+            table.customer_key = update_dict[key]
+        elif key == "billingKey":
+            if update_dict[key] == "":#blank값인 경우, 업데이트 무시.
+                continue
+            else:
+                pass
+            table.billing_key = update_dict[key]
+    table.save()
+    return True
+
+########################################
+# 결제정보 set
+########################################
+def setPaymentsData(update_dict):
+    PAYMENTS_TABLE(
+        id = update_dict['paymentsId'],#orderId
+        sales_channel = "EVRP",
+        payments_gate = update_dict['paymentsGate'],
+        payments_user = update_dict['paymentsUser'],
+        payments_date = datetime.datetime.now(),
+        payments_amount = update_dict['paymentsAmount'],
+        payments_key = update_dict["paymentKey"],#여긴 s없음.(주의!)
+    ).save()
+    return True

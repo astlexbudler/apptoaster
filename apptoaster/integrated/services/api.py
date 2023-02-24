@@ -1,6 +1,7 @@
 import requests
 import json
 import logging
+import http.client
 logger = logging.getLogger('appToaster')
 
 '''
@@ -110,3 +111,72 @@ def kakaoSendPush(kakaoAppAdminKey, title, message, targetList):
     response = requests.post(url, headers=header, data=body)
 
     return response
+
+##################################################
+# 토스 결제/빌링 API
+##################################################
+#결제승인요청
+def tosspayments_approval(dict):  # 결제 승인 API 요청
+    conn = http.client.HTTPSConnection("api.tosspayments.com")
+    paymentKey = dict["paymentKey"]
+    amount = dict["amount"]
+    orderId = dict["orderId"]
+    innerpayload = f"@paymentKey@:@{paymentKey}@,@amount@:{amount},@orderId@:@{orderId}@"
+    payload = "{" + innerpayload + "}"
+    payload = payload.replace("@","\"")
+
+    headers = {
+        'Authorization': "Basic dGVzdF9za19ZWjFhT3dYN0s4bXhkQXZPZDk5cnlReHp2TlBHOg==",
+        'Content-Type': "application/json"
+    }
+
+    conn.request("POST", "/v1/payments/confirm", payload, headers)
+
+    res = conn.getresponse()
+    data = res.read()
+    return json.loads(data.decode("utf-8"))
+
+#빌링연동요청
+def tossbilling_approval(dict):
+    authKey = dict["authKey"]
+    customerKey = dict["customerKey"]
+    import http.client
+
+    conn = http.client.HTTPSConnection("api.tosspayments.com")
+
+    innerpayload = f"@authKey@:@{authKey}@,@customerKey@:@{customerKey}@"
+    payload = "{" + innerpayload + "}"
+    payload = payload.replace("@","\"")
+
+    headers = {
+        'Authorization': "Basic dGVzdF9za19ZWjFhT3dYN0s4bXhkQXZPZDk5cnlReHp2TlBHOg==",
+        'Content-Type': "application/json; charset=utf-8",
+        }
+
+    conn.request("POST", "/v1/billing/authorizations/issue", payload, headers)
+
+    res = conn.getresponse()
+    data = res.read()
+    return json.loads(data.decode("utf-8"))
+
+#빌링결제요청
+def tossbilling_payment_approval(dict):
+    conn = http.client.HTTPSConnection("api.tosspayments.com")
+    customerKey = dict["customerKey"]
+    billingKey = dict["billingKey"]
+    amount = dict["amount"]
+    orderId = dict["orderId"]
+    orderName = dict["orderName"]
+    innerpayload = f"@customerKey@:@{customerKey}@,@amount@:{amount},@orderId@:@{orderId}@,@orderName@:@{orderName}@"
+    payload = "{" + innerpayload + "}"
+    payload = payload.replace("@","\"")
+    payload = payload.encode('utf-8')
+    headers = {
+        'Authorization': "Basic dGVzdF9za19ZWjFhT3dYN0s4bXhkQXZPZDk5cnlReHp2TlBHOg==",
+        'Content-Type': "application/json; charset=utf-8"
+    }
+    conn.request("POST", f"/v1/billing/{billingKey}", payload, headers)
+
+    res = conn.getresponse()
+    data = res.read()
+    return json.loads(data.decode("utf-8"))

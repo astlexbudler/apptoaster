@@ -111,4 +111,45 @@ urlpatterns = [
     # 푸시 관리(POST/DELETE)
     ########################################
     path('api/push/id/<str:id>', views.apiPush, name='apiPush'),
+
+    ##################################################
+    # EVERYPUSH ORIGINAL
+    ##################################################
+    ########################################
+    # 에브리푸시 이용약관 및 개인정보처리방침
+    ########################################
+    path('terms', views.everypushTerms, name='everypushTerms'),
+    ########################################
+    # 유저 부가정보(ADDITIONAL USER DATA)
+    ########################################
+    path('api/get_additional_user_data', views.everypushGetAdditionalData, name='everypushGetAdditionalData'),
+    ########################################
+    # 결제페이지
+    ########################################
+    path('payments', views.everypushPayments, name='everypushPayments'),
+    ########################################
+    # 결제결과페이지(임시)
+    ########################################
+    path('payments_result', views.everypushPaymentsResult, name='everypushPaymentsResult'),
+    ########################################
+    # 일반결제 성공
+    ########################################
+    path('payments_success', views.everypushPaymentsSuccess, name='everypushPaymentsSuccess'),
+    ########################################
+    # 일반결제 실패
+    ########################################
+    path('payments_fail', views.everypushPaymentsFail, name='everypusPaymentsFail'),
+    ########################################
+    # 빌링결제 성공
+    ########################################
+    path('billing_success', views.everypushBillingSuccess, name='everypushBillingSuccess'),
+    ########################################
+    # 빌링결제 실패
+    ########################################
+    path('billing_fail', views.everypushBillingFail, name='everypushBillingFail'),
+    ########################################
+    # 빌링 연장
+    ########################################
+    path('renew_billing', views.everypushRenewBilling, name='everypushRenewBilling'),
+
 ]

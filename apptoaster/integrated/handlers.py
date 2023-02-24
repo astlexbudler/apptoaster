@@ -7,6 +7,7 @@ from .services import email
 from .services import model
 from .services import session
 import logging
+import datetime
 logger = logging.getLogger('appToaster')
 
 
@@ -503,3 +504,154 @@ def apiDeletePush(request, user):
         return 'toast_push_success.html'
     except:
         return 'toast_push_fail.html'
+
+##################################################
+# EVERYPUSH ORIGINAL
+##################################################
+########################################
+# 유저 부가정보(ADDITIONAL USER DATA)
+########################################
+def getAdditionalUserData(request):
+    try:
+        try:
+            userId = session.getId(request)
+        except:
+            req_dict = json.loads(request.body)
+            userId = req_dict["userId"]
+        user_additional = model.getUserAdditional(userId)
+        result = {
+            'status': "200",
+            'user_additional': user_additional,
+        }
+        return(json.dumps(result))
+    except:
+        result = {
+            'status': "500"
+        }
+        return(json.dumps(result))
+
+########################################
+# 일반결제 성공
+########################################
+def paymentsSuccessHandler(request):
+    orderId = request.GET.get("orderId")
+    paymentKey = request.GET.get("paymentKey")
+    amount = request.GET.get("amount")
+    userPrevPayday = datetime.datetime.now()
+    if int(amount) <= 20000:#월플랜의 상한선은 최대 20000원임
+        userStatus = "1"
+        userPayday = userPrevPayday + datetime.timedelta(days=30)
+    elif 20000 < int(amount) <= 200000:#연플랜의 상한선은 최대 200000원임.
+        userStatus = "2"
+        userPayday = userPrevPayday + datetime.timedelta(days=365)
+    else:
+        userStatus = "9"
+    user_update_data = {#USER_TABLE을 업데이트
+        "userStatus":userStatus,
+        "userPayday":userPayday,#다음 결제 예정일
+        "userPrevPayday":userPrevPayday,#오늘 날짜(마지막 결제일)
+    }
+    userId = session.getId(request)
+    api_data = {#결제승인 API에 필요한 데이터
+        "orderId":orderId,
+        "paymentKey":paymentKey,
+        "amount":amount
+    }
+    payments_set_data = {
+        "paymentsId":orderId,
+        "paymentsGate":"TOSSPG",
+        "paymentsUser":userId,
+        "paymentsAmount":str(amount),
+        "paymentKey":paymentKey,
+    }
+    res_dict = api.tosspayments_approval(api_data)
+    try:
+        status = res_dict["status"]
+        if status == "DONE":#성공적으로 결제가 승인된 경우!
+            model.updateUserAdditional(user_update_data,userId)
+            model.setPaymentsData(payments_set_data)
+            return {"result":"200", "sys":"API Success", "api_result":res_dict, "payments_set_data":payments_set_data}
+        else:
+            return {"result":"500", "sys":"API Failure", "api_result":res_dict, "payments_set_data":payments_set_data}
+    except:
+        error_code = res_dict["code"]
+        error_msg = res_dict["message"]
+        return {"result":"400", "sys":"Wrong Access", "error_code":error_code, "error_msg":error_msg}
+
+########################################
+# 빌링 연동.
+########################################   
+def billingSuccessHandler(request):
+    customerKey = request.GET.get("customerKey")
+    authKey = request.GET.get("authKey")
+    userId = session.getId(request)
+    api_data = {
+        "authKey":authKey,
+        "customerKey":customerKey,
+    }
+    userPrevPayday = datetime.datetime.now()
+    userPayday = userPrevPayday + datetime.timedelta(days=30)
+    user_update_data = {
+        "userStatus":"1",
+        "userPayday":userPayday,#다음 결제 예정일
+        "userPrevPayday":userPrevPayday,#오늘 날짜(마지막 결제일)
+    }
+    res_dict = api.tossbilling_approval(api_data)
+    try:
+        billingKey = res_dict["billingKey"]
+        if ((billingKey != "") and (customerKey == res_dict["customerKey"])):#성공적으로 빌링이 연동된 경우
+            user_update_data["customerKey"]=customerKey
+            user_update_data["billingKey"]=billingKey
+            model.updateUserAdditional(user_update_data,userId)#빌링키를 넣어준다.
+            return {"result":"200", "sys":"API Success", "api_result":res_dict}
+        else:
+            return {"result":"500", "sys":"API Failure", "api_result":res_dict}
+    except:
+        error_code = res_dict["code"]
+        error_msg = res_dict["message"]
+        return {"result":"400", "sys":"Wrong Access", "error_code":error_code, "error_msg":error_msg}
+
+########################################
+# 빌링 결제.
+########################################   
+def billingPaymentsHandler(request):
+    userId = session.getId(request)
+    month_amount = 9900
+    userPrevPayday = datetime.datetime.now()
+    userPayday = userPrevPayday + datetime.timedelta(days=30)
+    orderId = common.getRandomString(8)
+    user_update_data = {
+        "userStatus":"1",
+        "userPayday":userPayday,#다음 결제 예정일
+        "userPrevPayday":userPrevPayday,#오늘 날짜(마지막 결제일)
+    }
+    user_dict = model.getUserAdditional(userId)
+    api_data = {
+        "customerKey":user_dict["customer_key"],
+        "billingKey":user_dict["billing_key"],
+        "amount":month_amount,#월요금
+        "orderId":orderId,
+        "orderName":"[1개월구독]푸시알림서비스",#월플랜이름
+        "taxFreeAmount":0
+    }
+    payments_set_data = {
+        "paymentsId":orderId,
+        "paymentsGate":"TOSSBL",
+        "paymentsUser":userId,
+        "paymentsAmount":str(month_amount),
+        #"paymentsNote":paymentKey, => 이따 넣어주자
+    }
+    res_dict = api.tossbilling_payment_approval(api_data)#토스빌링결제요청
+    try:
+        status = res_dict["status"]
+        if status == "DONE":#성공적으로 결제가 승인된 경우!
+            model.updateUserAdditional(user_update_data,userId)
+            payments_set_data["paymentKey"] = res_dict["paymentKey"]#이거 안넣으면 터짐;
+            model.setPaymentsData(payments_set_data)
+            return {"result":"200", "sys":"API Success", "api_result":res_dict, "payments_set_data":payments_set_data}
+        else:
+            return {"result":"500", "sys":"API Failure", "api_result":res_dict, "payments_set_data":payments_set_data}
+    except:
+        error_code = res_dict["code"]
+        error_msg = res_dict["message"]
+        return {"result":"400", "sys":"Wrong Access", "error_code":error_code, "error_msg":error_msg}

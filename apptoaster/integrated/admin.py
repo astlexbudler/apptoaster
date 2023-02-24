@@ -35,3 +35,6 @@ class questionAdmin(admin.ModelAdmin):
     search_fields = ['id', 'title']
 
 admin.site.register(QUESTION_TABLE, questionAdmin)
+
+admin.site.register(PAYMENTS_TABLE)
+admin.site.register(ADDITIONAL_USER_TABLE)

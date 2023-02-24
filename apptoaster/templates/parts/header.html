@@ -1,14 +1,20 @@
+{% load static %}
+<head>
+    <title id="HTMLtitle"></title>
+</head>
 <header id="header" class="header header--dark header-transparent header--sticky">
     <nav id="navigation" class="header-nav">
         <div class="container">
             <div class="row d-flex flex-md-row align-items-center">
                 <div class="logo mr-auto" id="headerLogo">
                 </div>
-
                 <div class="nav-menu ml-auto">
                     <ul class="">
                         <li class="nav-menu-item">
                             <a href="/dash">대시보드</a>
+                        </li>
+                        <li id="goods_and_payments" class="nav-menu-item" style="display: ;">
+                            <a href="/payments">상품 및 결제관리</a>
                         </li>
                         <li class="nav-menu-item">
                             <a href="/push">푸시 관리</a>
@@ -59,4 +65,23 @@
             </div>
         </div>
     </nav>
+    <script>
+        var rootUrl = location.href;
+        if (rootUrl.includes("127")) {
+            document.querySelector("#HTMLtitle").innerText = '개발페이지';
+            document.querySelector("#HTMLicon").setAttribute('href',"{% static 'default/img/favicon_dev.png' %}");
+            document.getElementById("goods_and_payments").setAttribute("style", "display: ;");
+        } else if (rootUrl.includes("everypush")) {
+            document.querySelector("#HTMLtitle").innerText = '에브리푸시';
+            document.querySelector("#HTMLicon").setAttribute('href',"{% static 'default/img/favicon_everypush.png' %}");
+            document.querySelector("#headerLogo").innerHTML = '<img src="static/apptoaster/images/logo/logo_everypush.png" style="max-width: 200px;">';
+            document.getElementById("goods_and_payments").setAttribute("style", "display: ;");
+        } else if (rootUrl.includes("apptoaster")) {
+            document.querySelector("#HTMLtitle").innerText = 'AppToaster';
+            document.querySelector("#HTMLicon").setAttribute('href',"{% static 'default/img/favicon.png' %}");
+            document.querySelector("#headerLogo").innerHTML = '<img src="static/apptoaster/images/logo/logo_black.png" style="max-width: 200px;">';
+            document.getElementById("goods_and_payments").setAttribute("style", "display: none;");
+        } else {}
+        //택갈이
+    </script>
 </header>

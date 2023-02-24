@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link id="HTMLicon" rel="icon" type="image/png" href="">
+
+    <!-- CSS -->
+    <link href="{% static 'default/css/bootstrap.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'default/css/style.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'default/css/plugin/animate.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'default/css/jquery-ui.css' %}" rel="stylesheet" type="text/css" />
+    <!-- CSS -->
+
+    <!-- SDK -->
+    <script src="{% static 'apptoaster/js/apptoaster.js' %}" type="text/javascript"></script>
+    <script src="https://kit.fontawesome.com/37a4d902d2.js" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- SDK -->
+    <style>
+    .swal2-height {
+        height: 80vh;
+    }
+    </style>
+</head>
+
+<body>
+
+    <!-- Preloader -->
+    <section id="preloader">
+        <div class="loader" id="loader">
+            <div class="loader-img"></div>
+        </div>
+    </section>
+    <!-- Preloader -->
+
+    <!-- Wrapper -->
+    <div class="wrapper">
+
+        <!-- Header-->
+        {% include "parts/header.html" %}
+        <!-- Header -->
+
+        <section class="ptb ptb-sm-80 " style="min-height: 100vh;">
+            <div class="container">
+                <div class="col-md-8 offset-md-2">
+
+                    <h4 id="figurePaymentStatus">결제 상태</h4>
+
+                    <br />
+                    <hr />
+                    <br />
+
+                    <div>
+                        <label id="formLabel">상세내역</label>
+                        <table id="billSection" class="col-12">
+                            <hr style="border-top: 0.5px solid rgb(174, 174, 174);">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" style="width:50%">
+                                    </th>
+                                    <th class="text-center" style="width:50%">
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th class="text-center">
+                                        <h4></h4>
+                                    </th>
+                                    <th class="text-center">
+                                        <h4></h4>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="2" class="text-center">
+                                        <h2 style="font-weight: 300; margin-bottom:0;">계산서</h2>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="padding-right:15%; padding-left:15%; padding-bottom:5%;">
+                                        <div style="margin:auto;">
+                                            <p id="figureMsg" class="text-center">결제 정상 처리/에러 메시지.</p>
+                                            <p id="figure1stStatusDisc" class="text-center" style="margin-bottom: 0px; color:black;"></p>
+                                            <p id="figure2ndStatusDisc" class="text-center" style="margin-bottom: 0px; color:black;"></p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            </table>
+                            <table id="billBox" class="col-12" style="display: ;">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" style="width:50%">
+                                        </th>
+                                        <th class="text-center" style="width:50%">
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td colspan="2" style="padding-right:15%; padding-left:15%;">
+                                        <div style="display: flex;">
+                                            <div style="float:none; width:30%;"><p style="margin-bottom:3px;">항목:</p></div>
+                                            <div style="text-align: right; width:70%;"><p id="planName" style="margin-bottom: 3px;"></p></div>
+                                        </div>
+                                        <div style="float:right; width:100%; background-color: rgb(174, 174, 174); height: 0.5px;"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="padding-right:15%; padding-left:15%;">
+                                        <div style="display: flex;">
+                                            <div style="float:none; width:50%;"><p style="margin-bottom:3px;">총 금액:</p></div>
+                                            <div style="text-align: right; width:50%;"><p id="wholePrice" style="margin-bottom: 3px;"></div>
+                                        </div>
+                                        <div style="float:right; width:100%; background-color: rgb(174, 174, 174); height: 0.5px;"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="padding-right:15%; padding-left:15%;">
+                                        <div style="display: flex;">
+                                            <div style="float:none; width:40%;"><p style="margin-bottom:3px;">할인:</p></div>
+                                            <div style="text-align: right; width:60%;"><p id="discountAmount" style="margin-bottom: 3px;"></p></div>
+                                        </div>
+                                        <div style="float:right; width:100%; background-color: rgb(174, 174, 174); height: 0.5px;"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="padding-right:15%; padding-left:15%; padding-top:5%;">
+                                        <div style="display: flex;">
+                                            <div style="float:none; width:50%;"><p style="margin-bottom:3px;">최종금액:</p></div>
+                                            <div style="text-align: right; width:50%;"><p id="finalPrice" style="margin-bottom: 3px;"></p></div>
+                                        </div>
+                                        <div style="float:right; width:100%; background-color: rgb(174, 174, 174); height: 0.5px;"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="padding-right:15%; padding-left:15%; padding-top:0;">
+                                        <div style="display: flex;">
+                                            <div style="float:none; width:50%;"><p style="margin-bottom:3px;">결제일시 </p></div>
+                                            <div style="text-align: right; width:50%;"><p id="figureApprovedAt" style="margin-bottom: 3px;"></p></div>
+                                        </div>
+                                        <div style="float:right; width:100%; background-color: rgb(174, 174, 174); height: 0.5px;"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="padding-right:15%; padding-left:15%; padding-top:0;">
+                                        <div style="display: flex;">
+                                            <div style="float:none; width:50%;"><p style="margin-bottom:3px;">결제승인 </p></div>
+                                            <div style="text-align: right; width:50%;"><p id="figureApprovedStatus" style="margin-bottom: 3px;"></p></div>
+                                        </div>
+                                        <div style="float:right; width:100%; background-color: rgb(174, 174, 174); height: 0.5px;"></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            </table>
+                            <table class="col-12">
+                            <tbody>
+                                <tr>
+                                    <td class="text-center" colspan="4">
+                                        <div>
+                                            <div style="margin:auto; border:solid; border-color: rgb(149, 149, 149); border-width: 0.3px; width: 100px; height: 35px; margin-top:40px; cursor: pointer;" onclick="goPaymentsGate();">
+                                                <a href="/"><h4 style="font-weight: 300; margin-bottom: 0px; margin-top:3.5px;">확인</h4></a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="padding-right:15%; padding-left:15%; padding-top:2%;">
+                                        <div style="margin:auto;">
+                                            <p class="text-center" style="line-height: 14px; font-size: 12px; color:rgb(0, 157, 255); cursor:pointer;" onclick="swalvin();">상품설명, 서비스제공기간 및 환불정책</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="padding-right:15%; padding-left:15%; padding-bottom:0;">
+                                        <div style="margin:auto;">
+                                            <p class="text-center" style="line-height: 12px; font-size: 5px;">결제전후, 고객센터(070-7757-7779)로 연락주시면<br>문의사항을 친절하게 상담드리고 있습니다.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- FOOTER -->
+        {% include "parts/footer.html" %}
+        <!-- END FOOTER -->
+
+        <!-- Scroll Top -->
+        <a class="scroll-top">
+            <i class="fa-light fa-arrow-up"></i>
+        </a>
+        <!-- End Scroll Top -->
+
+    </div>
+    <!-- Wrapper -->
+
+    <!-- Javascript -->
+    <script src="{% static 'default/js/jquery-1.11.2.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/jquery-ui.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.easing.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/bootstrap.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.flexslider.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.fitvids.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.viewportchecker.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.stellar.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/wow.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.colorbox-min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/owl.carousel.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/isotope.pkgd.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/masonry.pkgd.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/imagesloaded.pkgd.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.fs.tipper.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/mediaelement-and-player.min.js' %}"></script>
+    <script src="{% static 'default/js/plugin/jquery.validate.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/theme.js' %}" type="text/javascript"></script>
+<script>
+var statusPayments = "{{ status }}";
+var resultServer = "{{ result_dict.result }}";
+var resultApi = "{{ result_dict.api_result }}";
+var orderName = "{{ result_dict.api_result.orderName }}";
+var approvedAt = "{{ result_dict.api_result.approvedAt }}";
+var orderAmount = "{{ result_dict.payments_set_data.paymentsAmount }}";
+var errorMsg = "{{ result_dict.error_msg }}";
+
+var planNameMonth = "[1개월구독]푸시알림서비스";
+var wholePriceMonth = "10,000원";
+var discountAmountMonth = "-1%(100원)";
+var finalPriceMonth = "9,900원";
+var planNameYear = "[1년무제한]푸시알림서비스";
+var wholePriceYear = "120,000원";
+var discountAmountYear = "-20%(24,000원)";
+var finalPriceYear = "96,000원";
+var planWhich;
+
+//상품분기파악
+try {
+   if (parseInt(orderAmount) < 20000) {
+    planWhich = "month";
+   } else if (20000 <= parseInt(orderAmount) <= 200000) {
+    planWhich = "year";
+   }
+} catch {}
+
+//결제결과를 작성합니다.
+buchiKomu = () => {
+    if (statusPayments == "success") {
+    document.querySelector("#figurePaymentStatus").innerText = "결제 성공!";
+    //document.querySelector("#figure1stStatusDisc").innerHTML = `${pastorName}님,`
+    //document.querySelector("#figure2ndStatusDisc").innerText = "상세 내역은 아래와 같습니다.";
+    document.getElementById("figureMsg").setAttribute("style", "display: none;");
+    if (planWhich == "month") {
+      document.querySelector("#planName").innerText = planNameMonth;
+      document.querySelector("#wholePrice").innerHTML = `${wholePriceMonth}/<sub style="font-size: 11px;">월</sub>`;
+      document.querySelector("#discountAmount").innerText = discountAmountMonth;
+      document.querySelector("#finalPrice").innerHTML = `${finalPriceMonth}/<sub style="font-size: 11px;">월</sub>`;
+    } else if (planWhich == "year") {
+      document.querySelector("#planName").innerText = planNameYear;
+      document.querySelector("#wholePrice").innerText = wholePriceYear;
+      document.querySelector("#discountAmount").innerText = discountAmountYear;
+      document.querySelector("#finalPrice").innerText = finalPriceYear;
+    } else {}
+    document.querySelector("#figureApprovedAt").innerText = approvedAt;
+    document.querySelector("#figureApprovedStatus").innerText = "정상처리";
+    document.getElementById("figureApprovedStatus").style.color = 'rgb(0, 216, 47)';
+  } else if (statusPayments == "error") {
+    document.getElementById("billBox").setAttribute("style", "display: none;");
+    document.querySelector("#figurePaymentStatus").innerText = "결제 중 오류발생";
+    document.querySelector("#figure1stStatusDisc").innerText = "불편을 드려 대단히 죄송합니다. 잔액이 빠져 나간 경우,";
+    document.querySelector("#figure2ndStatusDisc").innerText = "고객센터(070-7757-7779)로 즉시 문의하여 주십시오.";
+    document.querySelector("#figureMsg").innerText = errorMsg;
+    document.getElementById("figureMsg").style.color = 'rgb(229, 0, 0)';
+  } else if (statusPayments == "fail") {
+    document.getElementById("billBox").setAttribute("style", "display: none;");
+    document.querySelector("#figurePaymentStatus").innerText = "결제 실패";
+    document.querySelector("#figure1stStatusDisc").innerText = "불편을 드려 대단히 죄송합니다. 시스템 장애가 계속될 경우,";
+    document.querySelector("#figure2ndStatusDisc").innerText = "고객센터(070-7757-7779)로 문의하여 주십시오.";
+    document.querySelector("#figureMsg").innerText = "PAYMENT FAILED";
+  } else {}
+}
+
+//상품설명 등의 swal을 띄웁니다.
+swalvin = () => {
+    Swal.fire({
+    heightAuto: false,
+    customClass: 'swal2-height',
+    title: '내용 본문',
+    html: `<div style="text-align:left; padding-right:30px; padding-left:15px;"><h5>에브리푸시 푸시알림 서비스 상품설명,<br> 서비스 제공기간 및 환불정책</h5><p style="position: relative; font-size: 12px;">
+            본 상품(구독 서비스 및 이용권)은 처치 인 앱, 에브리푸시, 앱토스터 등의 서비스를 통해 작성, 배포된 어플리케이션의 푸시 알림 발송 및 기타 기능을 제공하는 서비스로,<br>
+            처치 인 앱, 에브리푸시, 앱토스터 등을 통해 작성, 배포된 어플리케이션 그 자체와는 관계가 없음을 알립니다.<br>
+            본 구독상품(구독 서비스)는 푸시 알림 발송 및 아래와 같은 기타 서비스를 제공합니다.<br><br>
+            1. https://everypush.com(이하 웹사이트)를 통한 어플리케이션 푸시알림 발송 및 예약발송<br>
+            2. 웹사이트를 통한 어플리케이션의 기본 관리와 통계정보 제공<br>
+            3. 전자우편을 통한 어플리케이션 푸시알림 발송 및 예약발송<br>
+            4. 교회 및 모임 등 공동체에서 필요한 자동화 보조업무 서비스<br>
+			5. 그 외 약관에 명시된 것으로 추가될 수 있는 서비스<br><br>
+            제공일/서비스제공기간: 구독 서비스 결제일로부터 서비스 종류에 따라 월 정기구독 상품의 경우 매월 결제일부터 익월 결제예정일 전까지, 1년 이용권의 경우 당해 결제일로부터 1년(365일). <br>
+            환불/교환 사유에 따른 요청가능기간:<br>
+            1. 상기 상품설명에서 제공하는 서비스를 이용하지 않은 상태에서 결제일 이후 7일 이내 구매의 취소와 전액 환불이 가능합니다.<br>
+            2. 표시/광고와 상이, 계약 내용과 다르게 이행된 경우 서비스 결제일 이후 3개월이내 혹은 표시/광고와 다른 사실을 안 날로부터 30일 이내일 때 둘 중 긴
+            것을 적용하여 환불이 가능합니다.<br>
+			3. 처치 인 앱, 에브리푸시, 앱토스터 등을 통해 작성,배포되지 않은 어플리케이션 소유자의 상품 구입은 원천적으로 무효하며 3영업일 이내 자동환불처리됩니다.<br>
+            <br><sub style="font-size: 10px">
+            환불 및 교환 요청의 기준일은 전자우편 및 우편기준으로 발송일이며,<br>
+			환불 및 교환 요청의 의사표시는 우편 및 전자우편을 원칙으로 하고 있습니다.<br>
+            우편:서울특별시 동대문구 경희대로 26, 406호(회기동, 삼의원창업센터)<br>
+            전자우편:mrchoijk@naver.com<br>
+            대표전화:070-7757-7779(평일 9:00 ~ 17:00) / 010-3162-9830(24시간 연중무휴)<br>
+			</sub>
+        </p></div>`,
+    //icon: '',
+    showCancelButton: false,
+    confirmButtonText: `확인`,
+})
+}
+//모든요소가 로드되면
+window.onload = () => {
+    buchiKomu();        
+}
+</script>
+<!-- Javascript -->
+</body>
+
+</html>

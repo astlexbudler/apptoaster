@@ -3,8 +3,8 @@
         <div class="container">
             <div class="row footer-info">
                 <div class="col-lg-3 col-md-12 col-sm-12">
-                    <div class="footer-block">
-                        <img src="static/apptoaster/images/logo/logo_black.png" style="width: 200px;" id="headerLogo">
+                    <div class="footer-block" id="footerLogo">
+                        <!--<img src="static/apptoaster/images/logo/logo_black.png" style="width: 200px;" id="headerLogo">-->
                         <!--
                         <ul class="social">
                             <li>
@@ -31,23 +31,23 @@
                         <ul class="link">
                             <h6 class="link-title">DOCUMENT</h6>
                             <li><a href="https://spam.kisa.or.kr/common/nttFileDownload.do?fileKey=2ed78e5844315de9e11ddd8219b283d0">한국인터넷진흥원 푸시 참고자료</a></li>
-                            <li><a href="https://apptoaster.co.kr/privacy">개인정보처리방침</a></li>
-                            <li><a href="https://apptoaster.co.kr/policy">서비스이용약관</a></li>
+                            <li id="privacy_to"><a href="https://apptoaster.co.kr/privacy">개인정보처리방침</a></li>
+                            <li id="policy_to"><a href="https://apptoaster.co.kr/policy">서비스이용약관</a></li>
                         </ul>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="footer-block">
                         <h6 class="link-title">CONTACT</h6>
-                        <p>경기도 용인시 기흥구 강남서로 9 아카데미프라자 703호</p>
+                        <p id="company_address">경기도 용인시 기흥구 강남서로 9 아카데미프라자 703호</p>
                         <ul class="link">
                             <li>
-                                <a href="mailto:admin@apptoaster.co.kr">
+                                <a id="mail_to" href="mailto:admin@apptoaster.co.kr">
                                     admin@apptoaster.co.kr
                                 </a>
                             </li>
                             <li>
-                                <a>010-4109-8317</a>
+                                <a id="tel_to">010-4109-8317</a>
                             </li>
                         </ul>
                     </div>
@@ -56,15 +56,45 @@
         </div>
     </div>
     <hr />
-
     <!-- Copyright -->
     <section class="copyright ptb-60">
+        <div id="bizInfo" class="container" style="display: none;">
+            <p>상호명 스태커블<br />대표자 최준혁 / 사업자등록번호 626-17-01809<br />통신판매업신고번호 제2022-서울동대문-1646호<br />소재지 서울특별시 동대문구 경희대로 26, 삼의원창업센터 406호(회기동)<br />대표번호 070-7757-7779
+        </div>
         <div class="container">
-            <p class="">
+            <p id="copyright" class="">
                 © 2023 <b>AppToaster</b>. All Rights Reserved.
             </p>
         </div>
     </section>
     <!-- Copyright -->
-
+    <script>
+        var rootUrl = location.href;
+        if (rootUrl.includes("127")) {
+            document.querySelector("#company_address").innerText = '개발환경:주소';
+            document.querySelector("#mail_to").innerText = '개발환경:이메일';
+            document.querySelector("#tel_to").innerText = '개발환경:전화번호';
+            document.querySelector("#privacy_to").innerHTML = '<a href="https://apptoaster.co.kr/privacy">개발환경:개인정보처리방침</a>';
+            document.querySelector("#policy_to").innerHTML = '<a href="https://apptoaster.co.kr/policy">개발환경:서비스이용약관</a>';
+            document.querySelector("#copyright").innerHTML = '© 2023 <b>StackableDevelopment.Coop</b>. All Rights Reserved.';
+            //document.getElementById("bizInfo").setAttribute("style","display: ;")
+        } else if (rootUrl.includes("everypush")) {
+            document.querySelector("#company_address").innerText = '서울특별시 동대문구 경희대로 26, 406호(삼의원창업센터, 회기동)';
+            document.querySelector("#mail_to").innerText = 'mrchoijk@naver.com';
+            document.querySelector("#tel_to").innerText = '070-7757-7779';
+            document.querySelector("#privacy_to").innerHTML = '<a href="https://everypush.com/terms">개인정보처리방침</a>';
+            document.querySelector("#policy_to_to").innerHTML = '<a href="https://everypush.com/terms">서비스이용약관</a>';
+            document.querySelector("#copyright").innerHTML = '© 2023 <b>StackableDevelopment.Coop</b>. All Rights Reserved.';
+            document.querySelector("#footerLogo").innerHTML = '<img src="static/apptoaster/images/logo/logo_everypush.png" style="max-width: 200px;">';
+            document.getElementById("bizInfo").setAttribute("style","display: ;")
+        } else if (rootUrl.includes("apptoaster")) {
+            document.querySelector("#company_address").innerText = '경기도 용인시 기흥구 강남서로 9 아카데미프라자 703호';
+            document.querySelector("#mail_to").innerText = 'admin@apptoaster.co.kr';
+            document.querySelector("#tel_to").innerText = '010-4109-8317';
+            document.querySelector("#privacy_to").innerHTML = '<a href="https://apptoaster.co.kr/privacy">개인정보처리방침</a>';
+            document.querySelector("#policy_to").innerHTML = '<a href="https://apptoaster.co.kr/policy">서비스이용약관</a>';
+            document.querySelector("#copyright").innerHTML = '© 2023 <b>AppToaster</b>. All Rights Reserved.';
+            document.querySelector("#footerLogo").innerHTML = '<img src="static/apptoaster/images/logo/logo_black.png" style="max-width: 200px;">';
+        }//택갈이
+    </script>
 </footer>
