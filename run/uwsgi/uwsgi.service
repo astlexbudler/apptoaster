@@ -3,7 +3,7 @@ Description=uWSGI service
 After=syslog.target
 
 [Service]
-ExecStart=/home/github/apptoaster/venv_linux/bin/uwsgi -i /home/github/apptoaster/run/uwsgi/apptoaster.ini
+ExecStart=/home/apptoaster/venv_linux/bin/uwsgi -i /home/apptoaster/run/uwsgi/apptoaster.ini
 
 Restart=always
 KillSignal=SIGQUIT
