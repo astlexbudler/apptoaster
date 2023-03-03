@@ -350,7 +350,7 @@ def apiGetTarget(request, id):
                 "pushAllowDatetime": common.stringToDatetime(''),
                 "isAdAllow": False,
                 "adAllowDatetime": common.stringToDatetime(''),
-                "lastActiveDate": common.stringToDate(''),
+                "lastActiveDatetime": common.stringToDatetime(''),
             })
             model.setUser({
                 "id": user.id,
@@ -390,7 +390,7 @@ def apiGetTarget(request, id):
                 "pushAllowDatetime": target['pushAllowDatetime'],
                 "isAdAllow": target['isAdAllow'],
                 "adAllowDatetime": target['adAllowDatetime'],
-                "lastActiveDate": common.stringToDate(''),
+                "lastActiveDatetime": common.stringToDatetime(''),
             })
             model.setUser({
                 "id": user.id,
@@ -449,7 +449,7 @@ def apiPatchTarget(request, id):
             "pushAllowDatetime": common.stringToDatetime(''),
             "isAdAllow": isAdAllow,
             "adAllowDatetime": common.stringToDatetime(''),
-            "lastActiveDate": target['lastActiveDate'],
+            "lastActiveDatetime": target['lastActiveDatetime'],
         })
 
         return
