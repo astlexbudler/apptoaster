@@ -38,3 +38,4 @@ admin.site.register(QUESTION_TABLE, questionAdmin)
 
 admin.site.register(PAYMENTS_TABLE)
 admin.site.register(ADDITIONAL_USER_TABLE)
+admin.site.register(LOGGER_TABLE)

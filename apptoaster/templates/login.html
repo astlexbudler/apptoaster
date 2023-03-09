@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 {% load static %}
+{% csrf_token %}
 
 <head>
     <meta charset="utf-8" />
@@ -54,7 +55,7 @@
                         <td>
                             <input class="input-sm form-full" id="id" type="text" maxlength="20" required>
                             <small>프로젝트 아이디를 입력해주세요.(20글자)</small><br>
-                            <small>로그인이 안될 시 웹 브라우저에서 Ctrl + F5(웹 캐시 삭제) 후 다시 시도해주세요.</small>
+                            <small>로그인이 안될 시 웹 브라우저에서 Ctrl + F5 후 다시 시도해주세요.</small>
                             <small class="text-danger" id="retry" style="opacity: 0;">
                                 <br>
                                 잠시만 기다려주세요..<span id="second">5</span>

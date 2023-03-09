@@ -1,6 +1,12 @@
 from django.db import models
 import datetime
 ##################################################
+# 서버 로거
+##################################################
+class LOGGER_TABLE(models.Model):
+    log = models.CharField(max_length=100) 
+    
+##################################################
 # 사용자
 ##################################################
 class USER_TABLE(models.Model):

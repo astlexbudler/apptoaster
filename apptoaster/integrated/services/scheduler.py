@@ -136,5 +136,5 @@ def scheduled_job():
             targetList = list
 
         for i in range(loop):
-            api.kakaoSendPush(user['appAdminKey'], push['title'], push['message'], targetList[index * 100:(index + 1)*100 - 1])
+            api.kakaoSendPush(user['kakaoAdminKey'], push['title'], push['message'], targetList[index * 100:(index + 1)*100 - 1])
             index = index + 1

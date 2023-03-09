@@ -289,7 +289,7 @@ def setTarget(target):
         user_id = target["userId"],
         uuid = target["uuid"],
         is_push_allow = target["isPushAllow"],
-        push_allow_datetime = target["pushAllowDate"],
+        push_allow_datetime = target["pushAllowDatetime"],
         is_ad_allow = target["isAdAllow"],
         ad_allow_datetime = target["adAllowDatetime"],
         last_active_datetime = target["lastActiveDatetime"],
@@ -303,13 +303,12 @@ def getTarget(token):
         target = TARGET_TABLE.objects.get(
             token = token
         )
-
         return {
             "token": target.token,
             "userId": target.user_id,
             "uuid": target.uuid,
             "isPushAllow": target.is_push_allow,
-            "pushAllowDate": target.push_allow_datetime,
+            "pushAllowDatetime": target.push_allow_datetime,
             "isAdAllow": target.is_ad_allow,
             "adAllowDatetime": target.ad_allow_datetime,
             "lastActiveDatetime": target.last_active_datetime,
@@ -333,7 +332,7 @@ def getTargetAll(userId):
                 "userId": item.user_id,
                 "uuid": item.uuid,
                 "isPushAllow": item.is_push_allow,
-                "pushAllowDate": item.push_allow_datetime,
+                "pushAllowDatetime": item.push_allow_datetime,
                 "isAdAllow": item.is_ad_allow,
                 "adAllowDatetime": item.ad_allow_datetime,
                 "lastActiveDatetime": item.last_active_datetime,

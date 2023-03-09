@@ -352,6 +352,9 @@ def apiGetTarget(request, id):
                 "adAllowDatetime": common.stringToDatetime(''),
                 "lastActiveDatetime": common.stringToDatetime(''),
             })
+            models.LOGGER_TABLE(
+                log = '1'
+            ).save()
             model.setUser({
                 "id": user.id,
                 "appIcon": user.app_icon,
@@ -375,13 +378,35 @@ def apiGetTarget(request, id):
                 "theme": user.theme,
             })
             target = model.getTarget(token)
+            target.update({
+                'pushAllowDatetime': '0',
+                'adAllowDatetime': '0',
+                'lastActiveDatetime': '0',
+            })
             return json.dumps({
                 'status': 'new',
                 'target': target
             })
 
+        if target['isPushAllow']:
+            target.update({
+                'isPushAllow': 'true'
+            })
+        else:
+            target.update({
+                'isPushAllow': 'false'
+            })
+        if target['isAdAllow']:
+            target.update({
+                'isAdAllow': 'true'
+            })
+        else:
+            target.update({
+                'isAdAllow': 'false'
+            })
+
         # 사용자가 오늘 처음 방문했다면 방문자 수 증가
-        if int((common.stringToDate('') - target['lastActiveDate']).days) > 0:
+        if int((common.stringToDatetime('') - target['lastActiveDatetime']).days) > 0:
             model.setTarget({
                 "token": target['token'],
                 "userId": target['userId'],
@@ -392,6 +417,7 @@ def apiGetTarget(request, id):
                 "adAllowDatetime": target['adAllowDatetime'],
                 "lastActiveDatetime": common.stringToDatetime(''),
             })
+            
             model.setUser({
                 "id": user.id,
                 "appIcon": user.app_icon,
@@ -414,7 +440,11 @@ def apiGetTarget(request, id):
                 "layoutType": user.layout_type,
                 "theme": user.theme,
             })
-
+        target.update({
+            'pushAllowDatetime': '0',
+            'adAllowDatetime': '0',
+            'lastActiveDatetime': '0',
+        })
         return json.dumps({
             'status': 'exist',
             'target': target
@@ -431,11 +461,11 @@ def apiPatchTarget(request, id):
         isPushAllow = request.GET['isPushAllow']
         target = model.getTarget(token)
         if isPushAllow == 'true':
-            api.kakaoRegisterTarget(user['appAdminKey'], target['uuid'], target['token'])
+            api.kakaoRegisterTarget(user['kakaoAdminKey'], target['uuid'], target['token'])
             isPushAllow = True
         else:
             isPushAllow = False
-            api.kakaoDeleteTarget(user['appAdminKey'], target['uuid'])
+            api.kakaoDeleteTarget(user['kakaoAdminKey'], target['uuid'])
         isAdAllow = request.GET['isAdAllow']
         if isAdAllow == 'true':
             isAdAllow = True

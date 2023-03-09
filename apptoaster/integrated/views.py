@@ -6,6 +6,7 @@ from . import handlers
 from .services import model
 from .services import session
 from .services import common
+from .services import api
 from . import models
 import requests
 import json
@@ -204,7 +205,7 @@ def apiId(request):
 ########################################
 @csrf_exempt
 def apiTest(request):
-    return HttpResponse("test")
+    return HttpResponse(api.kakaoGetTarget('a976cf90d58cb928f781590a77461fcd','2402615545658066410'))
 
 
 
