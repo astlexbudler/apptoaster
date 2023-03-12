@@ -3,6 +3,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from . import model
 from . import api
 from . import common
+from . import email
 from .. import models
 import math
 import datetime
@@ -24,7 +25,7 @@ scheduler.py
 ##################################################
 def startScheduler():
     scheduler = BackgroundScheduler()
-    scheduler.add_job(scheduled_job, 'interval', seconds=60)
+    scheduler.add_job(scheduled_job, 'interval', seconds=100)
     scheduler.start()
 
 def scheduled_job():
@@ -35,25 +36,40 @@ def scheduled_job():
 
     # 하루 마감
     try:
+        # 이전 마간 날짜 확인
         clearDatetime = models.TIMER.objects.get(
             index = 'clearDatetime'
         )
         clearDatetime = clearDatetime.datetime
+        logger.info("어제자 마감 날짜: " + clearDatetime)
     except:
         models.TIMER(
             index = 'clearDatetime',
             datetime = nowDatetime
         ).save()
         clearDatetime = nowDatetime
+
+    # 마감 날짜로부터 만 1일 경과 시
     if int((clearDatetime - nowDatetime).days) < -1:
+        logger.info("마감 날짜로부터 1일 이상 경과 확인")
         models.TIMER(
             index = 'clearDatetime',
             datetime = nowDatetime
         ).save()
+
+    # 미답변 질문 확인
+        not_answered = models.QUESTION_TABLE.objects.all().filter(
+            answer=""
+        )
+        if len(not_answered) > 0:
+            logger.info('미답변 질문 발견 ' + str(len(not_answered)) + "개의 미답변 질문이 발견되었습니다.")
+            email.sendEmail("toast@apptoaster.co.kr", "미답변 Qna 질문이 있습니다.", '미답변 질문 발견 ' + str(len(not_answered)) + "개의 미답변 질문이 발견되었습니다.")
+        
         # 100일 이상 접속하지 않은 사용자 제거
         targetList = models.TARGET_TABLE.objects.all()
         for target in targetList:
             if int((target.last_active_datetime - nowDatetime).days) < -100:
+                logger.info("100일 이상 접속하지 않은 사용자 확인. " + target.pk[0:10] + "...")
                 models.TARGET_TABLE.objects.get(
                     token = target.token
                 ).delete()
@@ -61,8 +77,9 @@ def scheduled_job():
         # 일일 방문자 횟수 초기화, 사용자 수 다시 계산
         userList = models.USER_TABLE.objects.all()
         for user in userList:
+            logger.info("앱 " + user.app_name + "방문자 초기화")
             targetLen = len(models.TARGET_TABLE.objects.all().filter(
-                user_id = user['id']
+                user_id = user.id
             ))
             model.setUser({
                 "id": user.id,
@@ -79,15 +96,14 @@ def scheduled_job():
                 "userCount": targetLen,
                 "visitTodayCount": 0,
                 "totalVisitCount": user.total_visit_count,
-                "isSplash": user.is_splash,
                 "splashBackground": user.splash_background,
                 "splashLogo": user.splash_logo,
-                "splashMinTime": user.splash_min_time,
                 "layoutType": user.layout_type,
                 "theme": user.theme,
             })
 
     # 로그인 카운트 초기화
+    logger.info("로그인 차단 초기화")
     model.initLoginTry()
 
     # 발송 시간이 된 푸시 확인, 스케줄에서 삭제(반복 제외), 반복 푸시일 경우 날짜 + 1
@@ -98,8 +114,10 @@ def scheduled_job():
         pushTime = push['time']
         pushDatetime = datetime.datetime.combine(pushDate, pushTime)
         if int((pushDatetime - nowDatetime).days) < 0:
+            logger.info(push["title"] + " 푸시 발송")
             workList.append(push)
             if push['repeat']:
+                logger.info(push["title"] + " 내일 반복 설정")
                 model.setPushSchedule({
                     "id": push['id'],
                     "userId": push['userId'],
@@ -112,6 +130,7 @@ def scheduled_job():
                     "ad": push['ad'],
                 })
             else:
+                logger.info(push["title"] + " 푸시 삭제")
                 model.deletePushSchedule(push['id'])
 
     # 푸시 발송. 푸시 기록 추가

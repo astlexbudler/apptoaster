@@ -30,10 +30,8 @@ def setUser(user):
         user_count = user['userCount'],
         visit_today_count = user['visitTodayCount'],
         total_visit_count = user['totalVisitCount'],
-        is_splash = user['isSplash'],
         splash_background = user['splashBackground'],
         splash_logo = user['splashLogo'],
-        splash_min_time = user['splashMinTime'],
         layout_type = user['layoutType'],
         theme = user['theme'],
     ).save()
@@ -63,10 +61,8 @@ def getUser(id):
             "userCount": user.user_count,
             "visitTodayCount": user.visit_today_count,
             "totalVisitCount": user.total_visit_count,
-            "isSplash": user.is_splash,
             "splashBackground": 'media/' + str(user.splash_background),
             "splashLogo": 'media/' + str(user.splash_logo),
-            "splashMinTime": user.splash_min_time,
             "layoutType": user.layout_type,
             "theme": user.theme,
         }
@@ -99,10 +95,8 @@ def getUserAll():
                 "userCount": user.user_count,
                 "visitTodayCount": user.visit_today_count,
                 "totalVisitCount": user.total_visit_count,
-                "isSplash": user.is_splash,
                 "splashBackground": 'media/' + str(user.splash_background),
                 "splashLogo": 'media/' + str(user.splash_logo),
-                "splashMinTime": user.splash_min_time,
                 "layoutType": user.layout_type,
                 "theme": user.theme,
             })

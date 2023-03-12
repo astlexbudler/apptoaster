@@ -162,10 +162,8 @@ def apiGeneralUpdate(request):
                 "userCount": user.user_count,
                 "visitTodayCount": user.visit_today_count,
                 "totalVisitCount": user.total_visit_count,
-                "isSplash": user.is_splash,
                 "splashBackground": user.splash_background,
                 "splashLogo": user.splash_logo,
-                "splashMinTime": user.splash_min_time,
                 "layoutType": user.layout_type,
                 "theme": user.theme,
             })
@@ -370,10 +368,8 @@ def apiGetTarget(request, id):
                 "userCount": user.user_count + 1,
                 "visitTodayCount": user.visit_today_count + 1,
                 "totalVisitCount": user.total_visit_count + 1,
-                "isSplash": user.is_splash,
                 "splashBackground": user.splash_background,
                 "splashLogo": user.splash_logo,
-                "splashMinTime": user.splash_min_time,
                 "layoutType": user.layout_type,
                 "theme": user.theme,
             })
@@ -433,10 +429,8 @@ def apiGetTarget(request, id):
                 "userCount": user.user_count,
                 "visitTodayCount": user.visit_today_count + 1,
                 "totalVisitCount": user.total_visit_count + 1,
-                "isSplash": user.is_splash,
                 "splashBackground": user.splash_background,
                 "splashLogo": user.splash_logo,
-                "splashMinTime": user.splash_min_time,
                 "layoutType": user.layout_type,
                 "theme": user.theme,
             })

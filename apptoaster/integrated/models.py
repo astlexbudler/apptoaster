@@ -24,10 +24,8 @@ class USER_TABLE(models.Model):
     user_count = models.DecimalField(decimal_places=0 ,max_digits=10)
     visit_today_count = models.DecimalField(decimal_places=0 ,max_digits=10)
     total_visit_count = models.DecimalField(decimal_places=0 ,max_digits=20)
-    is_splash = models.BooleanField()
     splash_background = models.ImageField(upload_to='splash_background')
     splash_logo = models.ImageField(upload_to='splash_logo')
-    splash_min_time = models.DecimalField(decimal_places=0 ,max_digits=1)
     layout_type = models.CharField(max_length=20)
     theme = models.CharField(max_length=20)
     sales_channel = models.CharField(max_length=8, blank=True)#영업채널

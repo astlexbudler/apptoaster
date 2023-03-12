@@ -83,7 +83,7 @@ def sendEmail(to, title, html):
     msg.attach(MIMEText(html, 'html'))
 
     server = smtplib.SMTP_SSL('smtp.naver.com', 465)
-    server.login("astlexbudler@naver.com", "mic6142xi4aem")
+    server.login("astlexbudler", "mic@6142xi4aem")
     server.send_message(msg)
     server.quit()
 

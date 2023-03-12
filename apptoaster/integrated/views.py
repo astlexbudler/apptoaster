@@ -6,6 +6,7 @@ from . import handlers
 from .services import model
 from .services import session
 from .services import common
+from .services import email
 from .services import api
 from . import models
 import requests
@@ -40,6 +41,13 @@ def policy(request):
 def privacy(request):
     return render(request, "privacy.html")
 
+########################################
+# ad
+########################################
+def ad(request):
+    #email.sendEmail("toast@apptoaster.co.kr", "AD 페이지를 누군가 방문했습니다.", common.datetimeToString(common.stringToDatetime("")))
+    return render(request, "ad.html")
+
 
 
 ##################################################
@@ -54,6 +62,7 @@ def login(request):
         return redirect('/dash')
     return render(request, "login.html")
 
+@csrf_exempt
 def apiLogin(request):
     return HttpResponse(json.dumps(handlers.apiLogin(request)))
 
@@ -201,11 +210,28 @@ def apiId(request):
     return HttpResponse(list)
 
 ########################################
+# 신청
+########################################
+@csrf_exempt
+def apiContact(request):
+    status = request.GET.get('status', '')
+    url = request.GET.get('url', '')
+    _email = request.GET.get('email', '')
+    apple = request.GET.get('apple', '')
+
+    if status == "demo":
+        email.sendEmail("toast@apptoaster.co.kr", "데모 제작 신청이 도착했습니다.", "url:" + url + "<br>email:" + _email + "<br>apple:" + apple)
+    elif status == "beta":
+        email.sendEmail("toast@apptoaster.co.kr", "앱 제작 신청이 도착했습니다.", "email:" + _email)
+    
+    return HttpResponse(list)
+
+########################################
 # 테스트
 ########################################
 @csrf_exempt
 def apiTest(request):
-    return HttpResponse(api.kakaoGetTarget('a976cf90d58cb928f781590a77461fcd','2402615545658066410'))
+    return HttpResponse()
 
 
 

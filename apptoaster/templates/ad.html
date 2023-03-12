@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link id="HTMLicon" rel="icon" type="image/png" href="">
+
+    <!-- CSS -->
+    <link href="{% static 'default/css/bootstrap.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'default/css/style.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'default/css/plugin/animate.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'default/css/jquery-ui.css' %}" rel="stylesheet" type="text/css" />
+    <!-- CSS -->
+
+    <!-- SDK -->
+    <script src="{% static 'apptoaster/js/apptoaster.js' %}" type="text/javascript"></script>
+    <script src="https://kit.fontawesome.com/37a4d902d2.js" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- SDK -->
+</head>
+
+<body class="full-intro">
+
+    <!-- Preloader -->
+    <section id="preloader">
+        <div class="loader" id="loader">
+            <div class="loader-img"></div>
+        </div>
+    </section>
+    <!-- Preloader -->
+
+    <!-- Wrapper -->
+    <div class="wrapper">
+        <section style="min-height: 100vh;">
+            <div class="container text-center" style="padding: 0px;">
+                <img src="/static/apptoaster/images/banner.png" style="width: 100%; max-width: 1024px;">
+            </div>
+            <div class="container text-start p-4" style="max-width: 1024px;">
+                <p>
+                    • 더이상 모바일 앱 개발하지 마세요!<br>
+                    앱토스터와 함께 기존 쇼핑몰 웹사이트를 그대로 앱으로 변환하세요!
+                </p>
+                <p>
+                    • 별도의 앱 서버가 필요 없어서 유지보수에 필요한 인력과 비용이 들지 않아요!
+                </p>
+                <p>
+                    • SMS나 SNS 메세지 대신 무료로 앱 푸시 메세지를 보낼 수 있어요.
+                </p>
+                <p>
+                    • 웹사이트 주소만 입력하시면 데모 앱 제작이 무료로 제공됩니다!<br>
+                    (데모 앱 제작은 대략적인 UI/UX를 보여주는 용도로 제작됩니다.)
+                </p>
+            </div>
+            <div class="container text-center" style="padding: 0px;">
+                <img src="/static/apptoaster/images/band.png" style="width: 100%; max-width: 1024px;">
+            </div>
+            <div class="container text-center pt-4" style="max-width: 1024px;">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="Pricing-box">
+                            <div class="price-title spacing-box">
+                                <h4>데모 앱 제작</h4>
+                                <div class="price-tenure">데모 앱</div>
+                            </div>
+                            <hr />
+                            <div class="spacing-box">
+                                <div><span style="font-size: 32px; font-weight: 700;">무료</div>
+                                <div class="price-tenure">데모버전</div>
+                            </div>
+                            <hr />
+                            <div class="pricing-features spacing-grid" style="height: 300px;">
+                                <ul>
+                                    <li><span class="text-success"><i class="fa-light fa-check"></i></span> 웹사이트 주소만으로
+                                        제작</li>
+                                    <li><span class="text-success"><i class="fa-light fa-check"></i></span> 안드로이드 및 IOS
+                                        데모 제공</li>
+                                    <li><span class="text-danger"><i class="fa-light fa-xmark-large"></i></span> 스토어 등록
+                                    </li>
+                                    <li>
+                                        <small class="text-primary">
+                                            IOS 데모 앱을 확인하시려면 애플 ID가 필요합니다.
+                                        </small>
+                                    </li>
+                                </ul>
+                            </div>
+                            <hr />
+                            <div class="spacing-grid">
+                                <a class="btn btn-md btn-black" onclick="demo();">데모 제작 신청</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="Pricing-box highlight">
+                            <div class="price-title spacing-box">
+                                <h4>안드로이드 및 IOS 앱 제작</h4>
+                                <p>베타 테스트 종료까지</p>
+                            </div>
+                            <hr />
+                            <div class="spacing-box">
+                                <div><span style="font-size: 32px; font-weight: 700;">240,000 </span><span
+                                        class="price-sm">&#8361;</span></div>
+                                <div class="price-tenure">베타 테스트 참여</div>
+                            </div>
+                            <hr />
+                            <div class="pricing-features spacing-grid" style="height: 300px;">
+                                <ul>
+                                    <li><span class="text-success"><i class="fa-light fa-check"></i></span> 앱 이름 및 디자인
+                                        수정</li>
+                                    <li><span class="text-success"><i class="fa-light fa-check"></i></span> 사용자 통계 정보 제공
+                                    </li>
+                                    <li><span class="text-success"><i class="fa-light fa-check"></i></span> 앱 푸시 메세지
+                                    </li>
+                                    <li><span class="text-success"><i class="fa-light fa-check"></i></span> 스토어 등록</li>
+                                    <li><span class="text-success"><i class="fa-light fa-check"></i></span> 베타 테스트 종료
+                                        후에도 사용 가능</li>
+                                    <li>
+                                        <small class="text-primary">
+                                            구글 및 애플 개발자 계정이 없으신 경우, 앱 토스터 스토어 계정에 앱을 등록시켜드립니다.
+                                        </small>
+                                    </li>
+                                </ul>
+                            </div>
+                            <hr />
+                            <div class="spacing-grid">
+                                <a class="btn btn-md btn-black" onclick="beta();">신청하기</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container text-start mt-4" style="max-width: 1024px;">
+                <div class="row">
+                    <div class="col-12">
+                        <p><i class="fa-light fa-location-dot"></i> 경기도 용인시 기흥구 강남서로 9(구갈동) 아카데미프라자 703호 앱 토스터</p>
+                    </div>
+                    <div class="col-lg-4 col-sm-12">
+                        <p><i class="fa-light fa-buildings"></i> 앱 토스터(194-24-01616)</p>
+                    </div>
+                    <div class="col-lg-4 col-sm-12">
+                        <p><i class="fa-light fa-phone"></i> <a href="tel:010-4109-8317">010-4109-8317</a></p>
+                    </div>
+                    <div class="col-lg-4 col-sm-12">
+                        <p><i class="fa-light fa-envelope"></i> <a
+                                href="mailto:toast@apptoaster.co.kr">toast@apptoaster.co.kr</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- FOOTER -->
+        {% include "parts/footer.html" %}
+        <!-- END FOOTER -->
+
+        <!-- Scroll Top -->
+        <a class="scroll-top">
+            <i class="fa-light fa-arrow-up"></i>
+        </a>
+        <!-- End Scroll Top -->
+
+    </div>
+    <!-- Wrapper -->
+
+
+    <!-- Javascript -->
+    <script src="{% static 'default/js/jquery-1.11.2.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/jquery-ui.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.easing.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/bootstrap.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.flexslider.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.fitvids.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.viewportchecker.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.stellar.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/wow.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.colorbox-min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/owl.carousel.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/isotope.pkgd.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/masonry.pkgd.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/imagesloaded.pkgd.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.fs.tipper.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/mediaelement-and-player.min.js' %}"></script>
+    <script src="{% static 'default/js/plugin/jquery.validate.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/theme.js' %}" type="text/javascript"></script>
+    <script src="{% static 'default/js/plugin/jquery.simple-text-rotator.min.js' %}" type="text/javascript"></script>
+    <script>
+
+        demo = () => {
+            Swal.fire({
+                title: '데모 앱 제작',
+                html: '<p>제작할 웹사이트의 주소를 입력해주세요.</p><div style="text-align:start; word-break: keep-all;">' +
+                    '<small>주소</small>' +
+                    '<input class="input-sm form-full" id="url" type="text" name="form-subject" value="https://www.your_website_here.com"><br>' +
+                    '<small>이메일 주소</small>' +
+                    '<input class="input-sm form-full" id="email" type="text" name="form-subject" value="your_email@email.com"><br>' +
+                    '<small>애플 ID(선택)</small>' +
+                    '<input class="input-sm form-full" id="apple" type="text" name="form-subject" value="your_apple_id@email.com"></div>',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: `신청`,
+                cancelButtonText: `취소`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var status = "demo";
+                    var url = document.querySelector("#url").value;
+                    var email = document.querySelector("#email").value;
+                    var apple = document.querySelector("#apple").value;
+
+                    fetch("/api/contact?status=" + status + "&url=" + url + "&email=" + email + "&apple=" + apple, {
+                        method: 'GET',
+                    }).then((response) => {
+                        Swal.fire({
+                            title: '신청 완료',
+                            html: '<div style="word-break: keep-all;">데모 앱 제작에는 최소 1일 ~ 최대 7일까지 소요될 수 있습니다. 데모 앱 제작 완료 시 이메일을 발송해드립니다.</div>',
+                            icon: 'success',
+                            confirmButtonText: `확인`,
+                        }).then((result) => {
+                            document.location.reload();
+                        });
+                    })
+                }
+            });
+        }
+
+        beta = () => {
+            Swal.fire({
+                title: '안드로이드 및 IOS 앱 제작',
+                html: '<p>앱 제작을 위해 필요한 정보를 보내드릴께요.<br>이메일 주소를 입력해주세요.</p><div style="text-align:start;word-break: keep-all;">' +
+                    '<small>이메일 주소</small>' +
+                    '<input class="input-sm form-full" id="email" type="text" name="form-subject" value="your_email@email.com"></div>',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: `신청`,
+                cancelButtonText: `취소`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var status = "beta";
+                    var email = document.querySelector("#email").value;
+
+                    fetch("/api/contact?status=" + status + "&email=" + email, {
+                        method: 'GET',
+                    }).then((response) => {
+                        Swal.fire({
+                            title: '신청 완료',
+                            html: '<div style="word-break: keep-all;">앱 제작을 위해 필요한 정보를 보내드릴께요! 신청해주셔서 감사합니다!</div>',
+                            icon: 'success',
+                            confirmButtonText: `확인`,
+                        }).then((result) => {
+                            document.location.reload();
+                        });
+                    })
+                }
+            });
+        }
+    </script>
+    <!-- Javascript -->
+
+</body>
+
+</html>
